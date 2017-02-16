@@ -6,7 +6,6 @@
       class="user page"
       :is="currentPage"
     />
-    hello
   </core-base>
 
   <component

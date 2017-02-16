@@ -27,6 +27,7 @@ pip-log.txt
 
 # Translations
 *.mo
+kolibri_instant_schools_plugin/locale/
 
 # Mr Developer
 .mr.developer.cfg

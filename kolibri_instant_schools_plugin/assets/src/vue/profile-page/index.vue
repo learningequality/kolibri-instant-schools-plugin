@@ -7,29 +7,39 @@
     <div v-if="success" class="success">
       {{$tr('success')}}
     </div>
+    <!-- WRAP THE STRINGS -->
     <form @focus.capture="" @submit.prevent="submitEdits">
-      <div v-if="hasPrivilege('username')" class="input-field">
-        <label>Username</label>
-        <input v-model.lazy="username" autocomplete="username" id="username" type="text"/>
-      </div>
-      <div v-if="hasPrivilege('name')" class="input-field">
-        <label>Name</label>
-        <input v-model.lazy="full_name" autocomplete="name" id="name" type="text"/>
-      </div>
-      <div v-if="hasPrivilege('password')"  class="input-field">
-        <label>Password</label>
-        <input autocomplete="new-password" id="password" type="password"/>
-      </div>
-      <div v-if="hasPrivilege('password')"  class="input-field">
-        <label>Confirm Password</label>
-        <input autocomplete="new-password" id="confirm-password" type="password"/>
-      </div>
-      <div v-if="hasPrivilege('delete')"  class="input-field">
-        <span class="advanced-option">Delete Account</span>
-      </div>
-      <div class="input-field">
-        <button :disabled="busy" type="submit">Update Profile</button>
-      </div>
+
+      <ui-textbox
+        v-if="hasPrivilege('username')"
+        class="input-field"
+        :invalid="busy"
+        label="Username"
+        v-model.lazy="username"
+        autocomplete="username"
+        id="username"
+        type="text" />
+
+        <ui-textbox
+            v-if="hasPrivilege('name')"
+            class="input-field"
+            label="Name"
+            v-model.lazy="full_name"
+            autocomplete="name"
+            id="name"
+            type="text" />
+
+        <ui-button
+          :disabled="busy"
+          color="primary"
+          type="primary"
+          buttonType="submit"
+          id="submit"
+          class="input-field"
+        >
+          Update Profile
+        </ui-button>
+
     </form>
   </div>
 
@@ -39,6 +49,7 @@
 <script>
 
   const actions = require('../../actions');
+  const responsiveElement = require('kolibri.coreVue.mixins.responsiveElement');
 
   module.exports = {
     name: 'profile-page',
@@ -47,18 +58,15 @@
       genericError: 'Something went wrong',
       success: 'Changes successfully made',
     },
+    components: {
+      'ui-textbox': require('keen-ui/src/UiTextbox'),
+      'ui-button': require('keen-ui/src/UiButton'),
+    },
     data() {
       return {
         username: this.session.username,
         full_name: this.session.full_name,
-        password: '',
-        confirm_password: '',
       };
-    },
-    watch: {
-      // going to be used for validation
-      // username() {return;},
-      // confirm_password() {return this.passwordsMatch();},
     },
     computed: {
       errorMessage() {
@@ -102,6 +110,7 @@
         editProfile: actions.editProfile,
       },
     },
+    mixins: [responsiveElement],
   };
 
 </script>
@@ -111,42 +120,33 @@
 
   @require '~kolibri.styles.definitions'
 
-  $input-width = 20em
-  $input-vertical-spacing = 1rem
+  $content-width = 33%
+  // taken from docs, assumes 1rem = 16px
+  $ui-input-height = 68px
 
   .content
-    position: relative
-    top: 100px
-
-  .input-field, .error, .success
-    width: $input-width
+    margin-top: 100px
+    width: $content-width
     margin-left: auto
     margin-right: auto
-    margin-bottom: $input-vertical-spacing
+    height: (4 * $ui-input-height)
 
-    @media(max-width: $portrait-breakpoint)
-      width: 100%
+  form
+    height: 100%
 
-  .input-field
-    label
-      clear: both
-      display: block
-      font-size: 0.7em
-      margin-bottom: ($input-vertical-spacing / 2)
-    input
-      width: 100%
+  #submit
+    width: 98%
+    margin-left: auto
+    margin-right: auto
+    display: block
+    clear: both
 
-    .advanced-option
-      color: $core-action-light
-      width: 100%
-      display: inline-block
-      font-size: 0.9em
+  .advanced-option
+    color: $core-action-light
+    width: 100%
+    display: inline-block
+    font-size: 0.9em
 
-    button
-      width: ($input-width * 0.9)
-      height: 3em
-      display: block
-      margin: auto
   .error
     background-color: red
     font-size: 2em

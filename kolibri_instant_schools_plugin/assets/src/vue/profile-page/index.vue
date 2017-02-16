@@ -1,6 +1,6 @@
 <template>
 
-  <div class="profile-page">
+  <div class="content">
     <div v-if="error" class="error ">
       {{errorMessage}}
     </div>
@@ -114,10 +114,9 @@
   $input-width = 20em
   $input-vertical-spacing = 1rem
 
-  .profile-page
+  .content
     position: relative
-    top: 50%
-    transform: translateY(-50%)
+    top: 100px
 
   .input-field, .error, .success
     width: $input-width

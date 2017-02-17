@@ -154,9 +154,11 @@
     margin: auto
     margin-top: 28px
     margin-bottom: 20px
+    text-align: center
 
   .group-btn
     padding: 5px
+    display: inline-block
 
   #password-reset
     display: block

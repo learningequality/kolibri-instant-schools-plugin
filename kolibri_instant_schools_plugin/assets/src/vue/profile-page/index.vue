@@ -1,40 +1,40 @@
 <template>
 
   <div :style="fieldWidth" class="content">
-    <div v-if="error" class="error ">
-      {{errorMessage}}
-    </div>
-    <div v-if="success" class="success">
+    <ui-alert type="success" @dismiss="resetProfileState" v-if="success">
       {{$tr('success')}}
-    </div>
-    <!-- WRAP THE STRINGS -->
-    <form @focus.capture="" @submit.prevent="submitEdits">
+    </ui-alert>
+    <form @submit.prevent="submitEdits">
 
       <ui-textbox
         v-if="hasPrivilege('username')"
         class="input-field"
-        :invalid="busy"
+        :invalid="error"
+        :error="errorMessage"
         :label="$tr('username')"
+        :disabled="busy"
         v-model="username"
         autocomplete="username"
         id="username"
         type="text" />
 
       <ui-textbox
-          v-if="hasPrivilege('name')"
-          class="input-field"
-          :label="$tr('name')"
-          v-model="full_name"
-          autocomplete="name"
-          id="name"
-          type="text" />
+        v-if="hasPrivilege('name')"
+        class="input-field"
+        :disabled="busy"
+        :label="$tr('name')"
+        v-model="full_name"
+        autocomplete="name"
+        id="name"
+        type="text" />
+
       <icon-button
-      :style="submitWidth"
-      :disabled="busy"
-      :primary="true"
-      :text="$tr('updateProfile')"
-      id="submit"
-      type="submit" />
+        :style="submitWidth"
+        :disabled="busy"
+        :primary="true"
+        :text="$tr('updateProfile')"
+        id="submit"
+        type="submit" />
     </form>
   </div>
 
@@ -59,6 +59,7 @@
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
       'ui-textbox': require('keen-ui/src/UiTextbox'),
+      'ui-alert': require('keen-ui/src/UiAlert'),
     },
     data() {
       return {
@@ -77,40 +78,50 @@
         return '';
       },
       submitWidth() {
+        const width = this.widthMultiplier.submit * this.windowSize.width;
+        const fieldWidth = this.widthMultiplier.field * this.windowSize.width;
+        const margins = (fieldWidth - width) / 2;
         return {
-          width: `${this.wideMult().submit * this.windowSize.width}px`,
+          width: `${width}px`,
+          margin: `0 ${margins}px 0 ${margins}px`,
         };
       },
       fieldWidth() {
         return {
-          width: `${this.wideMult().field * this.windowSize.width}px`,
+          width: `${this.widthMultiplier.field * this.windowSize.width}px`,
         };
+      },
+      widthMultiplier() {
+        const wideMult = () => {
+          const field = 0.33;
+          const submit = field * 0.95;
+          return {
+            field,
+            submit,
+          };
+        };
+        const mobileMult = () => ({
+          field: 0.85,
+          submit: 0.85,
+        });
+
+        if (this.windowSize.breakpoint <= 2) {
+          return mobileMult();
+        }
+        return wideMult();
       },
     },
     methods: {
       hasPrivilege(privilege) {
         return this.privileges[privilege];
       },
-      passwordsMatch() {
-        return this.password === this.confirm_password;
-      },
       submitEdits() {
-        // if (this.passwordsMatch()) {
         const edits = {
           username: this.username,
           full_name: this.full_name,
           password: this.password,
         };
         this.editProfile(edits, this.session);
-        // }
-      },
-      wideMult() {
-        const field = 0.33;
-        const submit = field * 0.98;
-        return {
-          field,
-          submit,
-        };
       },
     },
     vuex: {
@@ -124,6 +135,7 @@
       },
       actions: {
         editProfile: actions.editProfile,
+        resetProfileState: actions.resetProfileState,
       },
     },
     mixins: [responsiveWindow],
@@ -144,14 +156,8 @@
     margin-top: $vertical-page-margin
     margin-left: auto
     margin-right: auto
-    height: (4 * $ui-input-height)
-
-  form
-    height: 100%
 
   #submit
-    margin-left: auto
-    margin-right: auto
     display: block
     position: absolute
     bottom: $vertical-page-margin
@@ -161,14 +167,5 @@
     width: 100%
     display: inline-block
     font-size: 0.9em
-
-  .error
-    background-color: red
-    font-size: 2em
-    color: white
-  .success
-    background-color: green
-    font-size: 2em
-    color: white
 
 </style>

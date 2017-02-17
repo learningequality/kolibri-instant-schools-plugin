@@ -102,8 +102,6 @@
 
 <style lang="stylus" scoped>
 
-  @require '../../styles/theme.styl'
-
   .login
     background-color: $login-overlay
     height: 100%

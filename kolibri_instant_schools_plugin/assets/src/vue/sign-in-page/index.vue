@@ -2,12 +2,9 @@
 
   <div class="login">
     <div id="login-container">
-      <br>
-      <br>
       <img class="logo" src="../img/instant-school-logo.png" alt="logo">
       <h1 class="login-text title">{{ $tr('instantSchool') }}</h1>
-      <br>
-      <form ref="form" @submit.prevent="signIn">
+      <form id="login-form" ref="form" @submit.prevent="signIn">
         <ui-autocomplete
           :label="$tr('username')"
           id="username"
@@ -18,7 +15,6 @@
           autocomplete="username"
           required
           autofocus/>
-        <br>
         <ui-autocomplete
           :label="$tr('password')"
           id="password"
@@ -28,18 +24,14 @@
           v-model="password"
           autocomplete="current-password"
           required/>
-        <br>
         <icon-button id="login-btn" :text="$tr('signIn')" :primary="true" type="submit"></icon-button>
 
         <p v-if="loginError" class="sign-in-error">{{ $tr('signInError') }}</p>
       </form>
-      <br>
       <router-link class="login-text" id="password-reset" :to="signUp">{{ $tr('resetPassword') }}</router-link>
-      <br>
       <div id="divid-line"></div>
 
-      <p class="login-text">{{ $tr('noAccount') }}</p>
-      <br>
+      <p class="login-text no-account">{{ $tr('noAccount') }}</p>
       <div id="btn-group">
         <router-link class="group-btn" :to="signUp">
           <icon-button :text="$tr('createAccount')" :primary="true"></icon-button>
@@ -48,7 +40,6 @@
           <icon-button :text="$tr('accessAsGuest')" :primary="false"></icon-button>
         </a>
       </div>
-      <br>
     </div>
   </div>
 
@@ -115,11 +106,8 @@
 
   .login
     background-color: $login-overlay
-    height: 100vh
+    height: 100%
     background: url(../img/instant-background.jpg) no-repeat center center fixed
-    -webkit-background-size: cover
-    -moz-background-size: cover
-    -o-background-size: cover
     background-size: cover
     overflow-y: auto
     overflow-x: hidden
@@ -128,27 +116,53 @@
     display: block
     margin: auto
 
+  .logo
+    position: relative
+    display: block
+    margin: auto
+    margin-top: 34px
+    width: 30%
+    max-width: 120px
+    min-width: 60px
+
   .login-text
     color: $login-text
 
   .title
     font-weight: 100
+    font-size: 1.3em
+    letter-spacing: 0.1em
+    text-align: center
+
+  #login-form
+    width: 70%
+    max-width: 300px
+    margin: auto
+    margin-top: 30px
+
+  #password
+    margin-top: 30px
 
   #login-btn
-    display:block
+    display: block
     margin: auto
+    margin-top: 38px
     width: 100%
 
   #btn-group
-    display:table
+    display: table
     margin: auto
+    margin-top: 28px
+    margin-bottom: 20px
 
   .group-btn
     padding: 5px
 
   #password-reset
-    display: table
+    display: block
+    text-align: center
     margin: auto
+    margin-top: 26px
     font-size: 0.8em
 
   #divid-line
@@ -156,27 +170,12 @@
     height: 1px
     background-color: $core-text-annotation
     margin: auto
+    margin-top: 16px
 
-  h1
-    font-size: 1.3em
-    letter-spacing: 0.1em
-
-  h1, p
+  .no-account
     text-align: center
-
-  img
-    position: relative
-    display: block
-    margin: auto
-    width: 16vh
-
-  form
-    width: 70%;
-    max-width: 300px;
-    margin: auto
 
   .sign-in-error
     color: red
-
 
 </style>

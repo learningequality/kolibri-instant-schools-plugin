@@ -1,6 +1,6 @@
 <template>
 
-  <div class="content">
+  <div :style="fieldWidth" class="content">
     <div v-if="error" class="error ">
       {{errorMessage}}
     </div>
@@ -34,6 +34,7 @@
           color="primary"
           type="primary"
           buttonType="submit"
+          :style="submitWidth"
           id="submit"
           class="input-field"
         >
@@ -49,7 +50,7 @@
 <script>
 
   const actions = require('../../actions');
-  const responsiveElement = require('kolibri.coreVue.mixins.responsiveElement');
+  const responsiveWindow = require('kolibri.coreVue.mixins.responsiveWindow');
 
   module.exports = {
     name: 'profile-page',
@@ -78,6 +79,16 @@
         }
         return '';
       },
+      submitWidth() {
+        return {
+          width: `${this.wideMult().submit * this.windowSize.width}px`,
+        };
+      },
+      fieldWidth() {
+        return {
+          width: `${this.wideMult().field * this.windowSize.width}px`,
+        };
+      },
     },
     methods: {
       hasPrivilege(privilege) {
@@ -96,6 +107,14 @@
         this.editProfile(edits, this.session);
         // }
       },
+      wideMult() {
+        const field = 0.33;
+        const submit = field * 0.98;
+        return {
+          field,
+          submit,
+        };
+      },
     },
     vuex: {
       getters: {
@@ -110,7 +129,7 @@
         editProfile: actions.editProfile,
       },
     },
-    mixins: [responsiveElement],
+    mixins: [responsiveWindow],
   };
 
 </script>
@@ -120,13 +139,12 @@
 
   @require '~kolibri.styles.definitions'
 
-  $content-width = 33%
   // taken from docs, assumes 1rem = 16px
   $ui-input-height = 68px
+  $vertical-page-margin = 100px
 
   .content
-    margin-top: 100px
-    width: $content-width
+    margin-top: $vertical-page-margin
     margin-left: auto
     margin-right: auto
     height: (4 * $ui-input-height)
@@ -135,11 +153,11 @@
     height: 100%
 
   #submit
-    width: 98%
     margin-left: auto
     margin-right: auto
     display: block
-    clear: both
+    position: absolute
+    bottom: $vertical-page-margin
 
   .advanced-option
     color: $core-action-light

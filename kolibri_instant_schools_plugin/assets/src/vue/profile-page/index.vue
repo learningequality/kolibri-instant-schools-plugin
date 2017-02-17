@@ -51,7 +51,7 @@
     $trNameSpace: 'profile-page',
     $trs: {
       genericError: 'Something went wrong',
-      success: 'Changes successfully made',
+      success: 'Profile details updated!',
       username: 'Username',
       name: 'Name',
       updateProfile: 'Update Profile',

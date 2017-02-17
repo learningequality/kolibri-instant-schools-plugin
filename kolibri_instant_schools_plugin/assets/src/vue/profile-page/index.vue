@@ -14,33 +14,27 @@
         v-if="hasPrivilege('username')"
         class="input-field"
         :invalid="busy"
-        label="Username"
-        v-model.lazy="username"
+        :label="$tr('username')"
+        v-model="username"
         autocomplete="username"
         id="username"
         type="text" />
 
-        <ui-textbox
-            v-if="hasPrivilege('name')"
-            class="input-field"
-            label="Name"
-            v-model.lazy="full_name"
-            autocomplete="name"
-            id="name"
-            type="text" />
-
-        <ui-button
-          :disabled="busy"
-          color="primary"
-          type="primary"
-          buttonType="submit"
-          :style="submitWidth"
-          id="submit"
+      <ui-textbox
+          v-if="hasPrivilege('name')"
           class="input-field"
-        >
-          Update Profile
-        </ui-button>
-
+          :label="$tr('name')"
+          v-model="full_name"
+          autocomplete="name"
+          id="name"
+          type="text" />
+      <icon-button
+      :style="submitWidth"
+      :disabled="busy"
+      :primary="true"
+      :text="$tr('updateProfile')"
+      id="submit"
+      type="submit" />
     </form>
   </div>
 
@@ -58,10 +52,13 @@
     $trs: {
       genericError: 'Something went wrong',
       success: 'Changes successfully made',
+      username: 'Username',
+      name: 'Name',
+      updateProfile: 'Update Profile',
     },
     components: {
+      'icon-button': require('kolibri.coreVue.components.iconButton'),
       'ui-textbox': require('keen-ui/src/UiTextbox'),
-      'ui-button': require('keen-ui/src/UiButton'),
     },
     data() {
       return {

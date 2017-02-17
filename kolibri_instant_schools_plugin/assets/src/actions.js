@@ -38,9 +38,9 @@ function editProfile(store, edits, session) {
   if (edits.username && edits.username !== session.username) {
     changedValues.username = edits.username;
   }
-  if (edits.password && edits.password !== session.password) {
-    changedValues.password = edits.password;
-  }
+  // if (edits.password && edits.password !== session.password) {
+  //   changedValues.password = edits.password;
+  // }
 
   // check to see if anything's changed and conditionally add last requirement
   if (Object.keys(changedValues).length) {
@@ -77,6 +77,32 @@ function editProfile(store, edits, session) {
   });
 }
 
+function resetProfileState(store) {
+  const pageState = {
+    busy: false,
+    success: false,
+    error: false,
+    errorMessage: '',
+  };
+
+  store.dispatch('SET_PAGE_STATE', pageState);
+}
+
+function showProfile(store) {
+  const userSignedIn = coreGetters.isUserLoggedIn(store.state);
+  if (!userSignedIn) {
+    router.getInstance().replace({
+      name: PageNames.SIGN_IN,
+    });
+    return;
+  }
+  store.dispatch('SET_PAGE_NAME', PageNames.PROFILE);
+  store.dispatch('CORE_SET_PAGE_LOADING', false);
+  store.dispatch('CORE_SET_ERROR', null);
+  store.dispatch('CORE_SET_TITLE', 'User Profile');
+  resetProfileState(store);
+}
+
 function showSignIn(store) {
   const userSignedIn = coreGetters.isUserLoggedIn(store.state);
   if (userSignedIn) {
@@ -108,29 +134,6 @@ function showSignUp(store) {
   store.dispatch('CORE_SET_TITLE', 'User Sign Up');
 }
 
-
-function showProfile(store) {
-  const userSignedIn = coreGetters.isUserLoggedIn(store.state);
-  if (!userSignedIn) {
-    router.getInstance().replace({
-      name: PageNames.SIGN_IN,
-    });
-    return;
-  }
-  const pageState = {
-    busy: false,
-    success: false,
-    error: false,
-    errorMessage: '',
-  };
-  store.dispatch('SET_PAGE_NAME', PageNames.PROFILE);
-  store.dispatch('SET_PAGE_STATE', pageState);
-  store.dispatch('CORE_SET_PAGE_LOADING', false);
-  store.dispatch('CORE_SET_ERROR', null);
-  store.dispatch('CORE_SET_TITLE', 'User Profile');
-}
-
-
 function signUp(store, signUpCreds) {
   const signUpModel = SignUpResource.createModel(signUpCreds);
   const signUpPromise = signUpModel.save(signUpCreds);
@@ -155,4 +158,5 @@ module.exports = {
   signUp,
   showProfile,
   editProfile,
+  resetProfileState,
 };

@@ -1,47 +1,56 @@
 <template>
 
-  <div>
-    <h1>{{ $tr('createAccount') }}</h1>
+  <div :style="pageHeight" class="signup-page">
 
-    <form ref="form" @submit.prevent="signUp">
-      <label for="name">{{ $tr('name') }}</label>
-      <input
-        id="name"
-        type="text"
+    <form class="signup-form" :style="wideWidth" ref="form" @submit.prevent="signUp">
+      <h1 class="signup-title">{{ $tr('createAccount') }}</h1>
+
+      <ui-textbox
         :placeholder="$tr('enterName')"
+        :label="$tr('name')"
         :aria-label="$tr('name')"
         v-model="name"
         autocomplete="name"
+        autofocus
         required
-        autofocus>
-      <label for="username">{{ $tr('username') }}</label>
-      <input
-        id="username"
-        type="text"
+        id="name"
+        type="text" />
+
+      <ui-textbox
         :placeholder="$tr('enterUsername')"
+        :label="$tr('username')"
         :aria-label="$tr('username')"
         v-model="username"
-        required>
-      <label for="password">{{ $tr('password') }}</label>
-      <input
+        autocomplete="username"
+        required
+        id="username"
+        type="text" />
+
+      <ui-textbox
         id="password"
         type="password"
         :placeholder="$tr('enterPassword')"
         :aria-label="$tr('password')"
+        :label="$tr('password')"
         v-model="password"
         autocomplete="new-password"
-        required>
-      <label for="confirmed-password">{{ $tr('confirmPassword') }}</label>
-      <input
+        required />
+
+      <ui-textbox
         id="confirmed-password"
         type="password"
         :placeholder="$tr('confirmPassword')"
         :aria-label="$tr('confirmPassword')"
+        :label="$tr('confirmPassword')"
         v-model="confirmed_password"
-        required>
-      <icon-button :primary="true" text="Finish" type="submit"></icon-button>
+        autocomplete="new-password"
+        required />
 
-      <p v-if="signUpError" class="sign-up-error">{{ $tr('signUpError') }}</p>
+      <icon-button id="submit" :primary="true" text="Finish" type="submit" />
+
+      <p v-if="signUpError" class="signup-error">{{ $tr('signUpError') }}</p>
+
+      <!-- Need terms of service thing -->
     </form>
 
   </div>
@@ -52,8 +61,10 @@
 <script>
 
   const actions = require('../../actions');
+  const responsiveWindow = require('kolibri.coreVue.mixins.responsiveWindow');
 
   module.exports = {
+    name: 'Sign-Up-Page',
     $trNameSpace: 'signUpPage',
     $trs: {
       createAccount: 'Create an Account',
@@ -68,6 +79,21 @@
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
+      'ui-textbox': require('keen-ui/src/UiTextbox'),
+    },
+    computed: {
+      wideWidth() {
+        const width = 0.25 * this.windowSize.width;
+        return {
+          width: `${width}px`,
+        };
+      },
+      pageHeight() {
+        const height = this.windowSize.height;
+        return {
+          height: `${height}px`,
+        };
+      },
     },
     data: () => ({
       name: '',
@@ -92,6 +118,7 @@
         signUpAction: actions.signUp,
       },
     },
+    mixins: [responsiveWindow],
   };
 
 </script>
@@ -101,16 +128,28 @@
 
   @require '~kolibri.styles.definitions'
 
-  input
+  .signup-page
+    position: relative
+    width: 100%
+
+  .signup-title
+    text-align: center
+
+
+  .signup-form
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+
+  #submit
+    width: 90%
+    margin-left: auto
+    margin-right: auto
     display: block
+    margin-top: 4em
 
-  .sign-up-error
-    color: red
-
-  input
-    display: block
-
-  .sign-up-error
+  .signup-error
     color: red
 
 </style>

@@ -143,7 +143,11 @@
     transform: translate(-50%, -50%)
 
   #submit
-    width: 100%
+    width: 90%
+    margin-left: auto
+    margin-right: auto
+    display: block
+    margin-top: 4em
 
   .signup-error
     color: red

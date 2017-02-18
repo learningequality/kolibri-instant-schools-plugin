@@ -59,8 +59,7 @@ function editProfile(store, edits, session) {
 
   // error handling
   }, error => {
-    // copying logic from user-create-modal
-    function errorMessage(apiError) {
+    function _errorMessageHandler(apiError) {
       if (apiError.status.code === 400) {
         // access the first apiError message
         return Object.values(apiError.entity)[0][0];
@@ -69,11 +68,14 @@ function editProfile(store, edits, session) {
       }
       return '';
     }
+
+    // copying logic from user-create-modal
     store.dispatch('SET_PROFILE_SUCCESS', false);
-    store.dispatch('SET_PROFILE_EROR', true, errorMessage(error));
+    store.dispatch('SET_PROFILE_EROR', true, _errorMessageHandler(error));
     store.dispatch('SET_PROFILE_BUSY', false);
   });
 }
+
 
 function resetProfileState(store) {
   const pageState = {
@@ -117,6 +119,16 @@ function showSignIn(store) {
 }
 
 
+function resetSignUpState(store) {
+  const pageState = {
+    busy: false,
+    errorCode: null,
+    errorMessage: '',
+  };
+
+  store.dispatch('SET_PAGE_STATE', pageState);
+}
+
 function showSignUp(store) {
   const userSignedIn = coreGetters.isUserLoggedIn(store.state);
   if (userSignedIn) {
@@ -126,25 +138,34 @@ function showSignUp(store) {
     return;
   }
   store.dispatch('SET_PAGE_NAME', PageNames.SIGN_UP);
-  store.dispatch('SET_PAGE_STATE', { signUpError: null });
   store.dispatch('CORE_SET_PAGE_LOADING', false);
   store.dispatch('CORE_SET_ERROR', null);
   store.dispatch('CORE_SET_TITLE', 'User Sign Up');
+  resetSignUpState(store);
 }
 
 function signUp(store, signUpCreds) {
   const signUpModel = SignUpResource.createModel(signUpCreds);
   const signUpPromise = signUpModel.save(signUpCreds);
+
+  store.dispatch('SET_SIGN_UP_BUSY', true);
+  resetSignUpState(store);
+
   signUpPromise.then(() => {
-    store.dispatch('SET_SIGN_UP_ERROR', null);
+    store.dispatch('SET_SIGN_UP_ERROR', null, '');
+    store.dispatch('SET_SIGN_UP_BUSY', false);
     // TODO: Better solution?
     redirectToHome();
   }).catch(error => {
-    if (error.status.code === 400) {
-      store.dispatch('SET_SIGN_UP_ERROR', 400);
-    } else {
-      coreActions.handleApiError(store, error);
+    function _errorMessageHandler(apiError) {
+      if (apiError.status.code === 400 || apiError.status.code === 200) {
+        return apiError.entity[0];
+      }
+      return '';
     }
+
+    store.dispatch('SET_SIGN_UP_ERROR', error.status.code, _errorMessageHandler(error));
+    store.dispatch('SET_SIGN_UP_BUSY', false);
   });
 }
 
@@ -154,6 +175,7 @@ module.exports = {
   showSignIn,
   showSignUp,
   signUp,
+  resetSignUpState,
   showProfile,
   editProfile,
   resetProfileState,

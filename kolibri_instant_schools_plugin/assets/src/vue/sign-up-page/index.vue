@@ -1,8 +1,26 @@
 <template>
 
-  <div :style="pageHeight" class="signup-page">
+  <div class="signup-page">
 
-    <form class="signup-form" :style="wideWidth" ref="form" @submit.prevent="signUp">
+    <ui-toolbar type="colored" textColor="white">
+      <template slot="icon">
+        <img id="logo" src="../img/instant-school-logo.png" />
+      </template>
+      <template slot="brand">
+        Instant Schools
+      </template>
+      <div slot="actions">
+        <router-link id="login" :to="signInPage">
+          <span>Log In</span>
+        </router-link>
+      </div>
+    </ui-toolbar>
+
+    <form class="signup-form" ref="form" @submit.prevent="signUp">
+      <ui-alert type="error" @dismiss="resetSignUpState" v-if="errorCode">
+        {{errorMessage}}
+      </ui-alert>
+
       <h1 class="signup-title">{{ $tr('createAccount') }}</h1>
 
       <ui-textbox
@@ -20,6 +38,7 @@
         :placeholder="$tr('enterUsername')"
         :label="$tr('username')"
         :aria-label="$tr('username')"
+        :invalid="usernameError"
         v-model="username"
         autocomplete="username"
         required
@@ -42,15 +61,18 @@
         :placeholder="$tr('confirmPassword')"
         :aria-label="$tr('confirmPassword')"
         :label="$tr('confirmPassword')"
+        :invalid="!passwordsMatch"
+        :error="passwordError "
         v-model="confirmed_password"
         autocomplete="new-password"
         required />
 
-      <icon-button id="submit" :primary="true" text="Finish" type="submit" />
+        <ui-checkbox v-model="termAgreement" required>
+          I agree to the <a href="#">terms of service & privacy policy</a>
+        </ui-checkbox>
 
-      <p v-if="signUpError" class="signup-error">{{ $tr('signUpError') }}</p>
+      <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
 
-      <!-- Need terms of service thing -->
     </form>
 
   </div>
@@ -61,7 +83,7 @@
 <script>
 
   const actions = require('../../actions');
-  const responsiveWindow = require('kolibri.coreVue.mixins.responsiveWindow');
+  const PageNames = require('../../state/constants').PageNames;
 
   module.exports = {
     name: 'Sign-Up-Page',
@@ -75,32 +97,53 @@
       password: 'Password',
       enterPassword: 'Enter Password',
       confirmPassword: 'Confirm Password',
-      signUpError: 'That username already exists. Try a different username.',
+      passwordMatchError: 'Passwords do not match',
+      genericError: 'Something went wrong during sign up!',
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
+      'ui-alert': require('keen-ui/src/UiAlert'),
       'ui-textbox': require('keen-ui/src/UiTextbox'),
-    },
-    computed: {
-      wideWidth() {
-        const width = 0.25 * this.windowSize.width;
-        return {
-          width: `${width}px`,
-        };
-      },
-      pageHeight() {
-        const height = this.windowSize.height;
-        return {
-          height: `${height}px`,
-        };
-      },
+      'ui-toolbar': require('keen-ui/src/UiToolbar'),
+      'ui-checkbox': require('keen-ui/src/UiCheckbox'),
     },
     data: () => ({
       name: '',
       username: '',
       password: '',
       confirmed_password: '',
+      termAgreement: false,
     }),
+    computed: {
+      signInPage() {
+        return { name: PageNames.SIGN_IN };
+      },
+      passwordsMatch() {
+        // make sure both fields are populated
+        if (this.password && this.confirmed_password) {
+          return this.password === this.confirmed_password;
+        }
+        return true;
+      },
+      passwordError() {
+        if (this.passwordsMatch) {
+          return '';
+        }
+        return this.$tr('passwordMatchError');
+      },
+      usernameError() {
+        return this.errorCode === 400;
+      },
+      allFieldsPopulated() {
+        return !(this.name && this.username && this.password && this.confirmed_password);
+      },
+      canSubmit() {
+        return !this.termAgreement || this.allFieldsPopulated || !this.passwordsMatch || this.busy;
+      },
+      errorMessage() {
+        return this.backendErrorMessage || this.$tr('genericError');
+      },
+    },
     methods: {
       signUp() {
         this.signUpAction({
@@ -112,13 +155,16 @@
     },
     vuex: {
       getters: {
-        signUpError: state => state.core.signUpError === 400,
+        session: state => state.core.session,
+        errorCode: state => state.pageState.errorCode,
+        busy: state => state.pageState.busy,
+        backendErrorMessage: state => state.pageState.errorMessage,
       },
       actions: {
         signUpAction: actions.signUp,
+        resetSignUpState: actions.resetSignUpState,
       },
     },
-    mixins: [responsiveWindow],
   };
 
 </script>
@@ -127,20 +173,35 @@
 <style lang="stylus" scoped>
 
   @require '~kolibri.styles.definitions'
-
+  $iphone-5-width = 320px
   .signup-page
     position: relative
     width: 100%
+    height: 100%
+    overflow-y: auto
 
   .signup-title
     text-align: center
-
 
   .signup-form
     position: absolute
     top: 50%
     left: 50%
+    width: ($iphone-5-width - 20)px
     transform: translate(-50%, -50%)
+
+  #logo
+    // 1.63 * font height
+    $logo-size = (1.64 * 1.125)rem
+    $logo-margin = (0.38 * $logo-size)rem
+    height: $logo-size
+    display: inline-block
+    margin-left: $logo-margin
+
+  #login
+    margin-right: 1em
+    color: white
+    text-decoration: none
 
   #submit
     width: 90%
@@ -148,8 +209,5 @@
     margin-right: auto
     display: block
     margin-top: 4em
-
-  .signup-error
-    color: red
 
 </style>

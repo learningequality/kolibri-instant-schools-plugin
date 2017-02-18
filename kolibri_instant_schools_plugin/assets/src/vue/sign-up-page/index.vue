@@ -2,6 +2,17 @@
 
   <div class="signup-page">
 
+    <ui-toolbar type="colored" textColor="white" :removeNavIcon="true">
+      <template slot="brand">
+        Instant Schools
+      </template>
+      <div slot="actions">
+        <router-link id="login" :to="signInPage">
+          <span>Log In</span>
+        </router-link>
+      </div>
+    </ui-toolbar>
+
     <form class="signup-form" ref="form" @submit.prevent="signUp">
       <ui-alert type="error" @dismiss="resetSignUpState" v-if="errorCode">
         {{errorMessage}}
@@ -67,6 +78,7 @@
 <script>
 
   const actions = require('../../actions');
+  const PageNames = require('../../state/constants').PageNames;
 
   module.exports = {
     name: 'Sign-Up-Page',
@@ -87,8 +99,18 @@
       'icon-button': require('kolibri.coreVue.components.iconButton'),
       'ui-alert': require('keen-ui/src/UiAlert'),
       'ui-textbox': require('keen-ui/src/UiTextbox'),
+      'ui-toolbar': require('keen-ui/src/UiToolbar'),
     },
+    data: () => ({
+      name: '',
+      username: '',
+      password: '',
+      confirmed_password: '',
+    }),
     computed: {
+      signInPage() {
+        return { name: PageNames.SIGN_IN };
+      },
       passwordsMatch() {
         // make sure both fields are populated
         if (this.password && this.confirmed_password) {
@@ -115,12 +137,6 @@
         return this.backendErrorMessage || this.$tr('genericError');
       },
     },
-    data: () => ({
-      name: '',
-      username: '',
-      password: '',
-      confirmed_password: '',
-    }),
     methods: {
       signUp() {
         this.signUpAction({
@@ -160,7 +176,6 @@
   .signup-title
     text-align: center
 
-
   .signup-form
     position: absolute
     top: 50%
@@ -168,14 +183,16 @@
     width: ($iphone-5-width - 20)px
     transform: translate(-50%, -50%)
 
+  #login
+    margin-right: 1em
+    color: white
+    text-decoration: none
+
   #submit
     width: 90%
     margin-left: auto
     margin-right: auto
     display: block
     margin-top: 4em
-
-  .signup-error
-    color: red
 
 </style>

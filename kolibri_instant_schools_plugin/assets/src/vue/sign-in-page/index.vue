@@ -102,6 +102,9 @@
 
 <style lang="stylus" scoped>
 
+  $login-overlay = #201A21
+  $login-text = #D8D8D8
+  
   .login
     background-color: $login-overlay
     height: 100%

@@ -2,7 +2,10 @@
 
   <div class="signup-page">
 
-    <ui-toolbar type="colored" textColor="white" :removeNavIcon="true">
+    <ui-toolbar type="colored" textColor="white">
+      <template slot="icon">
+        <img id="logo" src="../img/instant-school-logo.png" />
+      </template>
       <template slot="brand">
         Instant Schools
       </template>
@@ -182,6 +185,14 @@
     left: 50%
     width: ($iphone-5-width - 20)px
     transform: translate(-50%, -50%)
+
+  #logo
+    // 1.63 * font height
+    $logo-size = (1.64 * 1.125)rem
+    $logo-margin = (0.38 * $logo-size)rem
+    height: $logo-size
+    display: inline-block
+    margin-left: $logo-margin
 
   #login
     margin-right: 1em

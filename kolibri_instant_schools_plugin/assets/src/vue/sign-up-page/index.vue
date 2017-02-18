@@ -68,7 +68,7 @@
         required />
 
         <ui-checkbox v-model="termAgreement" required>
-          I agree to the <a href="#">terms of service & privacy policy</a>
+          I agree to the <span class="terms-of-service-link">terms of service & privacy policy</span>
         </ui-checkbox>
 
       <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
@@ -209,5 +209,8 @@
     margin-right: auto
     display: block
     margin-top: 4em
+
+  .terms-of-service-link
+    text-decoration: underline
 
 </style>

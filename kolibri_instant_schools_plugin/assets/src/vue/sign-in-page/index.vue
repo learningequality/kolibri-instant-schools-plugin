@@ -34,10 +34,10 @@
       <p class="login-text no-account">{{ $tr('noAccount') }}</p>
       <div id="btn-group">
         <router-link class="group-btn" :to="signUp">
-          <icon-button :text="$tr('createAccount')" :primary="true"></icon-button>
+          <icon-button id="signup-button" :text="$tr('createAccount')" :primary="true"></icon-button>
         </router-link>
         <a class="group-btn" href="/learn">
-          <icon-button :text="$tr('accessAsGuest')" :primary="false"></icon-button>
+          <icon-button id="guest-access-button" :text="$tr('accessAsGuest')" :primary="false"></icon-button>
         </a>
       </div>
     </div>
@@ -98,6 +98,29 @@
   };
 
 </script>
+
+
+<style lang="stylus">
+
+  $login-text = #D8D8D8
+  $login-red = #f44336
+
+  #login-container
+    .ui-
+      &autocomplete__
+        &label-text
+          color: $login-text
+        &input
+          border-bottom-color: $login-text
+      &button
+        background-color: $login-red
+
+        &#guest-access-button
+          background-color: transparent
+          color: $login-text
+          border: 2px solid $login-red
+
+</style>
 
 
 <style lang="stylus" scoped>

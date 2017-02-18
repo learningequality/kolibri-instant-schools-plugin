@@ -36,7 +36,7 @@
         <router-link class="group-btn" :to="signUp">
           <icon-button :text="$tr('createAccount')" :primary="true"></icon-button>
         </router-link>
-        <a class="group-btn" href="/">
+        <a class="group-btn" href="/learn">
           <icon-button :text="$tr('accessAsGuest')" :primary="false"></icon-button>
         </a>
       </div>
@@ -157,6 +157,7 @@
   .group-btn
     padding: 5px
     display: inline-block
+    text-decoration: none
 
   #password-reset
     display: block

@@ -1,6 +1,6 @@
 <template>
 
-  <div :style="fieldWidth" class="content">
+  <div class="content">
     <ui-alert type="success" @dismiss="resetProfileState" v-if="success">
       {{$tr('success')}}
     </ui-alert>
@@ -12,8 +12,8 @@
         :invalid="error"
         :error="errorMessage"
         :label="$tr('username')"
-        :disabled="busy"
-        v-model="username"
+        :value="session.username"
+        disabled
         autocomplete="username"
         id="username"
         type="text" />
@@ -29,7 +29,6 @@
         type="text" />
 
       <icon-button
-        :style="submitWidth"
         :disabled="busy"
         :primary="true"
         :text="$tr('updateProfile')"
@@ -77,39 +76,6 @@
         }
         return '';
       },
-      submitWidth() {
-        const width = this.widthMultiplier.submit * this.windowSize.width;
-        const fieldWidth = this.widthMultiplier.field * this.windowSize.width;
-        const margins = (fieldWidth - width) / 2;
-        return {
-          width: `${width}px`,
-          margin: `0 ${margins}px 0 ${margins}px`,
-        };
-      },
-      fieldWidth() {
-        return {
-          width: `${this.widthMultiplier.field * this.windowSize.width}px`,
-        };
-      },
-      widthMultiplier() {
-        const wideMult = () => {
-          const field = 0.33;
-          const submit = field * 0.95;
-          return {
-            field,
-            submit,
-          };
-        };
-        const mobileMult = () => ({
-          field: 0.85,
-          submit: 0.85,
-        });
-
-        if (this.windowSize.breakpoint <= 2) {
-          return mobileMult();
-        }
-        return wideMult();
-      },
     },
     methods: {
       hasPrivilege(privilege) {
@@ -117,9 +83,7 @@
       },
       submitEdits() {
         const edits = {
-          username: this.username,
           full_name: this.full_name,
-          password: this.password,
         };
         this.editProfile(edits, this.session);
       },
@@ -151,16 +115,21 @@
   // taken from docs, assumes 1rem = 16px
   $ui-input-height = 68px
   $vertical-page-margin = 100px
+  $iphone-width = 320
 
   .content
-    margin-top: $vertical-page-margin
+    padding-top: $vertical-page-margin
     margin-left: auto
     margin-right: auto
+    overflow-y: auto
+    width: ($iphone-width - 20)px
 
   #submit
+    margin-left: auto
+    margin-right: auto
     display: block
-    position: absolute
-    bottom: $vertical-page-margin
+    margin-top: $vertical-page-margin
+    width: 98%
 
   .advanced-option
     color: $core-action-light

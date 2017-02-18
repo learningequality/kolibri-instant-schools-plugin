@@ -29,8 +29,6 @@ function editProfile(store, edits, session) {
   const savedUserModel = FacilityUserResource.getModel(session.user_id);
   const changedValues = {};
 
-  // TODO set up core session updates
-
   // explicit checks for the only values that can be changed
   if (edits.full_name && edits.full_name !== session.full_name) {
     changedValues.full_name = edits.full_name;

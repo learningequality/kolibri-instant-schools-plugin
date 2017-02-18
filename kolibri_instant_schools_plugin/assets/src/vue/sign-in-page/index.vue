@@ -112,6 +112,7 @@
           color: $login-text
         &input
           border-bottom-color: $login-text
+          color: $login-text
       &button
         background-color: $login-red
 

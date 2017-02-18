@@ -67,7 +67,9 @@
         autocomplete="new-password"
         required />
 
-      <!-- Need terms of service thing -->
+        <ui-checkbox v-model="termAgreement" required>
+          I agree to the <a href="#">terms of service & privacy policy</a>
+        </ui-checkbox>
 
       <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
 
@@ -103,12 +105,14 @@
       'ui-alert': require('keen-ui/src/UiAlert'),
       'ui-textbox': require('keen-ui/src/UiTextbox'),
       'ui-toolbar': require('keen-ui/src/UiToolbar'),
+      'ui-checkbox': require('keen-ui/src/UiCheckbox'),
     },
     data: () => ({
       name: '',
       username: '',
       password: '',
       confirmed_password: '',
+      termAgreement: false,
     }),
     computed: {
       signInPage() {
@@ -134,7 +138,7 @@
         return !(this.name && this.username && this.password && this.confirmed_password);
       },
       canSubmit() {
-        return !!this.allFieldsPopulated || !!this.passwordError || this.busy;
+        return !this.termAgreement || this.allFieldsPopulated || !this.passwordsMatch || this.busy;
       },
       errorMessage() {
         return this.backendErrorMessage || this.$tr('genericError');

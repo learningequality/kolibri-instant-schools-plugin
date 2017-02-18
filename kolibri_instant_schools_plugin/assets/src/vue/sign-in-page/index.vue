@@ -200,6 +200,7 @@
     width: 412px
     height: 1px
     background-color: $core-text-annotation
+    background-color: $login-text
     margin: auto
     margin-top: 16px
 

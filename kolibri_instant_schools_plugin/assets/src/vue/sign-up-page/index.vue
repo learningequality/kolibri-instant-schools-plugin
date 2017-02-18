@@ -3,6 +3,10 @@
   <div class="signup-page">
 
     <form class="signup-form" ref="form" @submit.prevent="signUp">
+      <ui-alert type="error" @dismiss="resetSignUpState" v-if="errorCode">
+        {{errorMessage}}
+      </ui-alert>
+
       <h1 class="signup-title">{{ $tr('createAccount') }}</h1>
 
       <ui-textbox
@@ -20,6 +24,7 @@
         :placeholder="$tr('enterUsername')"
         :label="$tr('username')"
         :aria-label="$tr('username')"
+        :invalid="usernameError"
         v-model="username"
         autocomplete="username"
         required
@@ -42,15 +47,16 @@
         :placeholder="$tr('confirmPassword')"
         :aria-label="$tr('confirmPassword')"
         :label="$tr('confirmPassword')"
+        :invalid="!passwordsMatch"
+        :error="passwordError "
         v-model="confirmed_password"
         autocomplete="new-password"
         required />
 
-      <icon-button id="submit" :primary="true" text="Finish" type="submit" />
-
-      <p v-if="signUpError" class="signup-error">{{ $tr('signUpError') }}</p>
-
       <!-- Need terms of service thing -->
+
+      <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
+
     </form>
 
   </div>
@@ -74,11 +80,40 @@
       password: 'Password',
       enterPassword: 'Enter Password',
       confirmPassword: 'Confirm Password',
-      signUpError: 'That username already exists. Try a different username.',
+      passwordMatchError: 'Passwords do not match',
+      genericError: 'Something went wrong during sign up!',
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
+      'ui-alert': require('keen-ui/src/UiAlert'),
       'ui-textbox': require('keen-ui/src/UiTextbox'),
+    },
+    computed: {
+      passwordsMatch() {
+        // make sure both fields are populated
+        if (this.password && this.confirmed_password) {
+          return this.password === this.confirmed_password;
+        }
+        return true;
+      },
+      passwordError() {
+        if (this.passwordsMatch) {
+          return '';
+        }
+        return this.$tr('passwordMatchError');
+      },
+      usernameError() {
+        return this.errorCode === 400;
+      },
+      allFieldsPopulated() {
+        return !(this.name && this.username && this.password && this.confirmed_password);
+      },
+      canSubmit() {
+        return !!this.allFieldsPopulated || !!this.passwordError || this.busy;
+      },
+      errorMessage() {
+        return this.backendErrorMessage || this.$tr('genericError');
+      },
     },
     data: () => ({
       name: '',
@@ -97,10 +132,14 @@
     },
     vuex: {
       getters: {
-        signUpError: state => state.core.signUpError === 400,
+        session: state => state.core.session,
+        errorCode: state => state.pageState.errorCode,
+        busy: state => state.pageState.busy,
+        backendErrorMessage: state => state.pageState.errorMessage,
       },
       actions: {
         signUpAction: actions.signUp,
+        resetSignUpState: actions.resetSignUpState,
       },
     },
   };

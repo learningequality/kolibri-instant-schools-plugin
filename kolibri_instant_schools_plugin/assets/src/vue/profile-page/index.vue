@@ -12,8 +12,7 @@
         :invalid="error"
         :error="errorMessage"
         :label="$tr('username')"
-        :disabled="busy"
-        v-model="username"
+        disabled
         autocomplete="username"
         id="username"
         type="text" />
@@ -79,16 +78,14 @@
       },
       submitWidth() {
         const width = this.widthMultiplier.submit * this.windowSize.width;
-        const fieldWidth = this.widthMultiplier.field * this.windowSize.width;
-        const margins = (fieldWidth - width) / 2;
         return {
           width: `${width}px`,
-          margin: `0 ${margins}px 0 ${margins}px`,
         };
       },
       fieldWidth() {
+        const width = this.widthMultiplier.field * this.windowSize.width;
         return {
-          width: `${this.widthMultiplier.field * this.windowSize.width}px`,
+          width: `${width}px`,
         };
       },
       widthMultiplier() {
@@ -153,14 +150,15 @@
   $vertical-page-margin = 100px
 
   .content
-    margin-top: $vertical-page-margin
+    padding-top: $vertical-page-margin
     margin-left: auto
     margin-right: auto
+    overflow-y: auto
 
   #submit
-    display: block
-    position: absolute
-    bottom: $vertical-page-margin
+    margin-left: auto
+    margin-right: auto
+    margin-top: $vertical-page-margin
 
   .advanced-option
     color: $core-action-light

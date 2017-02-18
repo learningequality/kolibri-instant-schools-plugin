@@ -9,6 +9,6 @@ recursive-include kolibri_instant_schools_plugin/static *.*
 recursive-include kolibri_instant_schools_plugin/templates *.*
 recursive-include kolibri_instant_schools_plugin/* *.js
 recursive-include kolibri_instant_schools_plugin/ *.py
-recursive-include kolibri_instant_schools_plugin/templates *.*
+recursive-include kolibri_instant_schools_plugin/templatetags *.*
 recursive-include kolibri_instant_schools_plugin/assets/src *.*
 

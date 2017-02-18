@@ -28,7 +28,7 @@
 
         <p v-if="loginError" class="sign-in-error">{{ $tr('signInError') }}</p>
       </form>
-      <router-link class="login-text" id="password-reset" :to="signUp">{{ $tr('resetPassword') }}</router-link>
+      <span id="password-reset">{{ $tr('resetPassword') }}</span>
       <div id="divid-line"></div>
 
       <p class="login-text no-account">{{ $tr('noAccount') }}</p>
@@ -195,6 +195,8 @@
     margin: auto
     margin-top: 26px
     font-size: 0.8em
+    color: $login-text
+    text-decoration: underline
 
   #divid-line
     width: 412px

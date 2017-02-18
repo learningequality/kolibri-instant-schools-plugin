@@ -8,11 +8,11 @@
         <ui-autocomplete
           :label="$tr('username')"
           id="username"
-          type="text"
+          type="tel"
           :placeholder="$tr('enterUsername')"
           :aria-label="$tr('username')"
           v-model="username"
-          autocomplete="username"
+          autocomplete="tel"
           required
           autofocus/>
         <ui-autocomplete
@@ -104,7 +104,7 @@
 
   $login-overlay = #201A21
   $login-text = #D8D8D8
-  
+
   .login
     background-color: $login-overlay
     height: 100%

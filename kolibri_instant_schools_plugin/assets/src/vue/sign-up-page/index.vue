@@ -1,8 +1,8 @@
 <template>
 
-  <div :style="pageHeight" class="signup-page">
+  <div class="signup-page">
 
-    <form class="signup-form" :style="wideWidth" ref="form" @submit.prevent="signUp">
+    <form class="signup-form" ref="form" @submit.prevent="signUp">
       <h1 class="signup-title">{{ $tr('createAccount') }}</h1>
 
       <ui-textbox
@@ -61,7 +61,6 @@
 <script>
 
   const actions = require('../../actions');
-  const responsiveWindow = require('kolibri.coreVue.mixins.responsiveWindow');
 
   module.exports = {
     name: 'Sign-Up-Page',
@@ -80,20 +79,6 @@
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
       'ui-textbox': require('keen-ui/src/UiTextbox'),
-    },
-    computed: {
-      wideWidth() {
-        const width = 0.25 * this.windowSize.width;
-        return {
-          width: `${width}px`,
-        };
-      },
-      pageHeight() {
-        const height = this.windowSize.height;
-        return {
-          height: `${height}px`,
-        };
-      },
     },
     data: () => ({
       name: '',
@@ -118,7 +103,6 @@
         signUpAction: actions.signUp,
       },
     },
-    mixins: [responsiveWindow],
   };
 
 </script>
@@ -127,10 +111,11 @@
 <style lang="stylus" scoped>
 
   @require '~kolibri.styles.definitions'
-
+  $iphone-5-width = 320px
   .signup-page
     position: relative
     width: 100%
+    height: 100%
 
   .signup-title
     text-align: center
@@ -140,6 +125,7 @@
     position: absolute
     top: 50%
     left: 50%
+    width: ($iphone-5-width - 20)px
     transform: translate(-50%, -50%)
 
   #submit

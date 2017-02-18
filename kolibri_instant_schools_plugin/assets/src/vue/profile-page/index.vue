@@ -44,7 +44,6 @@
 <script>
 
   const actions = require('../../actions');
-  const responsiveWindow = require('kolibri.coreVue.mixins.responsiveWindow');
 
   module.exports = {
     name: 'profile-page',
@@ -138,7 +137,6 @@
         resetProfileState: actions.resetProfileState,
       },
     },
-    mixins: [responsiveWindow],
   };
 
 </script>

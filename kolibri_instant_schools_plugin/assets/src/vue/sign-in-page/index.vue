@@ -5,7 +5,7 @@
       <img class="logo" src="../img/instant-school-logo.png" alt="logo">
       <h1 class="login-text title">{{ $tr('instantSchool') }}</h1>
       <form id="login-form" ref="form" @submit.prevent="signIn">
-        <ui-autocomplete
+        <ui-textbox
           :label="$tr('username')"
           id="username"
           type="tel"
@@ -68,7 +68,6 @@
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
-      'ui-autocomplete': require('keen-ui/src/UiAutocomplete'),
       'ui-textbox': require('keen-ui/src/UiTextbox'),
     },
     data: () => ({
@@ -108,13 +107,11 @@
 
   #login-container
     .ui-
-      &autocomplete__, &textbox__
+      &textbox__
         &label-text
           color: $login-text
         &input
           border-bottom-color: $login-text
-          color: $login-text
-        &clear-button
           color: $login-text
       &button
         background-color: $login-red

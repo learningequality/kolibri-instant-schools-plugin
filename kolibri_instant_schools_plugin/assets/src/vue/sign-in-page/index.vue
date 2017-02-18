@@ -8,11 +8,11 @@
         <ui-autocomplete
           :label="$tr('username')"
           id="username"
-          type="text"
+          type="tel"
           :placeholder="$tr('enterUsername')"
           :aria-label="$tr('username')"
           v-model="username"
-          autocomplete="username"
+          autocomplete="tel"
           required
           autofocus/>
         <ui-autocomplete
@@ -36,7 +36,7 @@
         <router-link class="group-btn" :to="signUp">
           <icon-button :text="$tr('createAccount')" :primary="true"></icon-button>
         </router-link>
-        <a class="group-btn" href="/">
+        <a class="group-btn" href="/learn">
           <icon-button :text="$tr('accessAsGuest')" :primary="false"></icon-button>
         </a>
       </div>
@@ -102,6 +102,9 @@
 
 <style lang="stylus" scoped>
 
+  $login-overlay = #201A21
+  $login-text = #D8D8D8
+
   .login
     background-color: $login-overlay
     height: 100%
@@ -157,6 +160,7 @@
   .group-btn
     padding: 5px
     display: inline-block
+    text-decoration: none
 
   #password-reset
     display: block

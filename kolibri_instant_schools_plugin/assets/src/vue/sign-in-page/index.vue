@@ -5,7 +5,7 @@
       <img class="logo" src="../img/instant-school-logo.png" alt="logo">
       <h1 class="login-text title">{{ $tr('instantSchool') }}</h1>
       <form id="login-form" ref="form" @submit.prevent="signIn">
-        <ui-autocomplete
+        <ui-textbox
           :label="$tr('username')"
           id="username"
           type="tel"
@@ -15,7 +15,7 @@
           autocomplete="tel"
           required
           autofocus/>
-        <ui-autocomplete
+        <ui-textbox
           :label="$tr('password')"
           id="password"
           type="password"
@@ -28,7 +28,7 @@
 
         <p v-if="loginError" class="sign-in-error">{{ $tr('signInError') }}</p>
       </form>
-      <router-link class="login-text" id="password-reset" :to="signUp">{{ $tr('resetPassword') }}</router-link>
+      <span id="password-reset">{{ $tr('resetPassword') }}</span>
       <div id="divid-line"></div>
 
       <p class="login-text no-account">{{ $tr('noAccount') }}</p>
@@ -68,7 +68,7 @@
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
-      'ui-autocomplete': require('keen-ui/src/UiAutocomplete'),
+      'ui-textbox': require('keen-ui/src/UiTextbox'),
     },
     data: () => ({
       username: '',
@@ -107,7 +107,7 @@
 
   #login-container
     .ui-
-      &autocomplete__
+      &textbox__
         &label-text
           color: $login-text
         &input
@@ -192,11 +192,14 @@
     margin: auto
     margin-top: 26px
     font-size: 0.8em
+    color: $login-text
+    text-decoration: underline
 
   #divid-line
     width: 412px
     height: 1px
     background-color: $core-text-annotation
+    background-color: $login-text
     margin: auto
     margin-top: 16px
 

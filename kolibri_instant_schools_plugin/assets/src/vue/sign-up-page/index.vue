@@ -1,6 +1,6 @@
 <template>
 
-  <div class="signup-page">
+  <div id="signup-page">
 
     <ui-toolbar type="colored" textColor="white">
       <template slot="icon">
@@ -16,65 +16,67 @@
       </div>
     </ui-toolbar>
 
-    <form class="signup-form" ref="form" @submit.prevent="signUp">
-      <ui-alert type="error" @dismiss="resetSignUpState" v-if="errorCode">
-        {{errorMessage}}
-      </ui-alert>
+    <div class="signup-content">
+      <form class="signup-form" ref="form" @submit.prevent="signUp">
+        <ui-alert type="error" @dismiss="resetSignUpState" v-if="errorCode">
+          {{errorMessage}}
+        </ui-alert>
 
-      <h1 class="signup-title">{{ $tr('createAccount') }}</h1>
+        <h1 class="signup-title">{{ $tr('createAccount') }}</h1>
 
-      <ui-textbox
-        :placeholder="$tr('enterName')"
-        :label="$tr('name')"
-        :aria-label="$tr('name')"
-        v-model="name"
-        autocomplete="name"
-        autofocus
-        required
-        id="name"
-        type="text" />
+        <ui-textbox
+          :placeholder="$tr('enterName')"
+          :label="$tr('name')"
+          :aria-label="$tr('name')"
+          v-model="name"
+          autocomplete="name"
+          autofocus
+          required
+          id="name"
+          type="text" />
 
-      <ui-textbox
-        :placeholder="$tr('enterUsername')"
-        :label="$tr('username')"
-        :aria-label="$tr('username')"
-        :invalid="usernameError"
-        v-model="username"
-        autocomplete="username"
-        required
-        id="username"
-        type="text" />
+        <ui-textbox
+          :placeholder="$tr('enterUsername')"
+          :label="$tr('username')"
+          :aria-label="$tr('username')"
+          :invalid="usernameError"
+          v-model="username"
+          autocomplete="username"
+          required
+          id="username"
+          type="text" />
 
-      <ui-textbox
-        id="password"
-        type="password"
-        :placeholder="$tr('enterPassword')"
-        :aria-label="$tr('password')"
-        :label="$tr('password')"
-        v-model="password"
-        autocomplete="new-password"
-        required />
+        <ui-textbox
+          id="password"
+          type="password"
+          :placeholder="$tr('enterPassword')"
+          :aria-label="$tr('password')"
+          :label="$tr('password')"
+          v-model="password"
+          autocomplete="new-password"
+          required />
 
-      <ui-textbox
-        id="confirmed-password"
-        type="password"
-        :placeholder="$tr('confirmPassword')"
-        :aria-label="$tr('confirmPassword')"
-        :label="$tr('confirmPassword')"
-        :invalid="!passwordsMatch"
-        :error="passwordError "
-        v-model="confirmed_password"
-        autocomplete="new-password"
-        required />
+        <ui-textbox
+          id="confirmed-password"
+          type="password"
+          :placeholder="$tr('confirmPassword')"
+          :aria-label="$tr('confirmPassword')"
+          :label="$tr('confirmPassword')"
+          :invalid="!passwordsMatch"
+          :error="passwordError "
+          v-model="confirmed_password"
+          autocomplete="new-password"
+          required />
 
-        <ui-checkbox v-model="termAgreement" required>
-          I agree to the <a href="#">terms of service & privacy policy</a>
-        </ui-checkbox>
+          <ui-checkbox v-model="termAgreement" required>
+            I agree to the <span class="terms-of-service-link">terms of service & privacy policy</span>
+          </ui-checkbox>
 
-      <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
+        <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
 
-    </form>
+      </form>
 
+    </div>
   </div>
 
 </template>
@@ -174,7 +176,7 @@
 
   @require '~kolibri.styles.definitions'
   $iphone-5-width = 320px
-  .signup-page
+  .signup-content
     position: relative
     width: 100%
     height: 100%
@@ -209,5 +211,8 @@
     margin-right: auto
     display: block
     margin-top: 4em
+
+  .terms-of-service-link
+    text-decoration: underline
 
 </style>

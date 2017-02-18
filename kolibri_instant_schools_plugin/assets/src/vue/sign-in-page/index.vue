@@ -15,7 +15,7 @@
           autocomplete="tel"
           required
           autofocus/>
-        <ui-autocomplete
+        <ui-textbox
           :label="$tr('password')"
           id="password"
           type="password"
@@ -69,6 +69,7 @@
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
       'ui-autocomplete': require('keen-ui/src/UiAutocomplete'),
+      'ui-textbox': require('keen-ui/src/UiTextbox'),
     },
     data: () => ({
       username: '',
@@ -107,7 +108,7 @@
 
   #login-container
     .ui-
-      &autocomplete__
+      &autocomplete__, &textbox__
         &label-text
           color: $login-text
         &input

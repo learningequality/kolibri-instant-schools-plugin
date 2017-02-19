@@ -177,7 +177,6 @@
   @require '~kolibri.styles.definitions'
   $iphone-5-width = 320px
   .signup-content
-    position: relative
     width: 100%
     height: 100%
     overflow-y: auto

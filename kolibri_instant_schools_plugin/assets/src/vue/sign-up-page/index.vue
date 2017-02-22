@@ -16,67 +16,65 @@
       </div>
     </ui-toolbar>
 
-    <div class="signup-content">
-      <form class="signup-form" ref="form" @submit.prevent="signUp">
-        <ui-alert type="error" @dismiss="resetSignUpState" v-if="errorCode">
-          {{errorMessage}}
-        </ui-alert>
+    <form class="signup-form" ref="form" @submit.prevent="signUp">
+      <ui-alert type="error" @dismiss="resetSignUpState" v-if="errorCode">
+        {{errorMessage}}
+      </ui-alert>
 
-        <h1 class="signup-title">{{ $tr('createAccount') }}</h1>
+      <h1 class="signup-title">{{ $tr('createAccount') }}</h1>
 
-        <ui-textbox
-          :placeholder="$tr('enterName')"
-          :label="$tr('name')"
-          :aria-label="$tr('name')"
-          v-model="name"
-          autocomplete="name"
-          autofocus
-          required
-          id="name"
-          type="text" />
+      <ui-textbox
+        :placeholder="$tr('enterName')"
+        :label="$tr('name')"
+        :aria-label="$tr('name')"
+        v-model="name"
+        autocomplete="name"
+        autofocus
+        required
+        id="name"
+        type="text" />
 
-        <ui-textbox
-          :placeholder="$tr('enterUsername')"
-          :label="$tr('username')"
-          :aria-label="$tr('username')"
-          :invalid="usernameError"
-          v-model="username"
-          autocomplete="username"
-          required
-          id="username"
-          type="text" />
+      <ui-textbox
+        :placeholder="$tr('enterUsername')"
+        :label="$tr('username')"
+        :aria-label="$tr('username')"
+        :invalid="usernameError"
+        v-model="username"
+        autocomplete="username"
+        required
+        id="username"
+        type="text" />
 
-        <ui-textbox
-          id="password"
-          type="password"
-          :placeholder="$tr('enterPassword')"
-          :aria-label="$tr('password')"
-          :label="$tr('password')"
-          v-model="password"
-          autocomplete="new-password"
-          required />
+      <ui-textbox
+        id="password"
+        type="password"
+        :placeholder="$tr('enterPassword')"
+        :aria-label="$tr('password')"
+        :label="$tr('password')"
+        v-model="password"
+        autocomplete="new-password"
+        required />
 
-        <ui-textbox
-          id="confirmed-password"
-          type="password"
-          :placeholder="$tr('confirmPassword')"
-          :aria-label="$tr('confirmPassword')"
-          :label="$tr('confirmPassword')"
-          :invalid="!passwordsMatch"
-          :error="passwordError "
-          v-model="confirmed_password"
-          autocomplete="new-password"
-          required />
+      <ui-textbox
+        id="confirmed-password"
+        type="password"
+        :placeholder="$tr('confirmPassword')"
+        :aria-label="$tr('confirmPassword')"
+        :label="$tr('confirmPassword')"
+        :invalid="!passwordsMatch"
+        :error="passwordError "
+        v-model="confirmed_password"
+        autocomplete="new-password"
+        required />
 
-          <ui-checkbox v-model="termAgreement" required>
-            I agree to the <span class="terms-of-service-link">terms of service & privacy policy</span>
-          </ui-checkbox>
+        <ui-checkbox v-model="termAgreement" required>
+          I agree to the <span class="terms-of-service-link">terms of service & privacy policy</span>
+        </ui-checkbox>
 
-        <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
+      <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
 
-      </form>
+    </form>
 
-    </div>
   </div>
 
 </template>
@@ -94,8 +92,8 @@
       createAccount: 'Create an Account',
       name: 'Name',
       enterName: 'Enter Name',
-      username: 'Username',
-      enterUsername: 'Enter Username',
+      username: 'Phone Number',
+      enterUsername: 'Enter Phone Number',
       password: 'Password',
       enterPassword: 'Enter Password',
       confirmPassword: 'Confirm Password',
@@ -176,20 +174,21 @@
 
   @require '~kolibri.styles.definitions'
   $iphone-5-width = 320px
-  .signup-content
+  $vertical-page-margin = 100px
+
+  #signup-page
     width: 100%
     height: 100%
     overflow-y: auto
 
+  .signup-form
+    margin-top: $vertical-page-margin
+    margin-left: auto
+    margin-right: auto
+    width: ($iphone-5-width - 20)px
+
   .signup-title
     text-align: center
-
-  .signup-form
-    position: absolute
-    top: 50%
-    left: 50%
-    width: ($iphone-5-width - 20)px
-    transform: translate(-50%, -50%)
 
   #logo
     // 1.63 * font height
@@ -206,10 +205,9 @@
 
   #submit
     width: 90%
-    margin-left: auto
-    margin-right: auto
     display: block
-    margin-top: 4em
+    margin-top: $vertical-page-margin
+    margin-bottom: $vertical-page-margin
 
   .terms-of-service-link
     text-decoration: underline

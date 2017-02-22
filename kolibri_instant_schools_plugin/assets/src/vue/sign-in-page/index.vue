@@ -113,6 +113,8 @@
         &input
           border-bottom-color: $login-text
           color: $login-text
+          &:autofill
+            background-color: transparent
       &button
         background-color: $login-red
 

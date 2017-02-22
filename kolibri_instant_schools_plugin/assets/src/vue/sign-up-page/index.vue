@@ -16,67 +16,90 @@
       </div>
     </ui-toolbar>
 
-    <div class="signup-content">
-      <form class="signup-form" ref="form" @submit.prevent="signUp">
-        <ui-alert type="error" @dismiss="resetSignUpState" v-if="errorCode">
-          {{errorMessage}}
-        </ui-alert>
+    <form class="signup-form" ref="form" @submit.prevent="signUp">
+      <ui-alert type="error" @dismiss="resetSignUpState" v-if="errorCode">
+        {{errorMessage}}
+      </ui-alert>
 
-        <h1 class="signup-title">{{ $tr('createAccount') }}</h1>
+      <h1 class="signup-title">{{ $tr('createAccount') }}</h1>
 
-        <ui-textbox
-          :placeholder="$tr('enterName')"
-          :label="$tr('name')"
-          :aria-label="$tr('name')"
-          v-model="name"
-          autocomplete="name"
-          autofocus
-          required
-          id="name"
-          type="text" />
+      <ui-textbox
+        :placeholder="$tr('enterName')"
+        :label="$tr('name')"
+        :aria-label="$tr('name')"
+        v-model="name"
+        autocomplete="name"
+        autofocus
+        required
+        id="name"
+        type="text" />
 
-        <ui-textbox
-          :placeholder="$tr('enterUsername')"
-          :label="$tr('username')"
-          :aria-label="$tr('username')"
-          :invalid="usernameError"
-          v-model="username"
-          autocomplete="username"
-          required
-          id="username"
-          type="text" />
+      <ui-textbox
+        :placeholder="$tr('enterUsername')"
+        :label="$tr('username')"
+        :aria-label="$tr('username')"
+        :invalid="usernameError"
+        v-model="username"
+        autocomplete="username"
+        required
+        id="username"
+        type="text" />
 
-        <ui-textbox
-          id="password"
-          type="password"
-          :placeholder="$tr('enterPassword')"
-          :aria-label="$tr('password')"
-          :label="$tr('password')"
-          v-model="password"
-          autocomplete="new-password"
-          required />
+      <ui-textbox
+        id="password"
+        type="password"
+        :placeholder="$tr('enterPassword')"
+        :aria-label="$tr('password')"
+        :label="$tr('password')"
+        v-model="password"
+        autocomplete="new-password"
+        required />
 
-        <ui-textbox
-          id="confirmed-password"
-          type="password"
-          :placeholder="$tr('confirmPassword')"
-          :aria-label="$tr('confirmPassword')"
-          :label="$tr('confirmPassword')"
-          :invalid="!passwordsMatch"
-          :error="passwordError "
-          v-model="confirmed_password"
-          autocomplete="new-password"
-          required />
+      <ui-textbox
+        id="confirmed-password"
+        type="password"
+        :placeholder="$tr('confirmPassword')"
+        :aria-label="$tr('confirmPassword')"
+        :label="$tr('confirmPassword')"
+        :invalid="!passwordsMatch"
+        :error="passwordError "
+        v-model="confirmed_password"
+        autocomplete="new-password"
+        required />
 
-          <ui-checkbox v-model="termAgreement" required>
-            I agree to the <span class="terms-of-service-link">terms of service & privacy policy</span>
-          </ui-checkbox>
 
-        <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
+      <div class="terms">
+        <small>
+          <p>
+            1. Terms of Service: By accessing the application Kolibri you are
+            agreeing to be bound by these terms of service, all applicable laws and
+            regulations, and agree that you are responsible for compliance with any
+            applicable local laws.
+            <br>
+            <em>
+              Note: Complete Terms to follow preliminary testing period.
+            </em>
+          </p>
+          <p>
+            2. Privacy policy: By accessing the application Kolibri you acknowledge
+            the use of this platform and how data are collected, used, and shared
+            between Learning Equality and Vodafone Foundation.
+            <br>
+            <em>
+              Note: Complete Privacy Notice to follow preliminary testing period.
+            </em>
+          </p>
+        </small>
+      </div>
 
-      </form>
+      <ui-checkbox v-model="termsAgreement" required>
+        {{$tr('termsAgreement')}}
+      </ui-checkbox>
 
-    </div>
+      <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
+
+    </form>
+
   </div>
 
 </template>
@@ -94,13 +117,14 @@
       createAccount: 'Create an Account',
       name: 'Name',
       enterName: 'Enter Name',
-      username: 'Username',
-      enterUsername: 'Enter Username',
+      username: 'Phone Number',
+      enterUsername: 'Enter Phone Number',
       password: 'Password',
       enterPassword: 'Enter Password',
       confirmPassword: 'Confirm Password',
       passwordMatchError: 'Passwords do not match',
       genericError: 'Something went wrong during sign up!',
+      termsAgreement: 'I agree to the terms of service & privacy policy',
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
@@ -114,7 +138,7 @@
       username: '',
       password: '',
       confirmed_password: '',
-      termAgreement: false,
+      termsAgreement: false,
     }),
     computed: {
       signInPage() {
@@ -140,7 +164,7 @@
         return !(this.name && this.username && this.password && this.confirmed_password);
       },
       canSubmit() {
-        return !this.termAgreement || this.allFieldsPopulated || !this.passwordsMatch || this.busy;
+        return !this.termsAgreement || this.allFieldsPopulated || !this.passwordsMatch || this.busy;
       },
       errorMessage() {
         return this.backendErrorMessage || this.$tr('genericError');
@@ -176,25 +200,19 @@
 
   @require '~kolibri.styles.definitions'
   $iphone-5-width = 320px
-  .signup-content
+  $vertical-page-margin = 100px
+  $logo-size = (1.64 * 1.125)rem
+  $logo-margin = (0.38 * $logo-size)rem
+
+  // component, highest level
+  #signup-page
     width: 100%
     height: 100%
     overflow-y: auto
 
-  .signup-title
-    text-align: center
-
-  .signup-form
-    position: absolute
-    top: 50%
-    left: 50%
-    width: ($iphone-5-width - 20)px
-    transform: translate(-50%, -50%)
-
+  // Action Bar
   #logo
     // 1.63 * font height
-    $logo-size = (1.64 * 1.125)rem
-    $logo-margin = (0.38 * $logo-size)rem
     height: $logo-size
     display: inline-block
     margin-left: $logo-margin
@@ -204,14 +222,33 @@
     color: white
     text-decoration: none
 
-  #submit
-    width: 90%
+  // Form
+  .signup-title
+    text-align: center
+
+  .signup-form
+    margin-top: $vertical-page-margin
     margin-left: auto
     margin-right: auto
-    display: block
-    margin-top: 4em
+    width: ($iphone-5-width - 20)px
 
-  .terms-of-service-link
-    text-decoration: underline
+  .terms
+    background-color: $core-bg-light
+    color: $core-text-annotation
+    height: 6em
+    overflow-y: scroll
+    padding: 0.5em
+    margin-bottom: 1em
+    p
+      margin-top: 0
+
+  #submit
+    width: 90%
+    display: block
+    margin-left: auto
+    margin-right: auto
+
+    margin-top: $vertical-page-margin
+    margin-bottom: $vertical-page-margin
 
 </style>

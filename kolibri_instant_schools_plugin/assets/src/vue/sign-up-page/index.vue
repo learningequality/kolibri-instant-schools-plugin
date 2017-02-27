@@ -43,7 +43,7 @@
         autocomplete="username"
         required
         id="username"
-        type="text" />
+        type="number" />
 
       <ui-textbox
         id="password"
@@ -58,7 +58,7 @@
       <ui-textbox
         id="confirmed-password"
         type="password"
-        :placeholder="$tr('confirmPassword')"
+        :placeholder="$tr('confirmPasswordPlaceholder')"
         :aria-label="$tr('confirmPassword')"
         :label="$tr('confirmPassword')"
         :invalid="!passwordsMatch"
@@ -122,6 +122,7 @@
       password: 'Password',
       enterPassword: 'Enter Password',
       confirmPassword: 'Confirm Password',
+      confirmPasswordPlaceholder: 'Enter Password Again',
       passwordMatchError: 'Passwords do not match',
       genericError: 'Something went wrong during sign up!',
       termsAgreement: 'I agree to the terms of service & privacy policy',

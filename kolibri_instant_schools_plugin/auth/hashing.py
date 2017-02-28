@@ -6,17 +6,14 @@ import uuid
 
 from datetime import datetime
 
-try:
-    from functools import lru_cache
-except ImportError:
-    from backports.functools_lru_cache import lru_cache
-
 from django.conf import settings
 
 
 REVERSE_LOOKUP_DB_PATH = os.path.join(settings.KOLIBRI_HOME, "phonehashreverselookup.db")
 SALT_FILE_PATH = os.path.join(settings.KOLIBRI_HOME, "phonehashsalt.txt")
 
+CACHED_LOOKUP = {}
+SALT = None
 
 class ReverseLookupCursor(object):
 
@@ -42,7 +39,6 @@ def normalize_phone_number(phone):
     return re.sub("\D", "", str(phone))
 
 
-@lru_cache(maxsize=5000)
 def get_hash_value(phone):
     """Calculate the hashed + salted value for a phone number, or retrieve from DB if it already exists."""
     
@@ -56,6 +52,10 @@ def get_hash_value(phone):
     # normalize the phone number to only digits
     phone = normalize_phone_number(phone)
 
+    # check whether we've already cached it, and just use that
+    if phone in CACHED_LOOKUP:
+        return CACHED_LOOKUP[phone]
+
     # try looking up the mapping in the reverse lookup DB, else calculate and insert
     with ReverseLookupCursor() as c:
         c.execute("SELECT hashval FROM lookup WHERE phone = ?", (phone,))
@@ -66,10 +66,13 @@ def get_hash_value(phone):
             hashval = hashlib.sha256(phone + get_salt()).hexdigest()[:30]
             c.execute("INSERT OR REPLACE INTO lookup (phone, hashval) VALUES (?, ?)", (phone, hashval))
             c.connection.commit()
+
+        # cache the value for later
+        CACHED_LOOKUP[phone] = hashval
+
         return hashval
 
 
-@lru_cache(maxsize=5000)
 def get_phone_number(hashval):
     """Look up the phone number for a specific hashval, from the reverse lookup database."""
     with ReverseLookupCursor() as c:
@@ -82,8 +85,10 @@ def get_phone_number(hashval):
             return hashval
 
 
-@lru_cache(maxsize=1)
 def get_salt():
+    global SALT
+    if SALT:
+        return SALT
     """Retrieve this installation's salt value from disk, or generate it if it doesn't yet exist."""
     try:
         with open(SALT_FILE_PATH) as f:
@@ -92,4 +97,5 @@ def get_salt():
         salt = uuid.uuid4().hex
         with open(SALT_FILE_PATH, "w") as f:
             f.write(salt)
+    SALT = salt
     return salt

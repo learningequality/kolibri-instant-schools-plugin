@@ -43,7 +43,7 @@
         autocomplete="username"
         required
         id="username"
-        type="number" />
+        type="text" />
 
       <ui-textbox
         id="password"

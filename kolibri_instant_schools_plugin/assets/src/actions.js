@@ -1,11 +1,14 @@
 const coreApp = require('kolibri');
 const FacilityUserResource = coreApp.resources.FacilityUserResource;
 const PageNames = require('./state/constants').PageNames;
-const PhoneNumberSignUpResource = new (require('./api-resources')
-                                       .PhoneNumberSignUpResource)(coreApp);
 const coreActions = require('kolibri.coreVue.vuex.actions');
 const coreGetters = require('kolibri.coreVue.vuex.getters');
 const router = require('kolibri.coreVue.router');
+
+coreApp.resources.registerResource("PhoneNumberSignUpResource",
+  require('./api-resources').PhoneNumberSignUpResource);
+
+const PhoneNumberSignUpResource = coreApp.resources.PhoneNumberSignUpResource;
 
 function redirectToHome() {
   window.location = '/';

@@ -1,11 +1,11 @@
 <template>
 
-  <div class="login">
-    <div id="login-container">
+  <div class="login-page">
+    <div id="login-content">
       <img class="logo" src="../img/instant-school-logo.png" alt="logo">
       <h1 class="login-text title">{{ $tr('instantSchool') }}</h1>
       <form id="login-form" ref="form" @submit.prevent="signIn">
-        <ui-textbox
+        <core-textbox
           :label="$tr('username')"
           id="username"
           type="tel"
@@ -15,7 +15,7 @@
           autocomplete="tel"
           required
           autofocus/>
-        <ui-textbox
+        <core-textbox
           :label="$tr('password')"
           id="password"
           type="password"
@@ -31,7 +31,7 @@
       <span id="password-reset">{{ $tr('resetPassword') }}</span>
       <div id="divid-line"></div>
 
-      <p class="login-text no-account">{{ $tr('noAccount') }}</p>
+      <h2 class="login-text no-account">{{ $tr('noAccount') }}</h2>
       <div id="btn-group">
         <router-link class="group-btn" :to="signUp">
           <icon-button id="signup-button" :text="$tr('createAccount')" :primary="true"></icon-button>
@@ -68,7 +68,7 @@
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
-      'ui-textbox': require('keen-ui/src/UiTextbox'),
+      'core-textbox': require('kolibri.coreVue.components.textbox'),
     },
     data: () => ({
       username: '',
@@ -105,7 +105,7 @@
   $login-text = #D8D8D8
   $login-red = #f44336
 
-  #login-container
+  #login-content
     .ui-
       &textbox__
         &label-text
@@ -130,84 +130,98 @@
 
   $login-overlay = #201A21
   $login-text = #D8D8D8
+  $login-section-margin = 25px
+  $title-size = 1.3em
 
-  .login
+  // wrappers
+  .login-page
     background-color: $login-overlay
     height: 100%
     background: url(../img/instant-background.jpg) no-repeat center center fixed
     background-size: cover
     overflow-y: auto
-    overflow-x: hidden
 
-  #login-container
+  #login-content
     display: block
-    margin: auto
+    margin-top: $login-section-margin
+    margin-left: auto
+    margin-right: auto
 
+
+  // Logo stuff
   .logo
-    position: relative
     display: block
-    margin: auto
-    margin-top: 34px
-    width: 30%
+    margin-left: auto
+    margin-right: auto
+    width: 20%
     max-width: 120px
-    min-width: 60px
+    min-width: 45px
+    margin-bottom: $login-section-margin
 
+    // All text on screen (excluding buttons, fields)
   .login-text
     color: $login-text
-
   .title
     font-weight: 100
-    font-size: 1.3em
+    font-size: $title-size
     letter-spacing: 0.1em
     text-align: center
+    margin-top: 0
+    margin-bottom: 30px
 
+  // form
   #login-form
     width: 70%
     max-width: 300px
-    margin: auto
-    margin-top: 30px
-
-  #password
-    margin-top: 30px
+    margin-left: auto
+    margin-right: auto
+    margin-bottom: $login-section-margin
 
   #login-btn
     display: block
     margin: auto
-    margin-top: 38px
     width: 100%
-
-  #btn-group
-    display: table
-    margin: auto
-    margin-top: 28px
-    margin-bottom: 20px
-    text-align: center
-
-  .group-btn
-    padding: 5px
-    display: inline-block
-    text-decoration: none
+    margin-bottom: $login-section-margin
 
   #password-reset
     display: block
     text-align: center
     margin: auto
-    margin-top: 26px
     font-size: 0.8em
     color: $login-text
     text-decoration: underline
+    margin-bottom: $login-section-margin
 
+  // seperator between login and accountless options
   #divid-line
     width: 412px
+    max-width: 90%
     height: 1px
     background-color: $core-text-annotation
     background-color: $login-text
-    margin: auto
-    margin-top: 16px
+    margin-left: auto
+    margin-right: auto
+    margin-bottom: $login-section-margin
 
+  // accountless options
   .no-account
     text-align: center
+    font-weight: normal
+    font-size: $title-size * 0.8
+    margin-top: 0
+    margin-bottom: $login-section-margin
+  #btn-group
+    display: table
+    margin-left: auto
+    margin-right: auto
+    margin-top: $login-section-margin
+    text-align: center
+  .group-btn
+    padding: 5px
+    display: inline-block
+    text-decoration: none
 
+  // error text
   .sign-in-error
     color: red
 

@@ -31,22 +31,20 @@
         autocomplete="name"
         autofocus
         required
-        id="name"
         type="text" />
 
       <core-textbox
-        :placeholder="$tr('enterUsername')"
-        :label="$tr('username')"
-        :aria-label="$tr('username')"
-        :invalid="usernameError"
-        v-model="username"
-        autocomplete="username"
+        :placeholder="$tr('enterPhoneNumber')"
+        :label="$tr('phoneNumber')"
+        :aria-label="$tr('phoneNumber')"
+        :invalid="phoneNumberError"
+        v-model="phoneNumber"
+        autocomplete="tel"
         required
-        id="username"
-        type="text" />
+        type="text">
+      </core-textbox>
 
       <core-textbox
-        id="password"
         type="password"
         :placeholder="$tr('enterPassword')"
         :aria-label="$tr('password')"
@@ -56,7 +54,6 @@
         required />
 
       <core-textbox
-        id="confirmed-password"
         type="password"
         :placeholder="$tr('confirmPassword')"
         :aria-label="$tr('confirmPassword')"
@@ -117,8 +114,8 @@
       createAccount: 'Create an Account',
       name: 'Name',
       enterName: 'Enter Name',
-      username: 'Phone Number',
-      enterUsername: 'Enter Phone Number',
+      phoneNumber: 'Phone Number',
+      enterPhoneNumber: 'Enter Phone Number',
       password: 'Password',
       enterPassword: 'Enter Password',
       confirmPassword: 'Confirm Password',
@@ -135,7 +132,7 @@
     },
     data: () => ({
       name: '',
-      username: '',
+      phoneNumber: '',
       password: '',
       confirmed_password: '',
       termsAgreement: false,
@@ -157,7 +154,7 @@
         }
         return this.$tr('passwordMatchError');
       },
-      usernameError() {
+      phoneNumberError() {
         return this.errorCode === 400;
       },
       allFieldsPopulated() {

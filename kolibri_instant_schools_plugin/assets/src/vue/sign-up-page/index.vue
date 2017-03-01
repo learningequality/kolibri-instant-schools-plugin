@@ -92,11 +92,13 @@
         </small>
       </div>
 
+      <!-- conditional error for password check -->
+
       <ui-checkbox v-model="termsAgreement" required>
         {{$tr('termsAgreement')}}
       </ui-checkbox>
 
-      <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
+      <icon-button :disabled="busy" id="submit" :primary="true" text="Finish" type="submit" />
 
     </form>
 
@@ -160,23 +162,21 @@
       usernameError() {
         return this.errorCode === 400;
       },
-      allFieldsPopulated() {
-        return !(this.name && this.username && this.password && this.confirmed_password);
-      },
-      canSubmit() {
-        return !this.termsAgreement || this.allFieldsPopulated || !this.passwordsMatch || this.busy;
-      },
       errorMessage() {
         return this.backendErrorMessage || this.$tr('genericError');
       },
     },
     methods: {
       signUp() {
-        this.signUpAction({
-          full_name: this.name,
-          username: this.username,
-          password: this.password,
-        });
+        if (this.passwordsMatch) {
+          const userPayload = {
+            full_name: this.name,
+            username: this.username,
+            password: this.password,
+          };
+          this.signUpAction(userPayload);
+        }
+        // error should already be visible
       },
     },
     vuex: {

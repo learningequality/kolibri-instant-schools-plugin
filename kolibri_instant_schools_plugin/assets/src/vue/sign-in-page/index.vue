@@ -151,9 +151,10 @@
   // Logo stuff
   .logo
     display: block
-    margin-left: auto
-    margin-right: auto
-    width: 20%
+    margin: auto
+    margin-top: 34px
+    width: 30%
+    height: auto
     max-width: 120px
     min-width: 45px
     margin-bottom: $login-section-margin

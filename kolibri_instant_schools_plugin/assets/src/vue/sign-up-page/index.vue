@@ -214,6 +214,7 @@
   #logo
     // 1.63 * font height
     height: $logo-size
+    width: auto
     display: inline-block
     margin-left: $logo-margin
 

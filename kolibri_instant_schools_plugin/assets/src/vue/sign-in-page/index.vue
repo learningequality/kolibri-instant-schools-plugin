@@ -149,6 +149,7 @@
     margin: auto
     margin-top: 34px
     width: 30%
+    height: auto
     max-width: 120px
     min-width: 60px
 

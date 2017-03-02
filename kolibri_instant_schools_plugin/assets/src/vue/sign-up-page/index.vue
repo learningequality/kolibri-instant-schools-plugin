@@ -43,8 +43,7 @@
         v-model="phoneNumber"
         autocomplete="tel"
         required
-        type="tel">
-      </core-textbox>
+        type="tel" />
 
       <core-textbox
         type="password"
@@ -118,12 +117,12 @@
       enterName: 'Enter name',
       phoneNumber: 'Phone number',
       enterPhoneNumber: 'Enter phone number',
-      phoneNumberInvalidError: 'Please enter a valid ten-digit phone number',
+      phoneNumberInvalidError: 'Please enter a valid 10-digit phone number',
       password: 'Password',
       enterPassword: 'Enter password',
       confirmPassword: 'Confirm password',
       passwordMatchError: 'Passwords do not match',
-      genericError: 'Something went wrong during sign up!',
+      genericError: 'Something went wrong during sign up',
       termsAgreement: 'I agree to the terms of service & privacy policy',
     },
     components: {

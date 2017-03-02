@@ -37,11 +37,12 @@
         :placeholder="$tr('enterPhoneNumber')"
         :label="$tr('phoneNumber')"
         :aria-label="$tr('phoneNumber')"
-        :invalid="phoneNumberError"
+        :error="phoneNumberError"
+        :invalid="!phoneNumberValid"
         v-model="phoneNumber"
         autocomplete="tel"
         required
-        type="text">
+        type="tel">
       </core-textbox>
 
       <core-textbox
@@ -116,6 +117,7 @@
       enterName: 'Enter name',
       phoneNumber: 'Phone number',
       enterPhoneNumber: 'Enter phone number',
+      phoneNumberInvalidError: 'Please enter a valid phone number',
       password: 'Password',
       enterPassword: 'Enter password',
       confirmPassword: 'Confirm password',
@@ -154,9 +156,23 @@
         }
         return this.$tr('passwordMatchError');
       },
+      phoneNumberValid() {
+        const fieldPopulated = this.phoneNumber !== '';
+        if (fieldPopulated) {
+          // this avoids any octal, hex, negatives, etc interpretations
+          const onlyDigits = /^([0-9]+)$/.test(this.phoneNumber);
+          const noBackendError = this.errorCode !== 400;
+          const validLength = !(this.phoneNumber.length > 10);
+          return onlyDigits && validLength && noBackendError;
+        }
+        // field hasn't been populated
+        return true;
+      },
       phoneNumberError() {
-
-        return this.errorCode === 400;
+        if (this.phoneNumberValid) {
+          return '';
+        }
+        return this.$tr('phoneNumberInvalidError');
       },
       allFieldsPopulated() {
         return !(this.name && this.username && this.password && this.confirmed_password);
@@ -170,11 +186,15 @@
     },
     methods: {
       signUp() {
-        this.signUpAction({
-          full_name: this.name,
-          username: this.username,
-          password: this.password,
-        });
+        if (this.passwordsMatch) {
+          const userPayload = {
+            full_name: this.name,
+            username: this.phoneNumber,
+            password: this.password,
+          };
+          this.signUpAction(userPayload);
+        }
+        // error should already be visible
       },
     },
     vuex: {

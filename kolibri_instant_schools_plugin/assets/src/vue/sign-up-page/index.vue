@@ -111,14 +111,14 @@
     name: 'Sign-Up-Page',
     $trNameSpace: 'signUpPage',
     $trs: {
-      createAccount: 'Create an Account',
+      createAccount: 'Create an account',
       name: 'Name',
-      enterName: 'Enter Name',
-      phoneNumber: 'Phone Number',
-      enterPhoneNumber: 'Enter Phone Number',
+      enterName: 'Enter name',
+      phoneNumber: 'Phone number',
+      enterPhoneNumber: 'Enter phone number',
       password: 'Password',
-      enterPassword: 'Enter Password',
-      confirmPassword: 'Confirm Password',
+      enterPassword: 'Enter password',
+      confirmPassword: 'Confirm password',
       passwordMatchError: 'Passwords do not match',
       genericError: 'Something went wrong during sign up!',
       termsAgreement: 'I agree to the terms of service & privacy policy',
@@ -155,6 +155,7 @@
         return this.$tr('passwordMatchError');
       },
       phoneNumberError() {
+
         return this.errorCode === 400;
       },
       allFieldsPopulated() {

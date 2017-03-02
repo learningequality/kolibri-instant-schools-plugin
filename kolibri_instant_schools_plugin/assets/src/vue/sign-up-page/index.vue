@@ -37,6 +37,7 @@
         :placeholder="$tr('enterPhoneNumber')"
         :label="$tr('phoneNumber')"
         :aria-label="$tr('phoneNumber')"
+        @blur="phoneNumberVisited=true"
         :error="phoneNumberError"
         :invalid="!phoneNumberValid"
         v-model="phoneNumber"
@@ -94,7 +95,7 @@
         {{$tr('termsAgreement')}}
       </ui-checkbox>
 
-      <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
+      <icon-button id="submit" :disabled="busy" :primary="true" text="Finish" type="submit" />
 
     </form>
 
@@ -117,7 +118,7 @@
       enterName: 'Enter name',
       phoneNumber: 'Phone number',
       enterPhoneNumber: 'Enter phone number',
-      phoneNumberInvalidError: 'Please enter a valid phone number',
+      phoneNumberInvalidError: 'Please enter a valid ten-digit phone number',
       password: 'Password',
       enterPassword: 'Enter password',
       confirmPassword: 'Confirm password',
@@ -136,6 +137,7 @@
       name: '',
       phoneNumber: '',
       password: '',
+      phoneNumberVisited: false,
       confirmed_password: '',
       termsAgreement: false,
     }),
@@ -158,14 +160,21 @@
       },
       phoneNumberValid() {
         const fieldPopulated = this.phoneNumber !== '';
-        if (fieldPopulated) {
+        const fieldVisited = this.phoneNumberVisited;
+        const lengthCheck = () => {
+          const strippedPhoneNumber = this.phoneNumber.replace(/\D/g, '');
+          if (fieldVisited) {
+            return strippedPhoneNumber.length === 10;
+          }
+          return strippedPhoneNumber.length <= 10;
+        };
+        if (fieldPopulated || fieldVisited) {
           // this avoids any octal, hex, negatives, etc interpretations
-          const onlyDigits = /^([0-9]+)$/.test(this.phoneNumber);
           const noBackendError = this.errorCode !== 400;
-          const validLength = !(this.phoneNumber.length > 10);
-          return onlyDigits && validLength && noBackendError;
+          const validLength = lengthCheck();
+          return validLength && noBackendError;
         }
-        // field hasn't been populated
+        // field hasn't been visited yet
         return true;
       },
       phoneNumberError() {
@@ -175,18 +184,20 @@
         return this.$tr('phoneNumberInvalidError');
       },
       allFieldsPopulated() {
-        return !(this.name && this.username && this.password && this.confirmed_password);
-      },
-      canSubmit() {
-        return !this.termsAgreement || this.allFieldsPopulated || !this.passwordsMatch || this.busy;
+        return !!(this.name && this.phoneNumber &&
+          this.password && this.confirmed_password &&
+          this.termsAgreement);
       },
       errorMessage() {
         return this.backendErrorMessage || this.$tr('genericError');
       },
     },
     methods: {
+      canSubmit() {
+        return this.allFieldsPopulated && this.passwordsMatch && !this.busy && this.phoneNumberValid;
+      },
       signUp() {
-        if (this.passwordsMatch) {
+        if (this.canSubmit()) {
           const userPayload = {
             full_name: this.name,
             username: this.phoneNumber,

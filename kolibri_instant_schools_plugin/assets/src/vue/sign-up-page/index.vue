@@ -67,9 +67,12 @@
         autocomplete="new-password"
         required />
 
+      <ui-checkbox v-model="termsAgreement" required>
+        <a href="#" @click.prevent="openTermsModal">{{$tr('termsAgreement')}}</a>
+      </ui-checkbox>
 
-      <div class="terms">
-        <small>
+      <ui-modal ref="termsModal" :title="$tr('termsOfService')" size="large">
+        <div class="terms">
           <p>
             1. Terms of Service: By accessing the application Kolibri you are
             agreeing to be bound by these terms of service, all applicable laws and
@@ -89,12 +92,8 @@
               Note: Complete Privacy Notice to follow preliminary testing period.
             </em>
           </p>
-        </small>
-      </div>
-
-      <ui-checkbox v-model="termsAgreement" required>
-        {{$tr('termsAgreement')}}
-      </ui-checkbox>
+        </div>
+      </ui-modal>
 
       <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
 
@@ -125,6 +124,7 @@
       passwordMatchError: 'Passwords do not match',
       genericError: 'Something went wrong during sign up!',
       termsAgreement: 'I agree to the terms of service & privacy policy',
+      termsOfService: 'Terms of service & privacy policy'
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
@@ -132,6 +132,7 @@
       'core-textbox': require('kolibri.coreVue.components.textbox'),
       'ui-toolbar': require('keen-ui/src/UiToolbar'),
       'ui-checkbox': require('keen-ui/src/UiCheckbox'),
+      'ui-modal': require('keen-ui/src/UiModal'),
     },
     data: () => ({
       name: '',
@@ -177,6 +178,9 @@
           username: this.username,
           password: this.password,
         });
+      },
+      openTermsModal() {
+        this.$refs.termsModal.open();
       },
     },
     vuex: {
@@ -234,14 +238,7 @@
     width: ($iphone-5-width - 20)px
 
   .terms
-    background-color: $core-bg-light
     color: $core-text-annotation
-    height: 6em
-    overflow-y: scroll
-    padding: 0.5em
-    margin-bottom: 1em
-    p
-      margin-top: 0
 
   #submit
     width: 90%

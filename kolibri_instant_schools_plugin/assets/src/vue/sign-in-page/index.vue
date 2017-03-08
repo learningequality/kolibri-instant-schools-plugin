@@ -28,7 +28,7 @@
 
         <p v-if="loginError" class="sign-in-error">{{ $tr('signInError') }}</p>
 
-        <a @click="openPasswordResetModal()" role="link" href="#" id="password-reset">
+        <a @click.prevent="openPasswordResetModal()" role="link" href="#" id="password-reset">
           {{ $tr('resetPassword') }}
         </a>
 

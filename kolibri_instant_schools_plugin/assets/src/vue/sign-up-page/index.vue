@@ -200,6 +200,17 @@
 </script>
 
 
+<style lang="stylus">
+
+  #signup-page
+    .ui-modal__
+      &container
+          max-height: 90vh
+          max-width: 90vw
+
+</style>
+
+
 <style lang="stylus" scoped>
 
   @require '~kolibri.styles.definitions'

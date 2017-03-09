@@ -140,6 +140,11 @@
           color: $login-text
           border: 2px solid $login-red
 
+      &modal__
+        &container
+            max-height: 90vh
+            max-width: 90vw
+
 </style>
 
 
@@ -212,7 +217,6 @@
     &-phone-number
       display: block
       text-align: center
-      font-size: 2em
 
   // seperator between login and accountless options
   #divid-line

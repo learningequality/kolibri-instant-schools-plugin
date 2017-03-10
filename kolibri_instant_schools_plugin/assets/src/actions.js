@@ -1,11 +1,16 @@
 const coreApp = require('kolibri');
 const PageNames = require('./state/constants').PageNames;
-const SignUpResource = require('kolibri').resources.SignUpResource;
 const coreActions = require('kolibri.coreVue.vuex.actions');
 const coreGetters = require('kolibri.coreVue.vuex.getters');
 const router = require('kolibri.coreVue.router');
 
 const FacilityUserResource = coreApp.resources.FacilityUserResource;
+
+coreApp.resources.registerResource(
+  'PhoneNumberSignUpResource',
+  require('./api-resources').PhoneNumberSignUpResource
+);
+const PhoneNumberSignUpResource = coreApp.resources.PhoneNumberSignUpResource;
 
 function redirectToHome() {
   window.location = '/';
@@ -146,7 +151,7 @@ function showSignUp(store) {
 }
 
 function signUp(store, signUpCreds) {
-  const signUpModel = SignUpResource.createModel(signUpCreds);
+  const signUpModel = PhoneNumberSignUpResource.createModel(signUpCreds);
   const signUpPromise = signUpModel.save(signUpCreds);
 
   store.dispatch('SET_SIGN_UP_BUSY', true);

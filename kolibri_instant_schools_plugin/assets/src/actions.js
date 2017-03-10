@@ -10,6 +10,7 @@ coreApp.resources.registerResource(
   'PhoneNumberSignUpResource',
   require('./api-resources').PhoneNumberSignUpResource
 );
+
 const PhoneNumberSignUpResource = coreApp.resources.PhoneNumberSignUpResource;
 
 function redirectToHome() {

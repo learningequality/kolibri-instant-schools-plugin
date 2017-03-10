@@ -152,12 +152,16 @@
         };
       },
       wrapperStyle() {
+        const numOptions = this.menuOptions.length - 1;
+        const heightOfOptions = numOptions * 50;
+        const footerAndDividerHeight = 173;
+        const logoHeight = !this.mobile ? this.width / 2.5 : 0;
         return {
           // Calculate min-height property by taking the number of options (minus the divider)
           // multipying by 50 for each option, adding 173 for the divider and the footer,
           // and finally adding this.width/2.5 for the non-mobile logo if needed.
-          minHeight: `${(this.menuOptions.length - 1) * 50 + 173 +
-          (!this.mobile ? this.width / 2.5 : 0)}px`,
+
+          minHeight: `${heightOfOptions + footerAndDividerHeight + logoHeight}px`,
           width: `${this.width}px`,
         };
       },
@@ -219,7 +223,7 @@
         options.push({
           type: 'divider',
         });
-        if (this.isUserLoggedIn & !this.isAdminOrSuperuser) {
+        if (this.isUserLoggedIn && !this.isAdminOrSuperuser) {
           options.push({
             label: this.$tr('profile'),
             disabled: this.profileActive,

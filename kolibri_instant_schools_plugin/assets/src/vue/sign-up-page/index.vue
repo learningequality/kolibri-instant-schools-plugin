@@ -164,18 +164,12 @@
       phoneNumberValid() {
         const fieldPopulated = this.phoneNumber !== '';
         const fieldVisited = this.phoneNumberVisited;
-        const lengthCheck = () => {
+        if (fieldPopulated || fieldVisited) {
           const strippedPhoneNumber = this.phoneNumber.replace(/\D/g, '');
           if (fieldVisited) {
             return strippedPhoneNumber.length === 10;
           }
           return strippedPhoneNumber.length <= 10;
-        };
-        if (fieldPopulated || fieldVisited) {
-          // this avoids any octal, hex, negatives, etc interpretations
-          const noBackendError = this.errorCode !== 400;
-          const validLength = lengthCheck();
-          return validLength && noBackendError;
         }
         // field hasn't been visited yet
         return true;

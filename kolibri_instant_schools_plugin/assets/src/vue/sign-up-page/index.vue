@@ -66,7 +66,7 @@
         required />
 
       <ui-checkbox v-model="termsAgreement" required>
-        <a href="#" @click.prevent="openTermsModal">{{$tr('termsAgreement')}}</a>
+        <a href="#" @click.prevent="openTermsModal" class="tos">{{$tr('termsAgreement')}}</a>
       </ui-checkbox>
 
       <ui-modal ref="termsModal" :title="$tr('termsOfService')" size="large">
@@ -240,7 +240,7 @@
 
   @require '~kolibri.styles.definitions'
   $iphone-5-width = 320px
-  $vertical-page-margin = 100px
+  $vertical-page-margin = 40px
   $logo-size = (1.64 * 1.125)rem
   $logo-margin = (0.38 * $logo-size)rem
 
@@ -284,5 +284,8 @@
 
     margin-top: $vertical-page-margin
     margin-bottom: $vertical-page-margin
+
+  .tos
+    font-size: smaller
 
 </style>

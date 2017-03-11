@@ -95,7 +95,7 @@
         </div>
       </ui-modal>
 
-      <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
+      <icon-button :disabled="!canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
 
     </form>
 
@@ -194,13 +194,13 @@
       errorMessage() {
         return this.backendErrorMessage || this.$tr('genericError');
       },
-    },
-    methods: {
       canSubmit() {
         return this.allFieldsPopulated && this.passwordsMatch && !this.busy && this.phoneNumberValid;
       },
+    },
+    methods: {
       signUp() {
-        if (this.canSubmit()) {
+        if (this.canSubmit) {
           const userPayload = {
             full_name: this.name,
             username: this.phoneNumber,

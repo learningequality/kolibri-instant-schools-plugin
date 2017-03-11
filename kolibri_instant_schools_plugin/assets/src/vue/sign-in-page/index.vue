@@ -27,8 +27,21 @@
         <icon-button id="login-btn" :text="$tr('signIn')" :primary="true" type="submit"></icon-button>
 
         <p v-if="loginError" class="sign-in-error">{{ $tr('signInError') }}</p>
+
+        <a @click.prevent="openPasswordResetModal()" role="link" href="#" id="password-reset">
+          {{ $tr('resetPassword') }}
+        </a>
+
       </form>
-      <span id="password-reset">{{ $tr('resetPassword') }}</span>
+      <ui-modal
+        :title="$tr('resetPassword')"
+        size="small"
+        ref="passwordResetModal">
+        <p>
+          This is a test. If you need to change you're password, please call:
+        </p>
+        <a id="password-reset-phone-number" href="tel:+1111111111">(XXX)-XXX-XXXX</a>
+      </ui-modal>
       <div id="divid-line"></div>
 
       <h2 class="login-text no-account">{{ $tr('noAccount') }}</h2>
@@ -69,6 +82,7 @@
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
       'core-textbox': require('kolibri.coreVue.components.textbox'),
+      'ui-modal': require('keen-ui/src/UiModal'),
     },
     data: () => ({
       username: '',
@@ -85,6 +99,9 @@
           username: this.username,
           password: this.password,
         });
+      },
+      openPasswordResetModal() {
+        this.$refs.passwordResetModal.open();
       },
     },
     vuex: {
@@ -122,6 +139,11 @@
           background-color: transparent
           color: $login-text
           border: 2px solid $login-red
+
+      &modal__
+        &container
+            max-height: 90vh
+            max-width: 90vw
 
 </style>
 
@@ -187,11 +209,14 @@
   #password-reset
     display: block
     text-align: center
-    margin: auto
+    margin-right: auto
+    margin-left: auto
     font-size: 0.8em
     color: $login-text
-    text-decoration: underline
     margin-bottom: $login-section-margin
+    &-phone-number
+      display: block
+      text-align: center
 
   // seperator between login and accountless options
   #divid-line

@@ -7,18 +7,6 @@
     <form @submit.prevent="submitEdits">
 
       <core-textbox
-        v-if="hasPrivilege('username')"
-        class="input-field"
-        :invalid="error"
-        :error="errorMessage"
-        :label="$tr('username')"
-        :value="session.username"
-        disabled
-        autocomplete="username"
-        id="username"
-        type="text" />
-
-      <core-textbox
         v-if="hasPrivilege('name')"
         class="input-field"
         :disabled="busy"
@@ -51,7 +39,6 @@
     $trs: {
       genericError: 'Something went wrong',
       success: 'Profile details updated!',
-      username: 'Username',
       name: 'Name',
       updateProfile: 'Update Profile',
     },
@@ -62,7 +49,6 @@
     },
     data() {
       return {
-        username: this.session.username,
         full_name: this.session.full_name,
       };
     },

@@ -118,7 +118,7 @@
       enterName: 'Enter name',
       phoneNumber: 'Phone number',
       enterPhoneNumber: 'Enter phone number',
-      phoneNumberInvalidError: 'Please enter a valid 10-digit phone number',
+      phoneNumberInvalidError: 'Please enter a valid phone number',
       password: 'Password',
       enterPassword: 'Enter password',
       confirmPassword: 'Confirm password',
@@ -162,14 +162,9 @@
         return this.$tr('passwordMatchError');
       },
       phoneNumberValid() {
-        const fieldPopulated = this.phoneNumber !== '';
-        const fieldVisited = this.phoneNumberVisited;
-        if (fieldPopulated || fieldVisited) {
+        if (this.phoneNumberVisited) {
           const strippedPhoneNumber = this.phoneNumber.replace(/\D/g, '');
-          if (fieldVisited) {
-            return strippedPhoneNumber.length === 10;
-          }
-          return strippedPhoneNumber.length <= 10;
+          return strippedPhoneNumber.length > 6;
         }
         // field hasn't been visited yet
         return true;

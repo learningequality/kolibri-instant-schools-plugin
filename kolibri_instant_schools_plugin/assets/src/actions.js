@@ -30,9 +30,10 @@ function showRoot(store) {
   });
 }
 
-function editProfile(store, edits, session) {
+function editProfile(store, edits) {
   // payload needs username, fullname, and facility
   // used to save changes to API
+  const session = store.state.core.session;
   const savedUserModel = FacilityUserResource.getModel(session.user_id);
   const changedValues = {};
 
@@ -43,9 +44,9 @@ function editProfile(store, edits, session) {
   if (edits.username && edits.username !== session.username) {
     changedValues.username = edits.username;
   }
-  // if (edits.password && edits.password !== session.password) {
-  //   changedValues.password = edits.password;
-  // }
+  if (edits.password && edits.password !== session.password) {
+    changedValues.password = edits.password;
+  }
 
   // check to see if anything's changed and conditionally add last requirement
   if (Object.keys(changedValues).length) {
@@ -93,6 +94,10 @@ function resetProfileState(store) {
   };
 
   store.dispatch('SET_PAGE_STATE', pageState);
+}
+
+function setProfileError(store, errorFlag, errorMessage) {
+  store.dispatch('SET_PROFILE_EROR', errorFlag, errorMessage);
 }
 
 function showProfile(store) {
@@ -186,4 +191,5 @@ module.exports = {
   showProfile,
   editProfile,
   resetProfileState,
+  setProfileError,
 };

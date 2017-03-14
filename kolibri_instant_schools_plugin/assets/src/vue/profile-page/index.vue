@@ -7,14 +7,28 @@
     <form @submit.prevent="submitEdits">
 
       <core-textbox
-        v-if="hasPrivilege('name')"
+        class="input-field"
+        :disabled="true"
+        :label="$tr('name')"
+        :value="fullName"
+        type="text" />
+      <core-textbox
         class="input-field"
         :disabled="busy"
-        :label="$tr('name')"
-        v-model="full_name"
-        autocomplete="name"
-        id="name"
-        type="text" />
+        :label="$tr('newPassword')"
+        :placeholder="$tr('enterNewPassword')"
+        v-model="newPassword"
+        type="password" />
+      <core-textbox
+        class="input-field"
+        :disabled="busy"
+        :label="$tr('confirmNewPassword')"
+        :invalid="!passwordsMatch"
+        :error="$tr('passwordsDoNotMatch')"
+        :placeholder="$tr('reenterNewPassword')"
+        @blur="passwordConfirmVisited = true"
+        v-model="newPasswordConfirm"
+        type="password" />
 
       <icon-button
         :disabled="busy"
@@ -40,7 +54,13 @@
       genericError: 'Something went wrong',
       success: 'Profile details updated!',
       name: 'Name',
-      updateProfile: 'Update Profile',
+      updateProfile: 'Update profile',
+      newPassword: 'New password',
+      enterNewPassword: 'Enter new password',
+      confirmNewPassword: 'Confirm new password',
+      reenterNewPassword: 'Re-enter new password',
+      passwordsDoNotMatch: 'Password entered does not match new password',
+
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
@@ -49,7 +69,10 @@
     },
     data() {
       return {
-        full_name: this.session.full_name,
+        fullName: this.fullName,
+        newPassword: '',
+        newPasswordConfirm: '',
+        passwordConfirmVisited: false,
       };
     },
     computed: {
@@ -62,22 +85,32 @@
         }
         return '';
       },
+      passwordsMatch() {
+        if (this.passwordConfirmVisited) {
+          const passwordsMatch = this.newPassword === this.newPasswordConfirm;
+          this.setProfileError(!passwordsMatch);
+          return passwordsMatch;
+        }
+        return true;
+      },
     },
     methods: {
       hasPrivilege(privilege) {
         return this.privileges[privilege];
       },
       submitEdits() {
-        const edits = {
-          full_name: this.full_name,
-        };
-        this.editProfile(edits, this.session);
+        if (this.passwordsMatch) {
+          const edits = {
+            password: this.newPassword,
+          };
+          this.editProfile(edits);
+        }
       },
     },
     vuex: {
       getters: {
         privileges: state => state.core.learnerPrivileges,
-        session: state => state.core.session,
+        fullName: state => state.core.session.full_name,
         error: state => state.pageState.error,
         success: state => state.pageState.success,
         busy: state => state.pageState.busy,
@@ -85,6 +118,7 @@
       },
       actions: {
         editProfile: actions.editProfile,
+        setProfileError: actions.setProfileError,
         resetProfileState: actions.resetProfileState,
       },
     },

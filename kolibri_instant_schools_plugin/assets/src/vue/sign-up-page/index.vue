@@ -66,13 +66,12 @@
         required />
 
       <ui-checkbox v-model="termsAgreement" required>
-        <a href="#" @click.prevent="openTermsModal" class="tos">{{$tr('termsAgreement')}}</a>
+        <a href="#" @click.prevent="showTerms = true" class="tos">{{$tr('termsAgreement')}}</a>
       </ui-checkbox>
 
-      <ui-modal ref="termsModal" :title="$tr('termsOfService')" size="large">
-        <iframe class="tos" src="/content/tos.txt">
-        </iframe>
-      </ui-modal>
+      <core-modal v-if="showTerms" @cancel="showTerms = false" :title="$tr('termsOfService')">
+        <iframe class="tos" src="/content/tos.txt"></iframe>
+      </core-modal>
 
       <icon-button :disabled="busy" id="submit" :primary="true" text="Finish" type="submit" />
 
@@ -113,7 +112,7 @@
       'core-textbox': require('kolibri.coreVue.components.textbox'),
       'ui-toolbar': require('keen-ui/src/UiToolbar'),
       'ui-checkbox': require('keen-ui/src/UiCheckbox'),
-      'ui-modal': require('keen-ui/src/UiModal'),
+      'core-modal': require('kolibri.coreVue.components.coreModal'),
     },
     data: () => ({
       name: '',
@@ -122,6 +121,7 @@
       phoneNumberVisited: false,
       confirmed_password: '',
       termsAgreement: false,
+      showTerms: false,
     }),
     computed: {
       signInPage() {
@@ -180,9 +180,6 @@
         }
         // error should already be visible
       },
-      openTermsModal() {
-        this.$refs.termsModal.open();
-      },
     },
     vuex: {
       getters: {
@@ -199,19 +196,6 @@
   };
 
 </script>
-
-
-<style lang="stylus">
-
-  #signup-page
-    .ui-modal__
-      &container
-        max-width: 90vw
-      &body
-        max-height: 90vh
-        min-height: 60vh
-
-</style>
 
 
 <style lang="stylus" scoped>
@@ -265,6 +249,6 @@
 
   .tos
     width: 100%
-    height: 80vh
+    height: 50vh
 
 </style>

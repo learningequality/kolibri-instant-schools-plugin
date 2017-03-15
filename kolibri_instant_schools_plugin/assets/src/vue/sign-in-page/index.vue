@@ -28,20 +28,20 @@
 
         <p v-if="loginError" class="sign-in-error">{{ $tr('signInError') }}</p>
 
-        <a @click.prevent="openPasswordResetModal()" role="link" href="#" id="password-reset">
+        <a @click.prevent="showResetModal = true" role="link" href="#" id="password-reset">
           {{ $tr('resetPassword') }}
         </a>
 
       </form>
-      <ui-modal
+      <core-modal
         :title="$tr('resetPassword')"
-        size="small"
-        ref="passwordResetModal">
+        v-if="showResetModal"
+        @cancel="showResetModal = false">
         <p>
           This is a test. If you need to change you're password, please call:
         </p>
         <a id="password-reset-phone-number" href="tel:+1111111111">(XXX)-XXX-XXXX</a>
-      </ui-modal>
+      </core-modal>
       <div id="divid-line"></div>
 
       <h2 class="login-text no-account">{{ $tr('noAccount') }}</h2>
@@ -82,11 +82,12 @@
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
       'core-textbox': require('kolibri.coreVue.components.textbox'),
-      'ui-modal': require('keen-ui/src/UiModal'),
+      'core-modal': require('kolibri.coreVue.components.coreModal'),
     },
     data: () => ({
       username: '',
       password: '',
+      showResetModal: false,
     }),
     computed: {
       signUp() {

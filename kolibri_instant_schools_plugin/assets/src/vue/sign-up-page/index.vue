@@ -143,7 +143,7 @@
       phoneNumberValid() {
         if (this.phoneNumberVisited) {
           const strippedPhoneNumber = this.phoneNumber.replace(/\D/g, '');
-          return strippedPhoneNumber.length > 6;
+          return strippedPhoneNumber.length > 8;
         }
         // field hasn't been visited yet
         return true;

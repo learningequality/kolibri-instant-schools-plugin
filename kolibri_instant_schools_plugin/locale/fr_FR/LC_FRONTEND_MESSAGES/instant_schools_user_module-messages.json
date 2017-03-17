@@ -1,5 +1,5 @@
 {
-  "profile-page.genericError":"Une erreur s’est produite",
+  "profile-page.genericError":"Une erreur s'est produite",
   "profile-page.success":"Détails du profil mis à jour !",
   "profile-page.username":"Nom d'utilisateur",
   "profile-page.name":"Nom",
@@ -12,7 +12,7 @@
   "signInPage.enterPassword":"Saisir le mot de passe",
   "signInPage.noAccount":"Vous n'avez pas encore de compte ?",
   "signInPage.createAccount":"Créer un compte",
-  "signInPage.accessAsGuest":"Accéder en tant qu’invité",
+  "signInPage.accessAsGuest":"Accéder en tant qu'invité",
   "signInPage.signInError":"Nom utilisateur ou mot de passe incorrect",
   "signInPage.resetPassword":"Réinitialisez votre mot de passe",
   "signUpPage.createAccount":"Créer un compte",

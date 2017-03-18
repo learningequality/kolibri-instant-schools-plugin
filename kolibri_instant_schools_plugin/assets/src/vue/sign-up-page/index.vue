@@ -70,7 +70,7 @@
       </ui-checkbox>
 
       <core-modal v-if="showTerms" @cancel="showTerms = false" :title="$tr('termsOfService')">
-        <iframe class="tos" src="/content/tos.txt"></iframe>
+        <iframe class="tos" src="/content/databases/tos.txt"></iframe>
       </core-modal>
 
       <icon-button :disabled="busy" id="submit" :primary="true" text="Finish" type="submit" />

@@ -37,10 +37,7 @@
         :title="$tr('resetPassword')"
         v-if="showResetModal"
         @cancel="showResetModal = false">
-        <p>
-          This is a test. If you need to change you're password, please call:
-        </p>
-        <a id="password-reset-phone-number" href="tel:+1111111111">(XXX)-XXX-XXXX</a>
+        <iframe class="reset" src="/content/databases/reset.txt"></iframe>
       </core-modal>
       <div id="divid-line"></div>
 
@@ -155,6 +152,10 @@
   $login-text = #D8D8D8
   $login-section-margin = 25px
   $title-size = 1.3em
+
+  .reset
+    width: 100%
+    height: 40vh
 
   // wrappers
   .login-page

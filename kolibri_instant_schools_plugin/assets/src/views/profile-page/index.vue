@@ -44,7 +44,7 @@
 
 <script>
 
-  const actions = require('../../actions');
+  const actions = require('../../state/actions');
   const responsiveWindow = require('kolibri.coreVue.mixins.responsiveWindow');
 
   module.exports = {

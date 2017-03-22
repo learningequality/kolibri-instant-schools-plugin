@@ -44,12 +44,12 @@
 
 <script>
 
-  const actions = require('../../actions');
+  const actions = require('../../state/actions');
   const responsiveWindow = require('kolibri.coreVue.mixins.responsiveWindow');
 
   module.exports = {
     name: 'profile-page',
-    $trNameSpace: 'profile-page',
+    $trNameSpace: 'profilePage',
     $trs: {
       genericError: 'Something went wrong',
       success: 'Profile details updated!',

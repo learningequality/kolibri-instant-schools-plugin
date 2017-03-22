@@ -59,7 +59,7 @@
 <script>
 
   const actions = require('kolibri.coreVue.vuex.actions');
-  const PageNames = require('../../state/constants').PageNames;
+  const PageNames = require('../../constants').PageNames;
 
   module.exports = {
     $trNameSpace: 'signInPage',

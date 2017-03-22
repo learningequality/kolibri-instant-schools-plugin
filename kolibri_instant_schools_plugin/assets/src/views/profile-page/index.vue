@@ -49,7 +49,7 @@
 
   module.exports = {
     name: 'profile-page',
-    $trNameSpace: 'profile-page',
+    $trNameSpace: 'profilePage',
     $trs: {
       genericError: 'Something went wrong',
       success: 'Profile details updated!',

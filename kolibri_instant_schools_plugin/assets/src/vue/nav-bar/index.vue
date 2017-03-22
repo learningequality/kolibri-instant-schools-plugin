@@ -91,7 +91,7 @@
       responsiveWindow,
       responsiveElement,
     ],
-    $trNameSpace: 'navbar-instantschools',
+    $trNameSpace: 'instantschoolsNavbar',
     $trs: {
       navigationLabel: 'Main user navigation',
       learn: 'Learn',

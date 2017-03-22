@@ -1,5 +1,5 @@
 const coreApp = require('kolibri');
-const PageNames = require('./state/constants').PageNames;
+const PageNames = require('../constants').PageNames;
 const coreActions = require('kolibri.coreVue.vuex.actions');
 const coreGetters = require('kolibri.coreVue.vuex.getters');
 const router = require('kolibri.coreVue.router');
@@ -8,7 +8,7 @@ const FacilityUserResource = coreApp.resources.FacilityUserResource;
 
 coreApp.resources.registerResource(
   'PhoneNumberSignUpResource',
-  require('./api-resources').PhoneNumberSignUpResource
+  require('../api-resources').PhoneNumberSignUpResource
 );
 
 const PhoneNumberSignUpResource = coreApp.resources.PhoneNumberSignUpResource;

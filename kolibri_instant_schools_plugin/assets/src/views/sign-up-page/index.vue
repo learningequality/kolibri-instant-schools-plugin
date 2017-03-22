@@ -84,8 +84,8 @@
 
 <script>
 
-  const actions = require('../../actions');
-  const PageNames = require('../../state/constants').PageNames;
+  const actions = require('../../state/actions');
+  const PageNames = require('../../constants').PageNames;
 
   module.exports = {
     name: 'Sign-Up-Page',

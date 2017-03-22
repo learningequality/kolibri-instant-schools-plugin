@@ -21,7 +21,7 @@
 <script>
 
   const store = require('../state/store');
-  const PageNames = require('../state/constants').PageNames;
+  const PageNames = require('../constants').PageNames;
   const TopLevelPageNames = require('kolibri.coreVue.vuex.constants').TopLevelPageNames;
 
   module.exports = {

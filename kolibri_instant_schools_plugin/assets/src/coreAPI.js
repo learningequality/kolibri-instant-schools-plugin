@@ -11,7 +11,7 @@ module.exports = {
   coreVue: {
     components: {
       navBar: {
-        module: require('./vue/nav-bar'),
+        module: require('./views/nav-bar'),
       },
     },
   },

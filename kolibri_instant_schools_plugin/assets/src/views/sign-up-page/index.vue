@@ -7,11 +7,11 @@
         <img id="logo" src="../img/instant-school-logo.png" />
       </template>
       <template slot="brand">
-        Instant Schools
+        {{ $tr('instantSchools') }}
       </template>
       <div slot="actions">
         <router-link id="login" :to="signInPage">
-          <span>Log In</span>
+          <span>{{$tr('logIn')}}</span>
         </router-link>
       </div>
     </ui-toolbar>
@@ -73,7 +73,7 @@
         <iframe class="tos" src="/content/databases/tos.txt"></iframe>
       </core-modal>
 
-      <icon-button :disabled="busy" id="submit" :primary="true" text="Finish" type="submit" />
+      <icon-button :disabled="busy" id="submit" :primary="true" :text="$tr('finish')" type="submit" />
 
     </form>
 
@@ -104,7 +104,10 @@
       passwordMatchError: 'Passwords do not match',
       genericError: 'Something went wrong during sign up',
       termsAgreement: 'I agree to the terms of service & privacy policy',
-      termsOfService: 'Terms of service & privacy policy'
+      termsOfService: 'Terms of service & privacy policy',
+      instantSchools: 'Instant Schools',
+      logIn: 'Log in',
+      finish: 'Finish',
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),

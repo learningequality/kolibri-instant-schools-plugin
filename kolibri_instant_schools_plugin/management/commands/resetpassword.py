@@ -5,6 +5,8 @@ from kolibri.auth.models import FacilityUser
 
 from ...auth.hashing import get_hash_value, normalize_phone_number
 
+from ...smpp.utils import send_temporary_password
+
 
 class Command(BaseCommand):
     help = "Reset a user's password to a temporary value"
@@ -32,4 +34,6 @@ class Command(BaseCommand):
         user.set_password(new_password)
         user.save()
 
-        return "Password reset successfully!"
+        self.stdout.write("Password reset successfully!")
+
+        send_temporary_password(phonenumber, new_password)

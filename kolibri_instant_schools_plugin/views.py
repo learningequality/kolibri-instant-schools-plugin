@@ -16,3 +16,11 @@ class UserView(TemplateView):
         context['currentFacilityId'] = getattr(Facility.get_default_facility(), 'id', None)
 
         return context
+
+
+class AboutView(TemplateView):
+    template_name = "about/about.html"
+
+
+class FAQView(TemplateView):
+    template_name = "faq/faq.html"

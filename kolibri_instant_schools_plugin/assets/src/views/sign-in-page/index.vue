@@ -352,7 +352,7 @@
     display: table-row
 
   #main-cell
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(./background.png) no-repeat center center
+    background: url(../img/instant-background.jpg) no-repeat center center
     background-size: cover
     display: table-cell
     vertical-align: middle

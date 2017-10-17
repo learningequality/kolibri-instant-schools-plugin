@@ -4,10 +4,10 @@ const router = require('kolibri.coreVue.router');
 
 const Vue = require('kolibri.lib.vue');
 
-const RootVue = require('./views');
-const actions = require('./state/actions');
+const RootVue = require('./vue');
+const actions = require('./actions');
 const store = require('./state/store');
-const PageNames = require('./constants').PageNames;
+const PageNames = require('./state/constants').PageNames;
 
 
 class UserModule extends KolibriModule {

@@ -4,14 +4,14 @@
 
     <ui-toolbar type="colored" textColor="white">
       <template slot="icon">
-        <img id="logo" src="../img/instant-school-logo.png" />
+        <ui-icon class="app-bar-icon"><logo/></ui-icon>
       </template>
       <template slot="brand">
-        {{ $tr('instantSchools') }}
+        {{ $tr('kolibri') }}
       </template>
       <div slot="actions">
         <router-link id="login" :to="signInPage">
-          <span>{{$tr('logIn')}}</span>
+          <span>{{ $tr('logIn') }}</span>
         </router-link>
       </div>
     </ui-toolbar>
@@ -31,21 +31,22 @@
         autocomplete="name"
         autofocus
         required
+        id="name"
         type="text" />
 
       <core-textbox
-        :placeholder="$tr('enterPhoneNumber')"
-        :label="$tr('phoneNumber')"
-        :aria-label="$tr('phoneNumber')"
-        @blur="phoneNumberVisited=true"
-        :error="phoneNumberError"
-        :invalid="!phoneNumberValid"
-        v-model="phoneNumber"
-        autocomplete="tel"
+        :placeholder="$tr('enterUsername')"
+        :label="$tr('username')"
+        :aria-label="$tr('username')"
+        :invalid="usernameError"
+        v-model="username"
+        autocomplete="username"
         required
-        type="tel" />
+        id="username"
+        type="text" />
 
       <core-textbox
+        id="password"
         type="password"
         :placeholder="$tr('enterPassword')"
         :aria-label="$tr('password')"
@@ -55,8 +56,9 @@
         required />
 
       <core-textbox
+        id="confirmed-password"
         type="password"
-        :placeholder="$tr('confirmPasswordPlaceholder')"
+        :placeholder="$tr('confirmPassword')"
         :aria-label="$tr('confirmPassword')"
         :label="$tr('confirmPassword')"
         :invalid="!passwordsMatch"
@@ -65,15 +67,7 @@
         autocomplete="new-password"
         required />
 
-      <ui-checkbox v-model="termsAgreement" required>
-        <a href="#" @click.prevent="showTerms = true" class="tos">{{$tr('termsAgreement')}}</a>
-      </ui-checkbox>
-
-      <core-modal v-if="showTerms" @cancel="showTerms = false" :title="$tr('termsOfService')">
-        <iframe class="tos" src="/content/databases/tos.txt"></iframe>
-      </core-modal>
-
-      <icon-button :disabled="busy" id="submit" :primary="true" :text="$tr('finish')" type="submit" />
+      <icon-button :disabled="canSubmit" id="submit" :primary="true" text="Finish" type="submit" />
 
     </form>
 
@@ -84,8 +78,8 @@
 
 <script>
 
-  const actions = require('../../state/actions');
-  const PageNames = require('../../constants').PageNames;
+  const actions = require('../../actions');
+  const PageNames = require('../../state/constants').PageNames;
 
   module.exports = {
     name: 'Sign-Up-Page',
@@ -94,20 +88,15 @@
       createAccount: 'Create an account',
       name: 'Name',
       enterName: 'Enter name',
-      phoneNumber: 'Phone number',
-      enterPhoneNumber: 'Enter phone number',
-      phoneNumberInvalidError: 'Please enter a valid phone number',
+      username: 'Username',
+      enterUsername: 'Enter username',
       password: 'Password',
       enterPassword: 'Enter password',
       confirmPassword: 'Confirm password',
-      confirmPasswordPlaceholder: 'Enter password again',
       passwordMatchError: 'Passwords do not match',
-      genericError: 'Something went wrong during sign up',
-      termsAgreement: 'I agree to the terms of service & privacy policy',
-      termsOfService: 'Terms of service & privacy policy',
-      instantSchools: 'Instant Schools',
+      genericError: 'Something went wrong during sign up!',
       logIn: 'Log in',
-      finish: 'Finish',
+      kolibri: 'Kolibri',
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
@@ -115,16 +104,15 @@
       'core-textbox': require('kolibri.coreVue.components.textbox'),
       'ui-toolbar': require('keen-ui/src/UiToolbar'),
       'ui-checkbox': require('keen-ui/src/UiCheckbox'),
-      'core-modal': require('kolibri.coreVue.components.coreModal'),
+      'logo': require('kolibri.coreVue.components.logo'),
+      'ui-icon': require('keen-ui/src/UiIcon'),
     },
     data: () => ({
       name: '',
-      phoneNumber: '',
+      username: '',
       password: '',
-      phoneNumberVisited: false,
       confirmed_password: '',
       termsAgreement: false,
-      showTerms: false,
     }),
     computed: {
       signInPage() {
@@ -143,24 +131,14 @@
         }
         return this.$tr('passwordMatchError');
       },
-      phoneNumberValid() {
-        if (this.phoneNumberVisited) {
-          const strippedPhoneNumber = this.phoneNumber.replace(/\D/g, '');
-          return strippedPhoneNumber.length > 8;
-        }
-        // field hasn't been visited yet
-        return true;
-      },
-      phoneNumberError() {
-        if (this.phoneNumberValid) {
-          return '';
-        }
-        return this.$tr('phoneNumberInvalidError');
+      usernameError() {
+        return this.errorCode === 400;
       },
       allFieldsPopulated() {
-        return !!(this.name && this.phoneNumber &&
-          this.password && this.confirmed_password &&
-          this.termsAgreement);
+        return !(this.name && this.username && this.password && this.confirmed_password);
+      },
+      canSubmit() {
+        return !this.termsAgreement || this.allFieldsPopulated || !this.passwordsMatch || this.busy;
       },
       errorMessage() {
         return this.backendErrorMessage || this.$tr('genericError');
@@ -168,20 +146,11 @@
     },
     methods: {
       signUp() {
-        const canSubmit =
-          this.allFieldsPopulated
-          && this.passwordsMatch
-          && !this.busy
-          && this.phoneNumberValid;
-        if (canSubmit) {
-          const userPayload = {
-            full_name: this.name,
-            username: this.phoneNumber,
-            password: this.password,
-          };
-          this.signUpAction(userPayload);
-        }
-        // error should already be visible
+        this.signUpAction({
+          full_name: this.name,
+          username: this.username,
+          password: this.password,
+        });
       },
     },
     vuex: {
@@ -205,7 +174,7 @@
 
   @require '~kolibri.styles.definitions'
   $iphone-5-width = 320px
-  $vertical-page-margin = 40px
+  $vertical-page-margin = 100px
   $logo-size = (1.64 * 1.125)rem
   $logo-margin = (0.38 * $logo-size)rem
 
@@ -219,7 +188,6 @@
   #logo
     // 1.63 * font height
     height: $logo-size
-    width: auto
     display: inline-block
     margin-left: $logo-margin
 
@@ -239,7 +207,14 @@
     width: ($iphone-5-width - 20)px
 
   .terms
+    background-color: $core-bg-light
     color: $core-text-annotation
+    height: 6em
+    overflow-y: scroll
+    padding: 0.5em
+    margin-bottom: 1em
+    p
+      margin-top: 0
 
   #submit
     width: 90%
@@ -250,8 +225,8 @@
     margin-top: $vertical-page-margin
     margin-bottom: $vertical-page-margin
 
-  .tos
-    width: 100%
-    height: 50vh
+  .app-bar-icon
+    font-size: 2.5em
+    margin-left: 0.25em
 
 </style>

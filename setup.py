@@ -21,7 +21,7 @@ dist_name = 'kolibri_instant_schools_plugin'
 plugin_name = 'kolibri_instant_schools_plugin'
 repo_url = 'https://github.com/fle-internal/kolibri-instant-schools-plugin'
 
-readme = read_file('README.rst')
+readme = read_file('README.md')
 doclink = """
 Documentation
 -------------

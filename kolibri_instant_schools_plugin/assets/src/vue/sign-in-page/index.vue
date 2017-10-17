@@ -1,18 +1,16 @@
 <template>
 
-  <div class="login-page">
-    <div id="login-content">
-      <img class="logo" src="../img/instant-school-logo.png" alt="logo">
-      <h1 class="login-text title">{{ $tr('instantSchool') }}</h1>
+  <div class="login">
+    <div id="login-container">
+      <logo class="logo"/>
+      <h1 class="login-text title">{{ $tr('kolibri') }}</h1>
       <form id="login-form" ref="form" @submit.prevent="signIn">
         <core-textbox
           :label="$tr('username')"
           id="username"
-          type="tel"
           :placeholder="$tr('enterUsername')"
           :aria-label="$tr('username')"
           v-model="username"
-          autocomplete="tel"
           required
           autofocus/>
         <core-textbox
@@ -24,30 +22,20 @@
           v-model="password"
           autocomplete="current-password"
           required/>
-        <icon-button id="login-btn" :text="$tr('signIn')" :primary="true" type="submit"></icon-button>
+        <icon-button id="login-btn" :text="$tr('signIn')" :primary="true" type="submit"/>
 
         <p v-if="loginError" class="sign-in-error">{{ $tr('signInError') }}</p>
-
-        <a @click.prevent="showResetModal = true" role="link" href="#" id="password-reset">
-          {{ $tr('resetPassword') }}
-        </a>
-
       </form>
-      <core-modal
-        :title="$tr('resetPassword')"
-        v-if="showResetModal"
-        @cancel="showResetModal = false">
-        <iframe class="reset" src="/content/databases/reset.txt"></iframe>
-      </core-modal>
+      <span id="password-reset">{{ $tr('resetPassword') }}</span>
       <div id="divid-line"></div>
 
-      <h2 class="login-text no-account">{{ $tr('noAccount') }}</h2>
+      <p class="login-text no-account">{{ $tr('noAccount') }}</p>
       <div id="btn-group">
         <router-link class="group-btn" :to="signUp">
-          <icon-button id="signup-button" :text="$tr('createAccount')" :primary="true"></icon-button>
+          <icon-button id="signup-button" :text="$tr('createAccount')" :primary="true"/>
         </router-link>
         <a class="group-btn" href="/learn">
-          <icon-button id="guest-access-button" :text="$tr('accessAsGuest')" :primary="false"></icon-button>
+          <icon-button id="guest-access-button" :text="$tr('accessAsGuest')" :primary="false"/>
         </a>
       </div>
     </div>
@@ -59,32 +47,31 @@
 <script>
 
   const actions = require('kolibri.coreVue.vuex.actions');
-  const PageNames = require('../../constants').PageNames;
+  const PageNames = require('../../state/constants').PageNames;
 
   module.exports = {
     $trNameSpace: 'signInPage',
     $trs: {
-      instantSchool: 'INSTANT SCHOOLS',
-      signIn: 'Log In',
-      username: 'Phone Number',
-      enterUsername: 'Enter phone number',
+      kolibri: 'Kolibri',
+      signIn: 'Log in',
+      username: 'Username',
+      enterUsername: 'Enter username',
       password: 'Password',
-      enterPassword: 'Enter Password',
+      enterPassword: 'Enter password',
       noAccount: `Don't have an account?`,
-      createAccount: 'Create Account',
-      accessAsGuest: 'Access as Guest',
+      createAccount: 'Create account',
+      accessAsGuest: 'Access as guest',
       signInError: 'Incorrect username or password',
       resetPassword: 'Reset your password',
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
       'core-textbox': require('kolibri.coreVue.components.textbox'),
-      'core-modal': require('kolibri.coreVue.components.coreModal'),
+      'logo': require('kolibri.coreVue.components.logo'),
     },
     data: () => ({
       username: '',
       password: '',
-      showResetModal: false,
     }),
     computed: {
       signUp() {
@@ -97,9 +84,6 @@
           username: this.username,
           password: this.password,
         });
-      },
-      openPasswordResetModal() {
-        this.$refs.passwordResetModal.open();
       },
     },
     vuex: {
@@ -117,10 +101,11 @@
 
 <style lang="stylus">
 
-  $login-text = #D8D8D8
-  $login-red = #f44336
+  @require '~kolibri.styles.definitions'
 
-  #login-content
+  $login-text = #D8D8D8
+
+  #login-container
     .ui-
       &textbox__
         &label-text
@@ -136,12 +121,7 @@
         &#guest-access-button
           background-color: transparent
           color: $login-text
-          border: 2px solid $login-red
-
-      &modal__
-        &container
-            max-height: 90vh
-            max-width: 90vw
+          border: 2px solid $core-action-normal
 
 </style>
 
@@ -150,106 +130,87 @@
 
   $login-overlay = #201A21
   $login-text = #D8D8D8
-  $login-section-margin = 25px
-  $title-size = 1.3em
 
-  .reset
-    width: 100%
-    height: 40vh
-
-  // wrappers
-  .login-page
+  .login
     background-color: $login-overlay
     height: 100%
-    background: url(../img/instant-background.jpg) no-repeat center center fixed
+    // Fallback for older browers.
+    background: $core-bg-canvas
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(./background.png) no-repeat center center fixed
     background-size: cover
     overflow-y: auto
+    overflow-x: hidden
 
-  #login-content
+  #login-container
     display: block
-    margin-top: $login-section-margin
-    margin-left: auto
-    margin-right: auto
+    margin: auto
 
-
-  // Logo stuff
   .logo
+    position: relative
     display: block
     margin: auto
     margin-top: 34px
     width: 30%
     height: auto
     max-width: 120px
-    min-width: 45px
-    margin-bottom: $login-section-margin
+    min-width: 60px
 
-    // All text on screen (excluding buttons, fields)
   .login-text
     color: $login-text
+
   .title
     font-weight: 100
-    font-size: $title-size
+    font-size: 1.3em
     letter-spacing: 0.1em
     text-align: center
-    margin-top: 0
-    margin-bottom: 30px
 
-  // form
   #login-form
     width: 70%
     max-width: 300px
-    margin-left: auto
-    margin-right: auto
-    margin-bottom: $login-section-margin
+    margin: auto
+    margin-top: 30px
+
+  #password
+    margin-top: 30px
 
   #login-btn
     display: block
     margin: auto
+    margin-top: 38px
     width: 100%
-    margin-bottom: $login-section-margin
 
-  #password-reset
-    display: block
-    text-align: center
-    margin-right: auto
-    margin-left: auto
-    font-size: 0.8em
-    color: $login-text
-    margin-bottom: $login-section-margin
-    &-phone-number
-      display: block
-      text-align: center
-
-  // seperator between login and accountless options
-  #divid-line
-    width: 412px
-    max-width: 90%
-    height: 1px
-    background-color: $core-text-annotation
-    background-color: $login-text
-    margin-left: auto
-    margin-right: auto
-    margin-bottom: $login-section-margin
-
-  // accountless options
-  .no-account
-    text-align: center
-    font-weight: normal
-    font-size: $title-size * 0.8
-    margin-top: 0
-    margin-bottom: $login-section-margin
   #btn-group
     display: table
-    margin-left: auto
-    margin-right: auto
-    margin-top: $login-section-margin
+    margin: auto
+    margin-top: 28px
+    margin-bottom: 20px
     text-align: center
+
   .group-btn
     padding: 5px
     display: inline-block
     text-decoration: none
 
-  // error text
+  #password-reset
+    display: block
+    text-align: center
+    margin: auto
+    margin-top: 26px
+    font-size: 0.8em
+    color: $login-text
+    text-decoration: underline
+
+  #divid-line
+    width: 412px
+    height: 1px
+    background-color: $core-text-annotation
+    background-color: $login-text
+    margin: auto
+    margin-top: 16px
+
+  .no-account
+    text-align: center
+
   .sign-in-error
     color: red
 

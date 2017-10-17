@@ -7,28 +7,26 @@
     <form @submit.prevent="submitEdits">
 
       <core-textbox
+        v-if="hasPrivilege('username')"
         class="input-field"
-        :disabled="true"
-        :label="$tr('name')"
-        :value="fullName"
+        :invalid="error"
+        :error="errorMessage"
+        :label="$tr('username')"
+        :value="session.username"
+        disabled
+        autocomplete="username"
+        id="username"
         type="text" />
+
       <core-textbox
+        v-if="hasPrivilege('name')"
         class="input-field"
         :disabled="busy"
-        :label="$tr('newPassword')"
-        :placeholder="$tr('enterNewPassword')"
-        v-model="newPassword"
-        type="password" />
-      <core-textbox
-        class="input-field"
-        :disabled="busy"
-        :label="$tr('confirmNewPassword')"
-        :invalid="!passwordsMatch"
-        :error="$tr('passwordsDoNotMatch')"
-        :placeholder="$tr('reenterNewPassword')"
-        @blur="passwordConfirmVisited = true"
-        v-model="newPasswordConfirm"
-        type="password" />
+        :label="$tr('name')"
+        v-model="full_name"
+        autocomplete="name"
+        id="name"
+        type="text" />
 
       <icon-button
         :disabled="busy"
@@ -44,23 +42,18 @@
 
 <script>
 
-  const actions = require('../../state/actions');
+  const actions = require('../../actions');
   const responsiveWindow = require('kolibri.coreVue.mixins.responsiveWindow');
 
   module.exports = {
     name: 'profile-page',
-    $trNameSpace: 'profilePage',
+    $trNameSpace: 'profile-page',
     $trs: {
       genericError: 'Something went wrong',
       success: 'Profile details updated!',
+      username: 'Username',
       name: 'Name',
-      updateProfile: 'Update profile',
-      newPassword: 'New password',
-      enterNewPassword: 'Enter new password',
-      confirmNewPassword: 'Confirm new password',
-      reenterNewPassword: 'Re-enter new password',
-      passwordsDoNotMatch: 'Password entered does not match new password',
-
+      updateProfile: 'Update',
     },
     components: {
       'icon-button': require('kolibri.coreVue.components.iconButton'),
@@ -69,10 +62,8 @@
     },
     data() {
       return {
-        fullName: this.fullName,
-        newPassword: '',
-        newPasswordConfirm: '',
-        passwordConfirmVisited: false,
+        username: this.session.username,
+        full_name: this.session.full_name,
       };
     },
     computed: {
@@ -85,32 +76,22 @@
         }
         return '';
       },
-      passwordsMatch() {
-        if (this.passwordConfirmVisited) {
-          const passwordsMatch = this.newPassword === this.newPasswordConfirm;
-          this.setProfileError(!passwordsMatch);
-          return passwordsMatch;
-        }
-        return true;
-      },
     },
     methods: {
       hasPrivilege(privilege) {
         return this.privileges[privilege];
       },
       submitEdits() {
-        if (this.passwordsMatch) {
-          const edits = {
-            password: this.newPassword,
-          };
-          this.editProfile(edits);
-        }
+        const edits = {
+          full_name: this.full_name,
+        };
+        this.editProfile(edits, this.session);
       },
     },
     vuex: {
       getters: {
         privileges: state => state.core.learnerPrivileges,
-        fullName: state => state.core.session.full_name,
+        session: state => state.core.session,
         error: state => state.pageState.error,
         success: state => state.pageState.success,
         busy: state => state.pageState.busy,
@@ -118,7 +99,6 @@
       },
       actions: {
         editProfile: actions.editProfile,
-        setProfileError: actions.setProfileError,
         resetProfileState: actions.resetProfileState,
       },
     },

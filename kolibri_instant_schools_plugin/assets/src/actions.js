@@ -1,17 +1,11 @@
 const coreApp = require('kolibri');
-const PageNames = require('../constants').PageNames;
+const PageNames = require('./state/constants').PageNames;
+const SignUpResource = require('kolibri').resources.SignUpResource;
 const coreActions = require('kolibri.coreVue.vuex.actions');
 const coreGetters = require('kolibri.coreVue.vuex.getters');
 const router = require('kolibri.coreVue.router');
 
 const FacilityUserResource = coreApp.resources.FacilityUserResource;
-
-coreApp.resources.registerResource(
-  'PhoneNumberSignUpResource',
-  require('../api-resources').PhoneNumberSignUpResource
-);
-
-const PhoneNumberSignUpResource = coreApp.resources.PhoneNumberSignUpResource;
 
 function redirectToHome() {
   window.location = '/';
@@ -30,10 +24,9 @@ function showRoot(store) {
   });
 }
 
-function editProfile(store, edits) {
+function editProfile(store, edits, session) {
   // payload needs username, fullname, and facility
   // used to save changes to API
-  const session = store.state.core.session;
   const savedUserModel = FacilityUserResource.getModel(session.user_id);
   const changedValues = {};
 
@@ -44,14 +37,12 @@ function editProfile(store, edits) {
   if (edits.username && edits.username !== session.username) {
     changedValues.username = edits.username;
   }
-  if (edits.password && edits.password !== session.password) {
-    changedValues.password = edits.password;
-  }
+  // if (edits.password && edits.password !== session.password) {
+  //   changedValues.password = edits.password;
+  // }
 
   // check to see if anything's changed and conditionally add last requirement
-  if (Object.keys(changedValues).length) {
-    changedValues.facility = session.facility_id;
-  } else {
+  if (!Object.keys(changedValues).length) {
     return;
   }
 
@@ -94,10 +85,6 @@ function resetProfileState(store) {
   };
 
   store.dispatch('SET_PAGE_STATE', pageState);
-}
-
-function setProfileError(store, errorFlag, errorMessage) {
-  store.dispatch('SET_PROFILE_EROR', errorFlag, errorMessage);
 }
 
 function showProfile(store) {
@@ -157,7 +144,7 @@ function showSignUp(store) {
 }
 
 function signUp(store, signUpCreds) {
-  const signUpModel = PhoneNumberSignUpResource.createModel(signUpCreds);
+  const signUpModel = SignUpResource.createModel(signUpCreds);
   const signUpPromise = signUpModel.save(signUpCreds);
 
   store.dispatch('SET_SIGN_UP_BUSY', true);
@@ -191,5 +178,4 @@ module.exports = {
   showProfile,
   editProfile,
   resetProfileState,
-  setProfileError,
 };

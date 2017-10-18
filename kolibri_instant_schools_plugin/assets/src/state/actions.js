@@ -57,13 +57,13 @@ function editProfile(store, edits, session) {
 
   // check to see if anything's changed and conditionally add last requirement
   if (!Object.keys(changedValues).length) {
-    return;
+    return Promise.resolve();
   }
 
   // update user object with new values
   store.dispatch('SET_PROFILE_BUSY', true);
 
-  savedUserModel.save(changedValues).then(
+  return savedUserModel.save(changedValues).then(
     userWithAttrs => {
       // dispatch changes to store
       coreActions.getCurrentSession(store, true);

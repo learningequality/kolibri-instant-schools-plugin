@@ -121,7 +121,6 @@
     $trs: {
       genericError: 'Something went wrong',
       success: 'Profile details updated!',
-      username: 'Username',
       name: 'Full name',
       updateProfile: 'Save changes',
       isLearner: 'Learner',
@@ -132,7 +131,6 @@
       points: 'Points',
       role: 'Role',
       devicePermissions: 'Device permissions',
-      usernameNotAlphaNumUnderscore: 'Username can only contain letters, numbers, and underscores',
       required: 'This field is required',
       limitedPermissions: 'Limited permissions',
       youCan: 'You can',
@@ -150,7 +148,6 @@
     mixins: [responsiveWindow],
     data() {
       return {
-        username: this.session.username,
         name: this.session.full_name,
         formSubmitted: false,
         newPw: '',
@@ -237,7 +234,10 @@
         if (this.newPw !== '') {
           edits.password = this.newPw;
         }
-        this.editProfile(edits, this.session);
+        this.editProfile(edits, this.session).then(() => {
+          this.newPw = '';
+          this.newPwConfirm = '';
+        });
       },
       getPermissionString(permission) {
         if (permission === 'can_manage_content') {

@@ -68,7 +68,10 @@
       </form>
       <div class="divider"></div>
 
+      <reset-password-modal :show="showPwResetModal" />
+
       <p class="login-text no-account">{{ $tr('noAccount') }}</p>
+      <k-button text="Reset Password" @click="showPwResetModal = true" />
       <div id="btn-group">
         <router-link v-if="canSignUp" class="group-btn" :to="signUpPage">
           <k-button :text="$tr('createAccount')" :primary="false"/>
@@ -100,6 +103,7 @@
   import uiAutocompleteSuggestion from 'keen-ui/src/UiAutocompleteSuggestion';
   import uiAlert from 'keen-ui/src/UiAlert';
   import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
+  import resetPasswordModal from '../reset-password-modal';
 
   export default {
     name: 'signInPage',
@@ -121,6 +125,7 @@
       kButton,
       kTextbox,
       logo,
+      resetPasswordModal,
       uiAutocompleteSuggestion,
       uiAlert,
       languageSwitcher,
@@ -135,6 +140,7 @@
       usernameBlurred: false,
       passwordBlurred: false,
       formSubmitted: false,
+      showPwResetModal: false,
     }),
     computed: {
       simpleSignIn() {

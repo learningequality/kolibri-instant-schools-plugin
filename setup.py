@@ -21,7 +21,7 @@ dist_name = 'kolibri_instant_schools_plugin'
 plugin_name = 'kolibri_instant_schools_plugin'
 repo_url = 'https://github.com/fle-internal/kolibri-instant-schools-plugin'
 
-readme = read_file('README.rst')
+readme = read_file('README.md')
 doclink = """
 Documentation
 -------------
@@ -54,7 +54,7 @@ def enable_log_to_stdout(logname):
 
 setup(
     name=dist_name,
-    version="0.2",
+    version="0.3",
     description=description,
     long_description="{readme}\n\n{doclink}".format(
         readme=readme,
@@ -67,6 +67,7 @@ setup(
         str(plugin_name),  # https://github.com/pypa/setuptools/pull/597
     ],
     package_dir={plugin_name: plugin_name},
+    install_requires=["smpplib2>=0.1.1"],
     include_package_data=True,
     license='All Rights Reserved',
     zip_safe=False,

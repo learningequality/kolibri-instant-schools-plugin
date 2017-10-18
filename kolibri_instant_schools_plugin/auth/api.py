@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from kolibri.auth.models import Facility, FacilityUser
 from kolibri.auth.api import SignUpViewSet
 
-from .mapping import get_usernames, create_new_username
+from .mapping import get_usernames, create_new_username, normalize_phone_number
 from ..models import PasswordResetToken, PhoneToUsernameMapping
 from ..smpp.utils import send_password_reset_link, SMPPConnectionError
 
@@ -55,7 +55,7 @@ class PasswordResetTokenViewset(viewsets.ViewSet):
         """
 
         # extract the phone number from the request
-        phone = request.data.get('phone', '')
+        phone = normalize_phone_number(request.data.get('phone', ''))
 
         # ensure we have an account for this phone number
         if not get_usernames(phone):
@@ -87,7 +87,7 @@ class PasswordResetTokenViewset(viewsets.ViewSet):
                 If token exists and is valid, returns status 200.
                 Otherwise, returns status 400.
         """
-        phone = request.query_params.get('phone', '')
+        phone = normalize_phone_number(request.query_params.get('phone', ''))
 
         try:
             obj = PasswordResetToken.objects.get(token=pk, phone=phone)
@@ -124,7 +124,7 @@ class PasswordChangeViewset(viewsets.ViewSet):
 
         if token:
             # try to find a reset token matching the phone number and token, otherwise error out
-            phone=request.data.get('phone', '')
+            phone = normalize_phone_number(request.data.get('phone', ''))
             try:
                 resettoken = PasswordResetToken.objects.get(phone=phone, token=token)
             except PasswordResetToken.DoesNotExist:
@@ -169,7 +169,7 @@ class PhoneAccountProfileViewset(viewsets.ViewSet):
         """
 
         # extract the data from the request
-        phone = request.data['phone']
+        phone = normalize_phone_number(request.data['phone'])
         password = request.data['password']
         full_name = request.data['full_name']
 
@@ -204,7 +204,7 @@ class PhoneAccountProfileViewset(viewsets.ViewSet):
                 If password fails, returns status 401.
         """
         # extract the phone and password from the query params
-        phone = request.query_params.get('phone', '')
+        phone = normalize_phone_number(request.query_params.get('phone', ''))
         password = request.query_params.get('password', '')
 
         # get all user profiles associated with the phone number

@@ -67,7 +67,7 @@ setup(
         str(plugin_name),  # https://github.com/pypa/setuptools/pull/597
     ],
     package_dir={plugin_name: plugin_name},
-    install_requires=["smpplib2==0.1.1"],
+    install_requires=["smpplib2>=0.1.1"],
     include_package_data=True,
     license='All Rights Reserved',
     zip_safe=False,

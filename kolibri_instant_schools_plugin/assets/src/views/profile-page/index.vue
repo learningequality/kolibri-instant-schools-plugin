@@ -81,7 +81,6 @@
 
       <k-button
         type="submit"
-        class="submit"
         :text="$tr('updateProfile')"
         :primary="true"
         :disabled="busy"
@@ -288,11 +287,8 @@
     margin-right: auto
     width: ($iphone-width - 20)px
 
-  .submit
-    margin-left: auto
-    margin-right: auto
-    display: block
-
+  button[type='submit']
+    margin-left: 0
 
   .points-icon, .points-num
     display: inline-block

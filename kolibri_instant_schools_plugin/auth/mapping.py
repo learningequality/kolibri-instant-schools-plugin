@@ -20,7 +20,7 @@ def get_usernames(phone):
     phone = normalize_phone_number(phone)
 
     # look up all of the associated usernames
-    return PhoneToUsernameMapping.objects.filter(phone=phone).values_list("username", flat=True)
+    return list(PhoneToUsernameMapping.objects.filter(phone=phone).values_list("username", flat=True))
 
 
 def create_new_username(phone):

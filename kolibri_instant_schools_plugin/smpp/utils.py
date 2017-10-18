@@ -3,21 +3,31 @@ import smpplib2.client
 import smpplib2.consts
 import smpplib2.exceptions
 
+from ..auth.mapping import normalize_phone_number
+
 from .config import read_config
 
-# TODO: what should the TON and NPI values be?
+
 SOURCE_ADDR_TON = smpplib2.consts.SMPP_TON_INTL
 SOURCE_ADDR_NPI = smpplib2.consts.SMPP_NPI_ISDN
 DEST_ADDR_TON = smpplib2.consts.SMPP_TON_INTL
 DEST_ADDR_NPI = smpplib2.consts.SMPP_NPI_ISDN
 
 
-def send_temporary_password(phone, password):
+class SMPPConnectionError(Exception):
+    pass
+
+
+def send_password_reset_link(phone, token, baseurl):
     
     conf = read_config()
+
+    phone = normalize_phone_number(phone)
+    baseurl = baseurl.rstrip("/")
+
+    url = "{baseurl}/user/#/passwordreset/{phone}/{token}".format(baseurl=baseurl, token=token, phone=phone)
     
-    send_message(phone, conf['SMS_MESSAGE_TEMPLATE'] % password)
-    print("SMS message with new password has been sent to %s!" % phone)
+    send_message(phone, conf['SMS_MESSAGE_TEMPLATE'].format(url=url))
 
 
 def send_message(phone, message):
@@ -32,7 +42,7 @@ def send_message(phone, message):
         client = smpplib2.client.Client(conf['SMSC_ADDRESS'], conf['SMSC_PORT'])
         client.connect()
     except smpplib2.exceptions.ConnectionError:
-        raise Exception("Unable to connect to SMSC server %s:%s (message was not sent)" % (conf['SMSC_ADDRESS'], conf['SMSC_PORT']))
+        raise SMPPConnectionError("Unable to connect to SMSC server %s:%s (message was not sent)" % (conf['SMSC_ADDRESS'], conf['SMSC_PORT']))
 
     # log into the SMSC server
     client.bind_transceiver(system_id=conf['SMSC_SYSTEM_ID'], password=conf['SMSC_PASSWORD'])

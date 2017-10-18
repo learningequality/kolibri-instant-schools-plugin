@@ -12,11 +12,11 @@ def write_default_config():
 
     config.add_section('SMPP')
     config.set('SMPP', 'smsc_address', '127.0.0.1')
-    config.set('SMPP', 'smsc_port', '1234')
-    config.set('SMPP', 'smsc_system_id', 'pavel')
-    config.set('SMPP', 'smsc_password', 'wpsd')
+    config.set('SMPP', 'smsc_port', '2775')
+    config.set('SMPP', 'smsc_system_id', 'smppclient1')
+    config.set('SMPP', 'smsc_password', 'password')
     config.set('SMPP', 'source_address', '11111111')
-    config.set('SMPP', 'sms_message_template', 'Your Instant Schools password has been reset; the new temporary password is: %s')
+    config.set('SMPP', 'sms_message_template', 'To reset your Instant Schools account password, please click the following link: {url}')
 
     with open(CONF_PATH, 'wb') as configfile:
         config.write(configfile)

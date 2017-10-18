@@ -15,7 +15,7 @@ def get_phone_numbers():
     """Look up the phone number / hash pairs from the reverse lookup database."""
     
     if not os.path.isfile(REVERSE_LOOKUP_DB_PATH):
-        return
+        return []
 
     conn = sqlite3.connect(REVERSE_LOOKUP_DB_PATH)
     cursor = conn.cursor()

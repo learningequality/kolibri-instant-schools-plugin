@@ -30,18 +30,10 @@
     </section>
 
     <form @submit.prevent="submitEdits">
-      <ui-alert
-        v-if="success"
-        type="success"
-        :dismissible="false"
-      >
+      <ui-alert v-if="success" type="success" :dismissible="false">
         {{ $tr('success') }}
       </ui-alert>
-      <ui-alert
-        v-if="error"
-        type="error"
-        :dismissible="false"
-      >
+      <ui-alert v-if="error" type="error" :dismissible="false">
         {{ errorMessage || $tr('genericError') }}
       </ui-alert>
 
@@ -63,26 +55,30 @@
         <p>{{ name }}</p>
       </template>
 
-      <k-textbox
-        ref="username"
-        v-if="canEditUsername"
-        type="text"
-        autocomplete="username"
-        :label="$tr('username')"
-        :disabled="busy"
-        :maxlength="30"
-        :invalid="usernameIsInvalid"
-        :invalidText="usernameIsInvalidText"
-        @blur="usernameBlurred = true"
-        v-model="username"
-      />
-      <template v-else>
-        <h2>{{ $tr('username') }}</h2>
-        <p>{{ session.username }}</p>
+      <template v-if="canEditPassword">
+        <k-textbox
+          ref="newPw"
+          type="password"
+          :label="$tr('newPw')"
+          :disabled="busy"
+          :maxlength="120"
+          :invalid="false"
+          @blur="newPwBlurred = true"
+          v-model="newPw"
+        />
+        <k-textbox
+          ref="newPwConfirm"
+          type="password"
+          :label="$tr('newPwConfirm')"
+          :disabled="busy"
+          :maxlength="120"
+          :invalid="false"
+          @blur="newPwConfirmBlurred = true"
+          v-model="newPwConfirm"
+        />
       </template>
 
       <k-button
-        v-if="canEditUsername || canEditName"
         type="submit"
         class="submit"
         :text="$tr('updateProfile')"
@@ -139,6 +135,8 @@
       required: 'This field is required',
       limitedPermissions: 'Limited permissions',
       youCan: 'You can',
+      newPw: 'New password',
+      newPwConfirm: 'New password again',
     },
     components: {
       kButton,
@@ -155,6 +153,10 @@
         usernameBlurred: false,
         nameBlurred: false,
         formSubmitted: false,
+        newPw: '',
+        newPwBlurred: false,
+        newPwConfirm: '',
+        newPwConfirmBlurred: false,
       };
     },
     computed: {
@@ -184,17 +186,15 @@
         }
         return '';
       },
-      canEditUsername() {
-        if (this.isCoach || this.isLearner) {
-          return this.facilityConfig.learnerCanEditUsername;
-        }
-        return true;
-      },
       canEditName() {
-        if (this.isCoach || this.isLearner) {
-          return this.facilityConfig.learnerCanEditName;
-        }
-        return true;
+        return this.userIsAdmin || this.facilityConfig.learnerCanEditName;
+      },
+      canEditPassword() {
+        return this.userIsAdmin || this.facilityConfig.learnerCanEditPassword;
+      },
+      // i.e. not a coach or a learner
+      userIsAdmin() {
+        return !this.isCoach && !this.isLearner;
       },
       nameIsInvalidText() {
         if (this.nameBlurred || this.formSubmitted) {

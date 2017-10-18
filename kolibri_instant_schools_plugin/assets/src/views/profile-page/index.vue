@@ -152,8 +152,6 @@
       return {
         username: this.session.username,
         name: this.session.full_name,
-        usernameBlurred: false,
-        nameBlurred: false,
         formSubmitted: false,
         newPw: '',
         newPwBlurred: false,
@@ -163,14 +161,16 @@
     },
     computed: {
       role() {
-        if (this.getUserRole === UserKinds.ADMIN) {
-          return this.$tr('isAdmin');
-        } else if (this.getUserRole === UserKinds.COACH) {
-          return this.$tr('isCoach');
-        } else if (this.getUserRole === UserKinds.LEARNER) {
-          return this.$tr('isLearner');
+        switch (this.getUserRole) {
+          case UserKinds.ADMIN:
+            return this.$tr('isAdmin');
+          case UserKinds.COACH:
+            return this.$tr('isCoach');
+          case UserKinds.LEARNER:
+            return this.$tr('isLearner');
+          default:
+            return '';
         }
-        return '';
       },
       permissionType() {
         if (this.isSuperuser) {
@@ -181,12 +181,14 @@
         return null;
       },
       permissionTypeText() {
-        if (this.permissionType === PermissionTypes.SUPERUSER) {
-          return this.$tr('isSuperuser');
-        } else if (this.permissionType === PermissionTypes.LIMITED_PERMISSIONS) {
-          return this.$tr('limitedPermissions');
+        switch (this.permissionType) {
+          case PermissionTypes.SUPERUSER:
+            return this.$tr('isSuperuser');
+          case PermissionTypes.LIMITED_PERMISSIONS:
+            return this.$tr('limitedPermissions');
+          default:
+            return '';
         }
-        return '';
       },
       canEditName() {
         return this.userIsAdmin || this.facilityConfig.learnerCanEditName;
@@ -212,6 +214,9 @@
         }
         return true;
       },
+      formIsValid() {
+        return this.nameIsValid && this.newPwConfirmIsValid;
+      },
     },
     created() {
       this.fetchPoints();
@@ -220,19 +225,19 @@
       submitEdits() {
         this.formSubmitted = true;
         this.resetProfileState();
-        if (true) {
-          const edits = {
-            username: this.username,
-            full_name: this.name,
-          };
-          this.editProfile(edits, this.session);
-        } else {
-          if (this.nameIsInvalid) {
-            this.$refs.name.focus();
-          } else if (this.usernameIsInvalid) {
-            this.$refs.username.focus();
-          }
+        if (!this.nameIsValid) {
+          return this.$refs.name.focus();
         }
+        if (!this.newPwConfirmIsValid) {
+          return this.$refs.newPwConfirm.focus();
+        }
+        const edits = {
+          full_name: this.name,
+        };
+        if (this.newPw !== '') {
+          edits.password = this.newPw;
+        }
+        this.editProfile(edits, this.session);
       },
       getPermissionString(permission) {
         if (permission === 'can_manage_content') {

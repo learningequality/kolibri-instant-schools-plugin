@@ -46,8 +46,8 @@
         :label="$tr('name')"
         :disabled="busy"
         :maxlength="120"
-        :invalid="nameIsInvalid"
-        :invalidText="nameIsInvalidText"
+        :invalid="!nameIsValid"
+        :invalidText="$tr('required')"
         v-model="name"
       />
       <template v-else>
@@ -72,7 +72,8 @@
           :label="$tr('newPwConfirm')"
           :disabled="busy"
           :maxlength="120"
-          :invalid="false"
+          :invalid="!newPwConfirmIsValid"
+          :invalidText="$tr('passwordsDoNotMatch')"
           @blur="newPwConfirmBlurred = true"
           v-model="newPwConfirm"
         />
@@ -137,6 +138,7 @@
       youCan: 'You can',
       newPw: 'New password',
       newPwConfirm: 'New password again',
+      passwordsDoNotMatch: 'Passwords do not match',
     },
     components: {
       kButton,
@@ -196,33 +198,19 @@
       userIsAdmin() {
         return !this.isCoach && !this.isLearner;
       },
-      nameIsInvalidText() {
-        if (this.nameBlurred || this.formSubmitted) {
-          if (this.name === '') {
-            return this.$tr('required');
-          }
+      nameIsValid() {
+        return this.name.trim() !== '';
+      },
+      newPwConfirmShouldValidate() {
+        return (
+          (this.newPw !== '' && this.newPwBlurred && this.newPwConfirm !== '') || this.formSubmitted
+        );
+      },
+      newPwConfirmIsValid() {
+        if (this.newPwConfirmShouldValidate) {
+          return this.newPw === this.newPwConfirm;
         }
-        return '';
-      },
-      nameIsInvalid() {
-        return !!this.nameIsInvalidText;
-      },
-      usernameIsInvalidText() {
-        if (this.usernameBlurred || this.formSubmitted) {
-          if (this.username === '') {
-            return this.$tr('required');
-          }
-          if (!validateUsername(this.username)) {
-            return this.$tr('usernameNotAlphaNumUnderscore');
-          }
-        }
-        return '';
-      },
-      usernameIsInvalid() {
-        return !!this.usernameIsInvalidText;
-      },
-      formIsValid() {
-        return !this.usernameIsInvalid;
+        return true;
       },
     },
     created() {
@@ -232,7 +220,7 @@
       submitEdits() {
         this.formSubmitted = true;
         this.resetProfileState();
-        if (this.formIsValid) {
+        if (true) {
           const edits = {
             username: this.username,
             full_name: this.name,

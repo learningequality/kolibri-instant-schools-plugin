@@ -2,9 +2,12 @@
 
   <div>
     <iframe
+      ref="iframe"
       width="100%"
-      frameborder
+      frameborder="0"
       :src="aboutSrc"
+      :height="height"
+      @load="resizeIframe"
     >
     </iframe>
 
@@ -38,16 +41,18 @@
 
   export default {
     name: 'aboutPage',
-
     $trs: {
       viewFaq: 'View FAQ',
       startLearning: 'Start learning',
     },
-
     components: {
       kButton,
     },
-
+    data() {
+      return {
+        height: null,
+      };
+    },
     computed: {
       faqRoute() {
         return { name: PageNames.FAQ };
@@ -57,6 +62,18 @@
       },
       aboutSrc() {
         return '/content/databases/about/about.html';
+      },
+    },
+    mounted() {
+      this.resizeIframe();
+      window.addEventListener('resize', this.resizeIframe);
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', this.resizeIframe);
+    },
+    methods: {
+      resizeIframe() {
+        this.height = this.$refs.iframe.contentWindow.document.body.scrollHeight;
       },
     },
   };

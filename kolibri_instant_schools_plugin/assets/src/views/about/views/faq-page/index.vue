@@ -12,9 +12,12 @@
     </router-link>
 
     <iframe
+      ref="iframe"
       width="100%"
-      frameborder
+      frameborder="0"
       :src="faqSrc"
+      :height="height"
+      @load="resizeIframe"
     >
     </iframe>
 
@@ -39,16 +42,18 @@
 
   export default {
     name: 'faqPage',
-
     $trs: {
       back: 'Back to about',
       toTop: 'Back to top',
     },
-
     components: {
       kButton,
     },
-
+    data() {
+      return {
+        height: null,
+      };
+    },
     computed: {
       aboutRoute() {
         return { name: PageNames.ABOUT };
@@ -57,10 +62,19 @@
         return '/content/databases/about/faq.html';
       },
     },
-
+    mounted() {
+      this.resizeIframe();
+      window.addEventListener('resize', this.resizeIframe);
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', this.resizeIframe);
+    },
     methods: {
       goToTop() {
         this.$refs.backButton.$el.scrollIntoView();
+      },
+      resizeIframe() {
+        this.height = this.$refs.iframe.contentWindow.document.body.scrollHeight;
       },
     },
   };

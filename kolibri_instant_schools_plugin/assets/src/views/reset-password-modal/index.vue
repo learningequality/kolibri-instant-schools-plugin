@@ -28,7 +28,7 @@
   import coreModal from 'kolibri.coreVue.components.coreModal';
   import status from './status';
   import phoneNumberForm from './phone-number-form';
-  import { requestResetToken } from '../../state/resetPasswordActions';
+  import { createResetToken } from '../../state/resetPasswordActions';
   import { STATUSES } from './constants';
 
   export default {
@@ -65,7 +65,7 @@
     methods: {
       submitTokenRequest(phoneNumber) {
         this.disableForms = true;
-        this.requestResetToken({ phoneNumber })
+        this.createResetToken({ phoneNumber })
           .then(() => {
             this.status = STATUSES.MESSAGE_SENT;
           })
@@ -94,7 +94,7 @@
     vuex: {
       getters: {},
       actions: {
-        requestResetToken,
+        createResetToken,
       },
     },
     $trs: {

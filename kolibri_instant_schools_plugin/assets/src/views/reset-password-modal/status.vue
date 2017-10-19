@@ -1,14 +1,12 @@
 <template>
 
   <div>
-
-
-    <div>
-
+    <div class="message">
+      {{ message }}
     </div>
     <div class="buttons">
       <k-button v-if="atAccountNotFound" :text="$tr('goBack')" @click="$emit('goback')" />
-      <k-button v-else :text="$tr('close')" @click="$emit('closemodal')" />
+      <k-button v-else :text="$tr('close')" @click="$emit('close')" />
     </div>
   </div>
 
@@ -18,21 +16,34 @@
 <script>
 
   import kButton from 'kolibri.coreVue.components.kButton';
+  import { STATUSES } from './constants';
 
   export default {
-    name: 'resetPasswordConfirmation',
+    name: 'resetPasswordStatus',
     components: {
       kButton,
     },
     props: {
-      type: {
+      status: {
         type: String,
         required: true,
       },
     },
     computed: {
       atAccountNotFound() {
-        return this.type === 'accountNotFound';
+        return this.status === STATUSES.ACCOUNT_NOT_FOUND;
+      },
+      message() {
+        switch (this.status) {
+          case STATUSES.ACCOUNT_NOT_FOUND:
+            return this.$tr('accountNotFound');
+          case STATUSES.MESSAGE_SENT:
+            return this.$tr('messageSent');
+          case STATUSES.SMS_SERVICE_ERROR:
+            return this.$tr('smsServiceUnavailable');
+          default:
+            return '';
+        }
       },
     },
     methods: {},
@@ -51,6 +62,9 @@
 
 
 <style lang="stylus" scoped>
+
+  .message
+    text-align: left
 
   .buttons
     text-align: right

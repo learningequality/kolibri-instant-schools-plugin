@@ -8,7 +8,7 @@
     <form @submit.prevent="$emit('submit', phoneNumber)">
       <k-textbox :label="$tr('enterPhoneNumber')" v-model="phoneNumber" />
       <div class="buttons">
-        <k-button :text="$tr('cancel')" @click="$emit('clickclose')" />
+        <k-button :text="$tr('cancel')" @click="$emit('close')" />
         <k-button type="submit" :text="$tr('send')" />
       </div>
     </form>

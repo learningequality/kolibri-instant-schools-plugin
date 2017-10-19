@@ -1,8 +1,22 @@
 <template>
 
-  <core-modal v-if="show" :title="currentTitle">
-    <confirmation v-if="confirmation" :type="confirmation" @close="handleClose" />
-    <phone-number-form v-else @submit="submitTokenRequest" />
+  <core-modal
+    :title="currentTitle"
+    @cancel="closeModal"
+  >
+    <div class="contents">
+      <status
+        v-if="showStatus"
+        :status="status"
+        @close="closeModal"
+        @goback="resetState"
+      />
+      <phone-number-form
+        v-else
+        @submit="submitTokenRequest"
+        @close="closeModal"
+      />
+    </div>
   </core-modal>
 
 </template>
@@ -11,55 +25,72 @@
 <script>
 
   import coreModal from 'kolibri.coreVue.components.coreModal';
-  import confirmation from './confirmation';
+  import status from './status';
   import phoneNumberForm from './phone-number-form';
   import { requestResetToken } from '../../state/resetPasswordActions';
+  import { STATUSES } from './constants';
 
   export default {
     name: 'resetPasswordModal',
     components: {
-      confirmation,
+      status,
       coreModal,
       phoneNumberForm,
     },
-    props: {
-      show: {
-        type: Boolean,
-        required: true,
-      },
-    },
+    props: {},
     data() {
       return {
-        confirmation: null,
+        status: STATUSES.ENTER_PHONE_NUMBER,
       };
     },
     computed: {
       currentTitle() {
-        return 'Reset password';
+        switch (this.status) {
+          case STATUSES.ACCOUNT_NOT_FOUND:
+            return this.$tr('accountNotFound');
+          case STATUSES.MESSAGE_SENT:
+            return this.$tr('messageSent');
+          case STATUSES.SMS_SERVICE_ERROR:
+            return this.$tr('smsServiceError');
+          default:
+            return this.$tr('resetPassword');
+        }
+      },
+      showStatus() {
+        return this.status !== STATUSES.ENTER_PHONE_NUMBER;
       },
     },
     methods: {
       submitTokenRequest(phoneNumber) {
         this.requestResetToken({ phoneNumber })
           .then(() => {
-            this.confirmation = 'success';
+            this.status = STATUSES.MESSAGE_SENT;
           })
           .catch(err => {
-            console.log(err);
-            this.confirmation = 'accountNotFound';
+            const { code } = err.status;
+            if (code === 400) {
+              this.status = STATUSES.ACCOUNT_NOT_FOUND;
+            } else if (code === 500) {
+              this.status = STATUSES.SMS_SERVICE_ERROR;
+            }
           });
+      },
+      resetState() {
+        this.status = STATUSES.ENTER_PHONE_NUMBER;
+      },
+      closeModal() {
+        this.$emit('close');
       },
     },
     vuex: {
-      getters: {
-        resetPwModalIsOpen: () => true,
-      },
+      getters: {},
       actions: {
         requestResetToken,
       },
     },
     $trs: {
       accountNotFound: 'Account not found',
+      messageSent: 'Message sent',
       resetPassword: 'Reset password',
       smsServiceError: 'SMS service error',
     },
@@ -68,4 +99,9 @@
 </script>
 
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+
+  .contents
+    margin: 1em 0
+
+</style>

@@ -68,7 +68,7 @@
       </form>
       <div class="divider"></div>
 
-      <reset-password-modal :show="showPwResetModal" />
+      <reset-password-modal v-if="showPwResetModal" @close="showPwResetModal = false" />
 
       <p class="login-text no-account">{{ $tr('noAccount') }}</p>
       <k-button text="Reset Password" @click="showPwResetModal = true" />

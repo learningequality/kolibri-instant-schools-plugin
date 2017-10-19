@@ -1,4 +1,3 @@
-// send phone number and get response
 import { httpClient } from 'kolibri.client';
 import urls from 'kolibri.urls';
 
@@ -9,6 +8,12 @@ export function requestResetToken(store, { phoneNumber }) {
     entity: {
       phone: phoneNumber,
     },
+  }).then(response => {
+    const { code } = response.status;
+    if (code === 400 || code === 500) {
+      return Promise.reject(response);
+    }
+    return response;
   });
 }
 

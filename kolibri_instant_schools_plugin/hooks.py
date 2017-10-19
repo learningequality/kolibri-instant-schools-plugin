@@ -18,3 +18,8 @@ class UserAsyncHook(webpack_hooks.WebpackInclusionHook):
 
     class Meta:
         abstract = True
+
+
+class AboutSyncHook(webpack_hooks.WebpackInclusionHook):
+    class Meta:
+        abstract = True

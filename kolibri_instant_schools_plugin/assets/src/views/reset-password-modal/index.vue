@@ -15,6 +15,7 @@
         v-else
         @submit="submitTokenRequest"
         @close="closeModal"
+        :disabled="disableForms"
       />
     </div>
   </core-modal>
@@ -40,6 +41,7 @@
     props: {},
     data() {
       return {
+        disableForms: false,
         status: STATUSES.ENTER_PHONE_NUMBER,
       };
     },
@@ -62,6 +64,7 @@
     },
     methods: {
       submitTokenRequest(phoneNumber) {
+        this.disableForms = true;
         this.requestResetToken({ phoneNumber })
           .then(() => {
             this.status = STATUSES.MESSAGE_SENT;
@@ -73,13 +76,19 @@
             } else if (code === 500) {
               this.status = STATUSES.SMS_SERVICE_ERROR;
             }
+          })
+          .then(() => {
+            this.disableForms = false;
           });
       },
       resetState() {
         this.status = STATUSES.ENTER_PHONE_NUMBER;
       },
       closeModal() {
-        this.$emit('close');
+        // guard against closing until 'X' button can be removed
+        if (!this.disableForms) {
+          this.$emit('close');
+        }
       },
     },
     vuex: {

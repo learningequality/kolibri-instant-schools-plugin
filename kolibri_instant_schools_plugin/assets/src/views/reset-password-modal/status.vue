@@ -5,8 +5,18 @@
       {{ message }}
     </div>
     <div class="buttons">
-      <k-button v-if="atAccountNotFound" :text="$tr('goBack')" @click="$emit('goback')" />
-      <k-button v-else :text="$tr('close')" @click="$emit('close')" />
+      <k-button
+        v-if="atAccountNotFound"
+        :text="$tr('goBack')"
+        @click="$emit('goback')"
+        :primary="true"
+      />
+      <k-button
+        v-else
+        :text="$tr('close')"
+        @click="$emit('close')"
+        :primary="true"
+      />
     </div>
   </div>
 
@@ -68,5 +78,9 @@
 
   .buttons
     text-align: right
+    margin-top: 1em
+
+  button
+    margin-right: 0
 
 </style>

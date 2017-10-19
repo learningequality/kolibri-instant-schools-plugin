@@ -6,10 +6,21 @@
     </div>
 
     <form @submit.prevent="$emit('submit', phoneNumber)">
-      <k-textbox :label="$tr('enterPhoneNumber')" v-model="phoneNumber" />
+      <k-textbox
+        :label="$tr('enterPhoneNumber')"
+        v-model="phoneNumber"
+      />
       <div class="buttons">
-        <k-button :text="$tr('cancel')" @click="$emit('close')" />
-        <k-button type="submit" :text="$tr('send')" />
+        <k-button
+          :text="$tr('cancel')"
+          @click="$emit('close')"
+          :primary="false"
+        />
+        <k-button
+          type="submit"
+          :text="$tr('send')"
+          :primary="true"
+        />
       </div>
     </form>
   </div>
@@ -23,6 +34,7 @@
   import kButton from 'kolibri.coreVue.components.kButton';
 
   export default {
+    name: 'phoneNumberForm',
     components: {
       kButton,
       kTextbox,
@@ -53,5 +65,9 @@
 
   .buttons
     text-align: right
+    margin-top: 1em
+
+  button[type='submit']
+    margin-right: 0
 
 </style>

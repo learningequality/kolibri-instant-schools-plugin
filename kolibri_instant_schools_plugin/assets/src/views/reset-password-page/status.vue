@@ -2,7 +2,7 @@
 
   <div>
     Status
-
+    {{ status }}
   </div>
 
 </template>
@@ -12,6 +12,12 @@
 
   export default {
     components: {},
+    props: {
+      status: {
+        type: String,
+        required: true,
+      },
+    },
     computed: {},
     methods: {},
     vuex: {

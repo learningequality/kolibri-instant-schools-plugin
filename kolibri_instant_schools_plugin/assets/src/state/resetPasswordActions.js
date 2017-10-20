@@ -29,7 +29,7 @@ export function createResetToken(store, { phoneNumber }) {
 
 export function getTokenStatus(store, { token, phoneNumber }) {
   return httpClient({
-    path: `${urls['kolibri:user:passwordresettoken_list']()}/${token}/?${phoneNumber}`,
+    path: `${urls['kolibri:user:passwordresettoken_list']()}${token}/?phone=${phoneNumber}`,
     method: 'GET',
   }).then(response => {
     const { code } = response.status;

@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <h1>{{ resetPasswordHeader }}</h1>
+    <h1>{{ $tr('resetPasswordHeader') }}</h1>
 
     <form @submit.prevent="submit">
       <!-- Duplicated in Profile Page -->
@@ -27,7 +27,11 @@
         v-model="newPwConfirm"
       />
 
-      <k-button :primary="true" :text="$tr('saveButton')" />
+      <k-button
+        type="submit"
+        :text="$tr('saveButton')"
+        :primary="true"
+      />
     </form>
   </div>
 
@@ -82,4 +86,9 @@
 </script>
 
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+
+  button[type='submit']
+    margin-left: 0
+
+</style>

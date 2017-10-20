@@ -1,5 +1,5 @@
 // a name for every URL pattern
-const PageNames = {
+export const PageNames = {
   ROOT: 'ROOT',
   SIGN_IN: 'SIGN_IN',
   SIGN_UP: 'SIGN_UP',
@@ -7,4 +7,17 @@ const PageNames = {
   RESET_PASSWORD: 'RESET_PASSWORD',
 };
 
-export { PageNames };
+export const RequestTokenStates = {
+  ENTER_PHONE_NUMBER: 'ENTER_PHONE_NUMBER',
+  ACCOUNT_NOT_FOUND: 'ACCOUNT_NOT_FOUND',
+  MESSAGE_SENT: 'MESSAGE_SENT',
+  SMS_SERVICE_ERROR: 'SMS_SERVICE_ERROR',
+};
+
+export const ResetPasswordStates = {
+  ENTER_PASSWORD: 'ENTER_PASSWORD',
+  CHECKING_TOKEN: 'CHECKING_TOKEN',
+  SUCCESS: 'SUCCESS',
+  LINK_EXPIRED: 'LINK_EXPIRED',
+  OTHER_ERROR: 'OTHER_ERROR',
+};

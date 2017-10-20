@@ -1,8 +1,8 @@
 <template>
 
   <div>
-    Status
-    {{ status }}
+    <h1>{{ header }}</h1>
+    <p>{{ explanation }}</h1>
   </div>
 
 </template>
@@ -18,7 +18,9 @@
         required: true,
       },
     },
-    computed: {},
+    computed: {
+      header() {},
+    },
     methods: {},
     vuex: {
       getters: {},

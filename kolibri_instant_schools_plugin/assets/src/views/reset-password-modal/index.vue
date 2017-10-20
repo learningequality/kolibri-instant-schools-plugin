@@ -28,7 +28,7 @@
   import status from './status';
   import phoneNumberForm from './phone-number-form';
   import { createResetToken } from '../../state/resetPasswordActions';
-  import { STATUSES } from './constants';
+  import { RequestTokenStates as STATES } from '../../constants';
 
   export default {
     name: 'resetPasswordModal',
@@ -41,24 +41,24 @@
     data() {
       return {
         disableForms: false,
-        status: STATUSES.ENTER_PHONE_NUMBER,
+        status: STATES.ENTER_PHONE_NUMBER,
       };
     },
     computed: {
       currentTitle() {
         switch (this.status) {
-          case STATUSES.ACCOUNT_NOT_FOUND:
+          case STATES.ACCOUNT_NOT_FOUND:
             return this.$tr('accountNotFound');
-          case STATUSES.MESSAGE_SENT:
+          case STATES.MESSAGE_SENT:
             return this.$tr('messageSent');
-          case STATUSES.SMS_SERVICE_ERROR:
+          case STATES.SMS_SERVICE_ERROR:
             return this.$tr('smsServiceError');
           default:
             return this.$tr('resetPassword');
         }
       },
       showStatus() {
-        return this.status !== STATUSES.ENTER_PHONE_NUMBER;
+        return this.status !== STATES.ENTER_PHONE_NUMBER;
       },
     },
     methods: {
@@ -66,14 +66,14 @@
         this.disableForms = true;
         this.createResetToken({ phoneNumber })
           .then(() => {
-            this.status = STATUSES.MESSAGE_SENT;
+            this.status = STATES.MESSAGE_SENT;
           })
           .catch(err => {
             const { code } = err.status;
             if (code === 400) {
-              this.status = STATUSES.ACCOUNT_NOT_FOUND;
+              this.status = STATES.ACCOUNT_NOT_FOUND;
             } else if (code === 500) {
-              this.status = STATUSES.SMS_SERVICE_ERROR;
+              this.status = STATES.SMS_SERVICE_ERROR;
             }
           })
           .then(() => {
@@ -81,7 +81,7 @@
           });
       },
       resetState() {
-        this.status = STATUSES.ENTER_PHONE_NUMBER;
+        this.status = STATES.ENTER_PHONE_NUMBER;
       },
       closeModal() {
         // guard against closing until 'X' button can be removed
@@ -90,8 +90,8 @@
         }
       },
       handleClose() {
-        if (this.status === STATUSES.ACCOUNT_NOT_FOUND) {
-          this.status = STATUSES.ENTER_PHONE_NUMBER;
+        if (this.status === STATES.ACCOUNT_NOT_FOUND) {
+          this.status = STATES.ENTER_PHONE_NUMBER;
         } else {
           this.closeModal();
         }

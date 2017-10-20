@@ -20,14 +20,7 @@
   import { getTokenStatus } from '../../state/resetPasswordActions';
   import newPasswordForm from './new-password-form';
   import status from './status';
-
-  const STATUSES = {
-    ENTER_PASSWORD: 'ENTER_PASSWORD',
-    CHECKING_TOKEN: 'CHECKING_TOKEN',
-    SUCCESS: 'SUCCESS',
-    LINK_EXPIRED: 'LINK_EXPIRED',
-    OTHER_ERROR: 'OTHER_ERROR',
-  };
+  import { ResetPasswordStates as STATES } from '../../constants';
 
   export default {
     components: {
@@ -36,13 +29,13 @@
     },
     data() {
       return {
-        status: STATUSES.CHECKING_TOKEN,
+        status: STATES.CHECKING_TOKEN,
         disableForms: false,
       };
     },
     computed: {
       showStatus() {
-        return this.status !== STATUSES.ENTER_PASSWORD;
+        return this.status !== STATES.ENTER_PASSWORD;
       },
     },
     methods: {
@@ -60,13 +53,13 @@
         phoneNumber: this.phone,
       })
         .then(() => {
-          this.status = STATUSES.ENTER_PASSWORD;
+          this.status = STATES.ENTER_PASSWORD;
         })
         .catch(response => {
           if (response.status.code === 400) {
-            this.status = STATUSES.LINK_EXPIRED;
+            this.status = STATES.LINK_EXPIRED;
           } else {
-            this.status = STATUSES.OTHER_ERROR;
+            this.status = STATES.OTHER_ERROR;
           }
         });
     },

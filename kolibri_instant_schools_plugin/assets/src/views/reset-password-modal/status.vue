@@ -19,7 +19,7 @@
 <script>
 
   import kButton from 'kolibri.coreVue.components.kButton';
-  import { STATUSES } from './constants';
+  import { RequestTokenStates as STATES } from '../../constants';
 
   export default {
     name: 'resetPasswordStatus',
@@ -34,18 +34,18 @@
     },
     computed: {
       buttonText() {
-        if (this.status === STATUSES.ACCOUNT_NOT_FOUND) {
+        if (this.status === STATES.ACCOUNT_NOT_FOUND) {
           return this.$tr('goBack');
         }
         return this.$tr('close');
       },
       message() {
         switch (this.status) {
-          case STATUSES.ACCOUNT_NOT_FOUND:
+          case STATES.ACCOUNT_NOT_FOUND:
             return this.$tr('accountNotFound');
-          case STATUSES.MESSAGE_SENT:
+          case STATES.MESSAGE_SENT:
             return this.$tr('messageSent');
-          case STATUSES.SMS_SERVICE_ERROR:
+          case STATES.SMS_SERVICE_ERROR:
             return this.$tr('smsServiceUnavailable');
           default:
             return '';

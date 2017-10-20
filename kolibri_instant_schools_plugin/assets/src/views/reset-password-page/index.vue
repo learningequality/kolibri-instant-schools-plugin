@@ -43,7 +43,7 @@
         this.disableForms = true;
         setTimeout(() => {
           this.disableForms = false;
-          this.status = 'SUCCESS';
+          this.status = STATES.PASSWORD_CHANGED;
         }, 1000);
       },
     },

@@ -165,16 +165,14 @@
     },
     computed: {
       role() {
-        switch (this.getUserRole) {
-          case UserKinds.ADMIN:
-            return this.$tr('isAdmin');
-          case UserKinds.COACH:
-            return this.$tr('isCoach');
-          case UserKinds.LEARNER:
-            return this.$tr('isLearner');
-          default:
-            return '';
+        if (this.getUserRole === UserKinds.ADMIN) {
+          return this.$tr('isAdmin');
+        } else if (this.getUserRole === UserKinds.COACH) {
+          return this.$tr('isCoach');
+        } else if (this.getUserRole === UserKinds.LEARNER) {
+          return this.$tr('isLearner');
         }
+        return '';
       },
       permissionType() {
         if (this.isSuperuser) {
@@ -185,14 +183,12 @@
         return null;
       },
       permissionTypeText() {
-        switch (this.permissionType) {
-          case PermissionTypes.SUPERUSER:
-            return this.$tr('isSuperuser');
-          case PermissionTypes.LIMITED_PERMISSIONS:
-            return this.$tr('limitedPermissions');
-          default:
-            return '';
+        if (this.permissionType === PermissionTypes.SUPERUSER) {
+          return this.$tr('isSuperuser');
+        } else if (this.permissionType === PermissionTypes.LIMITED_PERMISSIONS) {
+          return this.$tr('limitedPermissions');
         }
+        return '';
       },
       canEditName() {
         return this.userIsAdmin || this.facilityConfig.learnerCanEditName;

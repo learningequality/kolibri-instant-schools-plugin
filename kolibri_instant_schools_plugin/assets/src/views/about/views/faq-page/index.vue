@@ -39,6 +39,7 @@
 
   import kButton from 'kolibri.coreVue.components.kButton';
   import { PageNames } from '../../constants';
+  import throttle from 'lodash/throttle';
 
   export default {
     name: 'faqPage',
@@ -64,10 +65,10 @@
     },
     mounted() {
       this.resizeIframe();
-      window.addEventListener('resize', this.resizeIframe);
+      window.addEventListener('resize', this.throttleResizeIframe);
     },
     beforeDestroy() {
-      window.removeEventListener('resize', this.resizeIframe);
+      window.removeEventListener('resize', this.throttleResizeIframe);
     },
     methods: {
       goToTop() {
@@ -76,6 +77,9 @@
       resizeIframe() {
         this.height = this.$refs.iframe.contentWindow.document.body.scrollHeight;
       },
+      throttleResizeIframe: throttle(function() {
+        this.resizeIframe();
+      }, 100),
     },
   };
 

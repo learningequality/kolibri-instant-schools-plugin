@@ -30,10 +30,18 @@
     </section>
 
     <form @submit.prevent="submitEdits">
-      <ui-alert v-if="success" type="success" :dismissible="false">
+      <ui-alert
+        v-if="success"
+        type="success"
+        :dismissible="false"
+      >
         {{ $tr('success') }}
       </ui-alert>
-      <ui-alert v-if="error" type="error" :dismissible="false">
+      <ui-alert
+        v-if="error"
+        type="error"
+        :dismissible="false"
+      >
         {{ errorMessage || $tr('genericError') }}
       </ui-alert>
 

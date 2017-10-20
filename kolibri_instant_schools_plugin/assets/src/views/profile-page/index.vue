@@ -205,7 +205,7 @@
         return !this.isCoach && !this.isLearner;
       },
       nameIsValid() {
-        return this.name.trim() !== '';
+        return this.name !== '';
       },
       newPwConfirmShouldValidate() {
         return (

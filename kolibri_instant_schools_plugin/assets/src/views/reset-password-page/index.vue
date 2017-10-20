@@ -1,8 +1,15 @@
 <template>
 
   <div>
-    <status v-if="showStatus" :status="status" />
-    <new-password-form v-else @submit="submitNewPassword" />
+    <status
+      v-if="showStatus"
+      :status="status"
+    />
+    <new-password-form
+      v-else
+      @submit="submitNewPassword"
+      :disable="disableForms"
+    />
   </div>
 
 </template>
@@ -30,6 +37,7 @@
     data() {
       return {
         status: STATUSES.CHECKING_TOKEN,
+        disableForms: false,
       };
     },
     computed: {
@@ -38,7 +46,13 @@
       },
     },
     methods: {
-      submitNewPassword() {},
+      submitNewPassword() {
+        this.disableForms = true;
+        setTimeout(() => {
+          this.disableForms = false;
+          this.status = 'SUCCESS';
+        }, 1000);
+      },
     },
     mounted() {
       this.getTokenStatus({

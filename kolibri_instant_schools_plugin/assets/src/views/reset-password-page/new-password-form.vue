@@ -4,14 +4,15 @@
     <h1>{{ $tr('resetPasswordHeader') }}</h1>
 
     <form @submit.prevent="submit">
-      <!-- Duplicated in Profile Page -->
       <k-textbox
+        :autofocus="true"
         ref="newPw"
         type="password"
         :label="$tr('newPw')"
-        :disabled="busy"
+        :disabled="disable"
         :maxlength="120"
         :invalid="!newPwIsValid"
+        :invalidText="$tr('required')"
         @blur="newPwBlurred = true"
         v-model="newPw"
       />
@@ -19,7 +20,7 @@
         ref="newPwConfirm"
         type="password"
         :label="$tr('newPwConfirm')"
-        :disabled="busy"
+        :disabled="disable"
         :maxlength="120"
         :invalid="!newPwConfirmIsValid"
         :invalidText="$tr('passwordsDoNotMatch')"
@@ -30,6 +31,7 @@
       <k-button
         type="submit"
         :text="$tr('saveButton')"
+        :disabled="disable"
         :primary="true"
       />
     </form>
@@ -48,37 +50,69 @@
       kButton,
       kTextbox,
     },
+    props: {
+      disable: {
+        type: Boolean,
+        required: true,
+      },
+    },
     data() {
       return {
+        formSubmitted: false,
         newPw: '',
         newPwConfirm: '',
         newPwBlurred: false,
         newPwConfirmBlurred: false,
-        busy: false,
       };
     },
     computed: {
       newPwIsValid() {
-        return false;
+        if (this.newPwShouldValidate) {
+          return this.newPw !== '';
+        }
+        return true;
       },
       newPwConfirmIsValid() {
-        return false;
+        if (this.newPwConfirmShouldValidate) {
+          return this.newPw === this.newPwConfirm;
+        }
+        return true;
       },
-      newPwShouldValidate() {},
-      newPwConfirmShouldValidate() {},
+      newPwShouldValidate() {
+        return this.newPwBlurred || this.formSubmitted;
+      },
+      newPwConfirmShouldValidate() {
+        return (
+          (this.newPw !== '' && this.newPwBlurred && this.newPwConfirm !== '') || this.formSubmitted
+        );
+      },
+      formIsValid() {
+        return this.newPwConfirmIsValid;
+      },
     },
     methods: {
-      submit() {},
-    },
-    vuex: {
-      getters: {},
-      actions: {},
+      submit() {
+        this.formSubmitted = true;
+
+        if (!this.newPwIsValid) {
+          return this.$refs.newPw.focus();
+        }
+
+        if (!this.newPwConfirmIsValid) {
+          return this.$refs.newPwConfirm.focus();
+        }
+
+        if (this.formIsValid) {
+          return this.$emit('submit');
+        }
+      },
     },
     $trs: {
       newPw: 'New password',
       newPwConfirm: 'New password again',
       passwordsDoNotMatch: 'Passwords do not match',
       resetPasswordHeader: 'Reset password',
+      required: 'Required',
       saveButton: 'Save',
     },
   };

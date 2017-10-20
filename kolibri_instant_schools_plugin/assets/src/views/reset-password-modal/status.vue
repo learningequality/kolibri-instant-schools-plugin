@@ -6,14 +6,7 @@
     </div>
     <div class="buttons">
       <k-button
-        v-if="atAccountNotFound"
-        :text="$tr('goBack')"
-        @click="$emit('goback')"
-        :primary="true"
-      />
-      <k-button
-        v-else
-        :text="$tr('close')"
+        :text="buttonText"
         @click="$emit('close')"
         :primary="true"
       />
@@ -40,8 +33,11 @@
       },
     },
     computed: {
-      atAccountNotFound() {
-        return this.status === STATUSES.ACCOUNT_NOT_FOUND;
+      buttonText() {
+        if (this.status === STATUSES.ACCOUNT_NOT_FOUND) {
+          return this.$tr('goBack');
+        }
+        return this.$tr('close');
       },
       message() {
         switch (this.status) {

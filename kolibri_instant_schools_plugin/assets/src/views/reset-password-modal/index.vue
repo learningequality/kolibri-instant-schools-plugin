@@ -8,8 +8,7 @@
       <status
         v-if="showStatus"
         :status="status"
-        @close="closeModal"
-        @goback="resetState"
+        @close="handleClose"
       />
       <phone-number-form
         v-else
@@ -88,6 +87,13 @@
         // guard against closing until 'X' button can be removed
         if (!this.disableForms) {
           this.$emit('close');
+        }
+      },
+      handleClose() {
+        if (this.status === STATUSES.ACCOUNT_NOT_FOUND) {
+          this.status = STATUSES.ENTER_PHONE_NUMBER;
+        } else {
+          this.closeModal();
         }
       },
     },

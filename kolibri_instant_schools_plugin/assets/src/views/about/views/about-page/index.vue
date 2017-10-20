@@ -50,7 +50,7 @@
     },
     data() {
       return {
-        height: null,
+        height: 300,
       };
     },
     computed: {

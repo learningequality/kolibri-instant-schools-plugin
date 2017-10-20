@@ -51,7 +51,7 @@
     },
     data() {
       return {
-        height: null,
+        height: 5000,
       };
     },
     computed: {

@@ -6,7 +6,10 @@
       :topLevelPageName="topLevelPageName"
       :appBarTitle="appBarTitle"
     >
-      <component :is="currentPage" />
+      <component
+        :is="currentPage"
+        class="page"
+      />
     </core-base>
   </div>
 
@@ -67,5 +70,9 @@
 <style lang="stylus" scoped>
 
   @require '~kolibri.styles.definitions'
+
+  .page
+    background-color: $core-bg-light
+    padding: 16px
 
 </style>

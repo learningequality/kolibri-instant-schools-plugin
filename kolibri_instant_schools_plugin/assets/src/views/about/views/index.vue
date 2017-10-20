@@ -26,8 +26,8 @@
   import faqPage from './faq-page';
 
   export default {
-    $trs: { userProfileTitle: 'Profile' },
-    name: 'userPlugin',
+    $trs: { aboutTitle: 'About' },
+    name: 'about',
     components: {
       coreBase,
       aboutPage,
@@ -35,12 +35,7 @@
     },
     computed: {
       appBarTitle() {
-        if (this.pageName === PageNames.ABOUT) {
-          return this.$tr('userProfileTitle');
-        } else if (this.pageName === PageNames.FAQ) {
-          return this.$tr('userProfileTitle');
-        }
-        return '';
+        return this.$tr('aboutTitle');
       },
 
       topLevelPageName() {

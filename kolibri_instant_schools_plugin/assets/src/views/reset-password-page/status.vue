@@ -19,11 +19,14 @@
 
 <script>
 
+  import kButton from 'kolibri.coreVue.components.kButton';
   import { ResetPasswordStates as STATES } from '../../constants';
 
   export default {
-    name: 'ResetPasswordStatus',
-    components: {},
+    name: 'resetPasswordPageStatus',
+    components: {
+      kButton,
+    },
     props: {
       status: {
         type: String,
@@ -63,11 +66,6 @@
         return this.status !== STATES.CHECKING_TOKEN;
       },
     },
-    methods: {},
-    vuex: {
-      getters: {},
-      actions: {},
-    },
     $trs: {
       confirmingToken: 'Confirming the validity of our password reset token…',
       homeButton: 'Home',
@@ -77,7 +75,7 @@
       needToRequestNewToken:
         'If you need to reset your password, please request again from the home page.',
       serverError: 'Error making request',
-      thereWasAProblem: 'There was a problem with your request. Please try again.'
+      thereWasAProblem: 'There was a problem with your request. Please try again.',
       validatingToken: 'Validating token',
     },
   };
@@ -90,6 +88,7 @@
   .explanation
     margin: 1em 0
 
-  .buttons
+  .buttons button
+    margin-left: 0
 
 </style>

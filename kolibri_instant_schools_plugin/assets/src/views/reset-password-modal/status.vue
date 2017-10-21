@@ -22,7 +22,7 @@
   import { RequestTokenStates as STATES } from '../../constants';
 
   export default {
-    name: 'resetPasswordStatus',
+    name: 'resetPasswordModalStatus',
     components: {
       kButton,
     },
@@ -52,7 +52,6 @@
         }
       },
     },
-    methods: {},
     $trs: {
       accountNotFound:
         'No account was found under this phone number. Check to see if your phone number was entered correctly.',

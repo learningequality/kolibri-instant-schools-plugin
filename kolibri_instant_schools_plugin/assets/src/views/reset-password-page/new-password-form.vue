@@ -46,6 +46,7 @@
   import kButton from 'kolibri.coreVue.components.kButton';
 
   export default {
+    name: 'newPasswordForm',
     components: {
       kButton,
       kTextbox,
@@ -103,7 +104,7 @@
         }
 
         if (this.formIsValid) {
-          return this.$emit('submit');
+          return this.$emit('submit', this.newPw);
         }
       },
     },

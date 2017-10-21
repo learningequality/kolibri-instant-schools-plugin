@@ -19,8 +19,7 @@ export function createResetToken(store, { phoneNumber }) {
       phone: phoneNumber,
     },
   }).then(response => {
-    const { code } = response.status;
-    if (code !== 201) {
+    if (response.status.code !== 201) {
       return Promise.reject(response);
     }
     return response;
@@ -32,14 +31,26 @@ export function getTokenStatus(store, { token, phoneNumber }) {
     path: `${urls['kolibri:user:passwordresettoken_list']()}${token}/?phone=${phoneNumber}`,
     method: 'GET',
   }).then(response => {
-    const { code } = response.status;
-    if (code !== 200) {
+    if (response.status.code !== 200) {
       return Promise.reject(response);
     }
     return response;
   });
 }
 
-export function updatePassword(store, { password }) {
-  return Promise.resolve();
+export function updatePassword(store, { password, token, phone }) {
+  return httpClient({
+    path: urls['kolibri:user:passwordchange_list'](),
+    method: 'POST',
+    entity: {
+      password: encodeURIComponent(password),
+      token,
+      phone,
+    },
+  }).then(response => {
+    if (response.status.code !== 200) {
+      return Promise.reject(response);
+    }
+    return response;
+  });
 }

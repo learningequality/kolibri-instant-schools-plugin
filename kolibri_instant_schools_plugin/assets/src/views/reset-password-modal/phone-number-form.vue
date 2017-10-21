@@ -7,6 +7,7 @@
 
     <form @submit.prevent="submitPhoneNumber">
       <k-textbox
+        :autofocus="true"
         :label="$tr('enterPhoneNumber')"
         v-model="phoneNumber"
         :invalid="!phoneNumberIsValid"

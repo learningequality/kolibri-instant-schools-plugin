@@ -4,6 +4,7 @@
     <status
       v-if="showStatus"
       :status="status"
+      @close="goToHomePage"
     />
     <new-password-form
       v-else
@@ -17,12 +18,13 @@
 
 <script>
 
-  import { getTokenStatus } from '../../state/resetPasswordActions';
+  import { getTokenStatus, updatePassword } from '../../state/resetPasswordActions';
   import newPasswordForm from './new-password-form';
   import status from './status';
-  import { ResetPasswordStates as STATES } from '../../constants';
+  import { PageNames, ResetPasswordStates as STATES } from '../../constants';
 
   export default {
+    name: 'resetPasswordPage',
     components: {
       newPasswordForm,
       status,
@@ -39,12 +41,25 @@
       },
     },
     methods: {
-      submitNewPassword() {
+      submitNewPassword(newPw) {
         this.disableForms = true;
-        setTimeout(() => {
-          this.disableForms = false;
-          this.status = STATES.PASSWORD_CHANGED;
-        }, 1000);
+        return this.updatePassword({
+          password: newPw,
+          token: this.token,
+          phone: this.phone,
+        })
+          .then(() => {
+            this.status = STATES.PASSWORD_CHANGED;
+          })
+          .catch(() => {
+            this.status = STATES.OTHER_ERROR;
+          })
+          .then(() => {
+            this.disableForms = false;
+          });
+      },
+      goToHomePage() {
+        this.$router.replace({ name: PageNames.SIGN_IN });
       },
     },
     mounted() {
@@ -70,6 +85,7 @@
       },
       actions: {
         getTokenStatus,
+        updatePassword,
       },
     },
     $trs: {

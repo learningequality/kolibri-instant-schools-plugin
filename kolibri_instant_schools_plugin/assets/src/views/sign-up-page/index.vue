@@ -40,10 +40,9 @@
       <k-textbox
         ref="username"
         id="username"
-        type="text"
-        autocomplete="username"
-        :label="$tr('username')"
-        :maxlength="30"
+        type="tel"
+        autocomplete="tel"
+        :label="$tr('phoneNumberLabel')"
         :invalid="usernameIsInvalid"
         :invalidText="usernameIsInvalidText"
         @blur="usernameBlurred = true"
@@ -118,13 +117,13 @@
     $trs: {
       createAccount: 'Create an account',
       name: 'Full name',
-      username: 'Username',
+      phoneNumberLabel: 'Phone Number',
       password: 'Password',
       reEnterPassword: 'Re-enter password',
       passwordMatchError: 'Passwords do not match',
       genericError: 'Something went wrong during sign up!',
-      usernameAlphaNumError: 'Username can only contain letters, numbers, and underscores',
-      usernameAlreadyExistsError: 'An account with that username already exists',
+      phoneNumberInvalid: 'Please enter a valid phone number',
+      accountAlreadyExistsError: 'An account with that phone number already exists',
       logIn: 'Sign in',
       appBarHeader: 'Instant Schools',
       finish: 'Finish',
@@ -193,11 +192,11 @@
           if (this.username === '') {
             return this.$tr('required');
           }
-          if (!validateUsername(this.username)) {
-            return this.$tr('usernameAlphaNumError');
+          if (!this.validatePhoneNumber(this.username)) {
+            return this.$tr('phoneNumberInvalid');
           }
           if (!this.usernameDoesNotExistYet) {
-            return this.$tr('usernameAlreadyExistsError');
+            return this.$tr('accountAlreadyExistsError');
           }
         }
         return '';
@@ -291,6 +290,10 @@
         } else if (this.confirmedPasswordIsInvalid) {
           this.$refs.confirmedPassword.focus();
         }
+      },
+      validatePhoneNumber() {
+        const strippedPhoneNumber = this.username.replace(/\D/g, '');
+        return strippedPhoneNumber.length > 8;
       },
     },
     vuex: {

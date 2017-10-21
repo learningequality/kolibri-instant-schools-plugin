@@ -7,7 +7,7 @@
         <ui-icon class="app-bar-icon"><logo/></ui-icon>
       </template>
       <template slot="brand">
-        {{ $tr('kolibri') }}
+        {{ $tr('appBarHeader') }}
       </template>
       <div slot="actions">
         <router-link id="signin" :to="signInPage">
@@ -126,7 +126,7 @@
       usernameAlphaNumError: 'Username can only contain letters, numbers, and underscores',
       usernameAlreadyExistsError: 'An account with that username already exists',
       logIn: 'Sign in',
-      kolibri: 'Kolibri',
+      appBarHeader: 'Instant Schools',
       finish: 'Finish',
       facility: 'Facility',
       selectFacility: 'Select a facility',

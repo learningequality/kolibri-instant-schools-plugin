@@ -86,9 +86,36 @@
         @input="updateSelection"
       />
 
+      <!-- ToS modal only shows up if the box empty prior to clicking -->
+      <!-- Using UI Checkbox for blur events and v-model -->
+      <ui-checkbox
+        id="terms-agreement-checkbox"
+        :class="['terms-agreement-checkbox', termsNotAgreed ? 'invalid' : '']"
+        v-model="termsAgreed"
+        @change="showTerms = termsAgreed"
+        @blur="termsAgreementCheckboxBlurred = true"
+        :label="$tr('termsAgreementLabel')"
+      />
+      <label
+        v-if="termsNotAgreed"
+        for="terms-agreement-checkbox"
+        class="terms-error-box"
+      >
+        {{ termsNotAgreedText }}
+      </label>
+
+
       <k-button :disabled="busy" :primary="true" :text="$tr('finish')" type="submit" />
 
     </form>
+
+    <core-modal
+      v-if="showTerms"
+      @cancel="showTerms = false"
+      :title="$tr('termsOfServiceModalHeader')"
+    >
+      <iframe class="terms" src="/content/databases/tos.txt"></iframe>
+    </core-modal>
 
     <div class="footer">
       <language-switcher :footer="true"/>
@@ -104,6 +131,8 @@
   import { PageNames } from '../../constants';
   import { validateUsername } from 'kolibri.utils.validators';
   import kButton from 'kolibri.coreVue.components.kButton';
+  import uiCheckbox from 'keen-ui/src/UiCheckbox';
+  import coreModal from 'kolibri.coreVue.components.coreModal';
   import uiAlert from 'keen-ui/src/UiAlert';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
   import uiToolbar from 'keen-ui/src/UiToolbar';
@@ -125,6 +154,8 @@
       phoneNumberInvalid: 'Please enter a valid phone number',
       accountAlreadyExistsError: 'An account with that phone number already exists',
       logIn: 'Sign in',
+      termsAgreementLabel: 'I agree to the terms of service & privacy policy',
+      termsOfServiceModalHeader: 'Terms of service & privacy policy',
       appBarHeader: 'Instant Schools',
       finish: 'Finish',
       facility: 'Facility',
@@ -140,6 +171,8 @@
       uiIcon,
       uiSelect,
       languageSwitcher,
+      coreModal,
+      uiCheckbox,
     },
     data: () => ({
       name: '',
@@ -153,6 +186,9 @@
       confirmedPasswordBlurred: false,
       facilityBlurred: false,
       formSubmitted: false,
+      showTerms: false,
+      termsAgreed: false,
+      termsAgreementCheckboxBlurred: false,
     }),
     computed: {
       signInPage() {
@@ -229,6 +265,15 @@
       confirmedPasswordIsInvalid() {
         return !!this.confirmedPasswordIsInvalidText;
       },
+      termsNotAgreedText() {
+        if ((this.termsAgreementCheckboxBlurred || this.formSubmitted) && !this.termsAgreed) {
+          return this.$tr('required');
+        }
+        return '';
+      },
+      termsNotAgreed() {
+        return !!this.termsNotAgreedText;
+      },
       noFacilitySelected() {
         return !this.selectedFacility.id;
       },
@@ -249,7 +294,8 @@
           !this.usernameIsInvalid &&
           !this.passwordIsInvalid &&
           !this.confirmedPasswordIsInvalid &&
-          !this.facilityIsInvalid
+          !this.facilityIsInvalid &&
+          !this.termsNotAgreed
         );
       },
       unknownError() {
@@ -317,10 +363,12 @@
 <style lang="stylus" scoped>
 
   @require '~kolibri.styles.definitions'
+
   $iphone-5-width = 320px
   $vertical-page-margin = 100px
   $logo-size = (1.64 * 1.125)rem
   $logo-margin = (0.38 * $logo-size)rem
+  $keen-invalid-md-red = #f44336
 
   // component, highest level
   #signup-page
@@ -351,14 +399,16 @@
     width: ($iphone-5-width - 20)px
 
   .terms
-    background-color: $core-bg-light
-    color: $core-text-annotation
-    height: 6em
-    overflow-y: scroll
-    padding: 0.5em
-    margin-bottom: 1em
-    p
-      margin-top: 0
+    height: 80vh
+    width: 80vw
+    &-agreement-checkbox
+      text-decoration: underline
+      &.invalid
+        color: $keen-invalid-md-red
+    &-error-box
+      display: block
+      color: $keen-invalid-md-red // same color as input error messages
+      font-size: 14px // same as error messages from inputs
 
   .app-bar-icon
     font-size: 2.5em

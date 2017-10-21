@@ -63,26 +63,8 @@
         <p>{{ name }}</p>
       </template>
 
-      <k-textbox
-        ref="username"
-        v-if="canEditUsername"
-        type="text"
-        autocomplete="username"
-        :label="$tr('username')"
-        :disabled="busy"
-        :maxlength="30"
-        :invalid="usernameIsInvalid"
-        :invalidText="usernameIsInvalidText"
-        @blur="usernameBlurred = true"
-        v-model="username"
-      />
-      <template v-else>
-        <h2>{{ $tr('username') }}</h2>
-        <p>{{ session.username }}</p>
-      </template>
-
       <k-button
-        v-if="canEditUsername || canEditName"
+        v-if="canEditName"
         type="submit"
         class="submit"
         :text="$tr('updateProfile')"
@@ -110,7 +92,6 @@
     userHasPermissions,
   } from 'kolibri.coreVue.vuex.getters';
   import responsiveWindow from 'kolibri.coreVue.mixins.responsiveWindow';
-  import { validateUsername } from 'kolibri.utils.validators';
   import { fetchPoints } from 'kolibri.coreVue.vuex.actions';
   import kButton from 'kolibri.coreVue.components.kButton';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
@@ -124,7 +105,6 @@
     $trs: {
       genericError: 'Something went wrong',
       success: 'Profile details updated!',
-      username: 'Username',
       name: 'Full name',
       updateProfile: 'Save changes',
       isLearner: 'Learner',
@@ -135,7 +115,6 @@
       points: 'Points',
       role: 'Role',
       devicePermissions: 'Device permissions',
-      usernameNotAlphaNumUnderscore: 'Username can only contain letters, numbers, and underscores',
       required: 'This field is required',
       limitedPermissions: 'Limited permissions',
       youCan: 'You can',
@@ -150,9 +129,7 @@
     mixins: [responsiveWindow],
     data() {
       return {
-        username: this.session.username,
         name: this.session.full_name,
-        usernameBlurred: false,
         nameBlurred: false,
         formSubmitted: false,
       };
@@ -184,12 +161,6 @@
         }
         return '';
       },
-      canEditUsername() {
-        if (this.isCoach || this.isLearner) {
-          return this.facilityConfig.learnerCanEditUsername;
-        }
-        return true;
-      },
       canEditName() {
         if (this.isCoach || this.isLearner) {
           return this.facilityConfig.learnerCanEditName;
@@ -207,22 +178,8 @@
       nameIsInvalid() {
         return !!this.nameIsInvalidText;
       },
-      usernameIsInvalidText() {
-        if (this.usernameBlurred || this.formSubmitted) {
-          if (this.username === '') {
-            return this.$tr('required');
-          }
-          if (!validateUsername(this.username)) {
-            return this.$tr('usernameNotAlphaNumUnderscore');
-          }
-        }
-        return '';
-      },
-      usernameIsInvalid() {
-        return !!this.usernameIsInvalidText;
-      },
       formIsValid() {
-        return !this.usernameIsInvalid;
+        return !this.nameIsInvalid;
       },
     },
     created() {
@@ -234,16 +191,11 @@
         this.resetProfileState();
         if (this.formIsValid) {
           const edits = {
-            username: this.username,
             full_name: this.name,
           };
           this.editProfile(edits, this.session);
         } else {
-          if (this.nameIsInvalid) {
-            this.$refs.name.focus();
-          } else if (this.usernameIsInvalid) {
-            this.$refs.username.focus();
-          }
+          this.$refs.name.focus();
         }
       },
       getPermissionString(permission) {

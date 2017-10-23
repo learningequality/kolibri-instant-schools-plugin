@@ -66,12 +66,16 @@
           :disabled="busy"
         />
       </form>
+
+      <div class="reset-pw">
+        <a href="#" @click.prevent="showPwResetModal = true">
+          {{ $tr('resetYourPassword') }}
+        </a>
+      </div>
+
       <div class="divider"></div>
 
-      <reset-password-modal v-if="showPwResetModal" @close="showPwResetModal = false" />
-
       <p class="login-text no-account">{{ $tr('noAccount') }}</p>
-      <k-button text="Reset Password" @click="showPwResetModal = true" />
       <div id="btn-group">
         <router-link v-if="canSignUp" class="group-btn" :to="signUpPage">
           <k-button :text="$tr('createAccount')" :primary="false"/>
@@ -85,6 +89,11 @@
     <div class="footer-row">
       <language-switcher :footer="true" class="footer-cell"/>
     </div>
+
+    <reset-password-modal
+      v-if="showPwResetModal"
+      @close="showPwResetModal = false"
+    />
   </div>
 
 </template>
@@ -120,6 +129,7 @@
       poweredBy: 'Kolibri {version}',
       required: 'This field is required',
       requiredForCoachesAdmins: 'Password is required for coaches and admins',
+      resetYourPassword: 'Reset your password',
     },
     components: {
       kButton,
@@ -442,5 +452,9 @@
   .alert
     // Needed since alert has transparent background-color
     background-color: white
+
+  .reset-pw
+    margin-top: 1.5em
+    margin-bottom: -1em
 
 </style>

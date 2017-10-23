@@ -60,7 +60,7 @@
     computed: {
       phoneNumberIsValid() {
         if (this.phoneNumberShouldValidate) {
-          return this.phoneNumber.trim() !== '';
+          return this.phoneNumber !== '';
         }
         return true;
       },
@@ -72,10 +72,6 @@
           this.$emit('submit', this.phoneNumber);
         }
       },
-    },
-    vuex: {
-      getters: {},
-      actions: {},
     },
     $trs: {
       cancel: 'Cancel',
@@ -92,6 +88,7 @@
 <style lang="stylus" scoped>
 
   .instructions
+    text-align: left
     margin: 1em 0
 
   .buttons

@@ -33,11 +33,10 @@
   export default {
     name: 'resetPasswordModal',
     components: {
-      status,
       coreModal,
       phoneNumberForm,
+      status,
     },
-    props: {},
     data() {
       return {
         disableForms: false,
@@ -98,7 +97,6 @@
       },
     },
     vuex: {
-      getters: {},
       actions: {
         createResetToken,
       },

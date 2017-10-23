@@ -37,6 +37,11 @@ const mutations = {
     state.pageState.errorCode = errorCode;
     state.pageState.errorMessage = errorMessage;
   },
+  ADD_PROFILE(state, newProfile) {
+    if (state.pageState.profiles) {
+      state.pageState.profiles.push(newProfile);
+    }
+  },
 };
 
 // assigns core state and mutations

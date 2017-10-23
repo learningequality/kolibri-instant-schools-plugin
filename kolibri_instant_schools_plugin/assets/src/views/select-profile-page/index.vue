@@ -33,7 +33,7 @@
 
   import kButton from 'kolibri.coreVue.components.kButton';
   import newProfileModal from './new-profile-modal';
-  import profilesList from './profile-list';
+  import profilesList from './profiles-list';
 
   export default {
     name: 'selectProfilePage',
@@ -49,7 +49,7 @@
     },
     methods: {
       signInWithProfile({ username }) {
-        console.log(username);
+        console.log('signing in as ', username);
       },
     },
     vuex: {
@@ -59,7 +59,7 @@
       actions: {
         addProfileToPhoneAccount(profileName) {
           console.log('yoyo', profileName);
-        }
+        },
       },
     },
     $trs: {
@@ -75,5 +75,8 @@
 
   .buttons button
     margin-left: 0
+
+  .profiles
+    margin: 1em 0
 
 </style>

@@ -21,12 +21,14 @@
   import signInPage from './sign-in-page';
   import signUpPage from './sign-up-page';
   import profilePage from './profile-page';
+  import selectProfilePage from './select-profile-page/index';
 
   export default {
     $trs: { userProfileTitle: 'Profile' },
     name: 'userPlugin',
     components: {
       coreBase,
+      selectProfilePage,
       signInPage,
       signUpPage,
       profilePage,
@@ -48,6 +50,9 @@
         }
         if (this.pageName === PageNames.PROFILE) {
           return 'profile-page';
+        }
+        if (this.pageName === PageNames.CHOOSE_PROFILE) {
+          return 'selectProfilePage';
         }
         return null;
       },

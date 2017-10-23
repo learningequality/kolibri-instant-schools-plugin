@@ -100,6 +100,7 @@
   import uiAutocompleteSuggestion from 'keen-ui/src/UiAutocompleteSuggestion';
   import uiAlert from 'keen-ui/src/UiAlert';
   import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
+  import { showSelectProfilePage } from '../../state/profileActions';
 
   export default {
     name: 'signInPage',
@@ -277,13 +278,20 @@
       signIn() {
         this.formSubmitted = true;
         if (this.formIsValid) {
-          this.kolibriLogin({
-            username: this.username,
+          return this.showSelectProfilePage({
+            phone: this.username,
             password: this.password,
             facility: this.facility,
+          }).catch(err => {
+            console.log(err);
           });
+          // this.kolibriLogin({
+          //   username: this.username,
+          //   password: this.password,
+          //   facility: this.facility,
+          // });
         } else {
-          this.focusOnInvalidField();
+          return this.focusOnInvalidField();
         }
       },
       focusOnInvalidField() {
@@ -302,7 +310,7 @@
         invalidCredentials: state => state.core.loginError === LoginErrors.INVALID_CREDENTIALS,
         busy: state => state.core.signInBusy,
       },
-      actions: { kolibriLogin },
+      actions: { kolibriLogin, showSelectProfilePage },
     },
   };
 

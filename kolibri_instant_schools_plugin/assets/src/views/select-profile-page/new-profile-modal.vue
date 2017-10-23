@@ -41,7 +41,7 @@
 <script>
 
   import coreModal from 'kolibri.coreVue.components.coreModal';
-  import kTextbox from 'kolibri.corevue.components.kTextbox';
+  import kTextbox from 'kolibri.coreVue.components.kTextbox';
 
   export default {
     name: 'newProfileModal',
@@ -71,7 +71,7 @@
           return this.fullName !== '' && !this.profileAlreadyExists(this.fullName);
         }
         return true;
-      }
+      },
     },
     methods: {
       submit() {
@@ -85,7 +85,7 @@
         if (!this.disabled) {
           this.$emit('close');
         }
-      }
+      },
     },
     vuex: {
       getters: {
@@ -113,7 +113,8 @@
 
   .buttons
     text-align: right
-    button[type="submit"]
-      margin-right: 0
+
+  button[type='submit']
+    margin-right: 0
 
 </style>

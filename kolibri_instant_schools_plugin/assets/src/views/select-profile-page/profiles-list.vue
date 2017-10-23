@@ -9,7 +9,11 @@
         @click="selectProfile(profile)"
       >
         <div class="profile-icon">
-          Icon
+          <mat-svg
+            category="social"
+            name="person"
+            class="person-icon"
+          />
         </div>
         <div class="profile-name">
           {{ profile.full_name }}
@@ -44,9 +48,16 @@
 <style lang="stylus" scoped>
 
   .profile-card
-    padding: 0.5em
+    padding: 1.5em 1em
     cursor: pointer
-    // copied from kolibri card carousel
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23)
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.19), 0 1px 1px rgba(0, 0, 0, 0.23)
+
+  .profile-icon
+    display: inline-block
+    padding: 0 0.5em
+
+  .profile-name
+    display: inline-block
+    vertical-align: super
 
 </style>

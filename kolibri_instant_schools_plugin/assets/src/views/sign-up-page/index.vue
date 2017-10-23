@@ -314,23 +314,18 @@
 <style lang="stylus" scoped>
 
   @require '~kolibri.styles.definitions'
+
   $iphone-5-width = 320px
   $vertical-page-margin = 100px
-  $logo-size = (1.64 * 1.125)rem
-  $logo-margin = (0.38 * $logo-size)rem
+  $logo-size = 36px
+  $logo-margin = (0.38 * $logo-size)px
+  $keen-invalid-md-red = #f44336
 
   // component, highest level
   #signup-page
     width: 100%
     height: 100%
     overflow-y: auto
-
-  // Action Bar
-  #logo
-    // 1.63 * font height
-    height: $logo-size
-    display: inline-block
-    margin-left: $logo-margin
 
   #signin
     margin-right: 1em
@@ -348,18 +343,22 @@
     width: ($iphone-5-width - 20)px
 
   .terms
-    background-color: $core-bg-light
-    color: $core-text-annotation
-    height: 6em
-    overflow-y: scroll
-    padding: 0.5em
-    margin-bottom: 1em
-    p
-      margin-top: 0
+    height: 80vh
+    width: 80vw
+    &-agreement-checkbox
+      text-decoration: underline
+      &.invalid
+        color: $keen-invalid-md-red
+    &-error-box
+      display: block
+      color: $keen-invalid-md-red // same color as input error messages
+      font-size: 14px // same as error messages from inputs
 
   .app-bar-icon
-    font-size: 2.5em
-    margin-left: 0.25em
+    display: inline-block
+    margin-left: $logo-margin
+    height: $logo-size
+    width: $logo-size
 
   .footer
     margin: 36px

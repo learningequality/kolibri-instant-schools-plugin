@@ -8,7 +8,6 @@ import RootVue from './views';
 import * as actions from './state/actions';
 import store from './state/store';
 import { PageNames } from './constants';
-import { showSelectProfilePage } from './state/profileActions';
 
 class UserModule extends KolibriModule {
   ready() {

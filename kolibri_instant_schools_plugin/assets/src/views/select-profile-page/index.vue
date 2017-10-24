@@ -51,8 +51,8 @@
     data() {
       return {
         disableForms: false,
-        showNewProfileModal: false,
         newProfileFailed: false,
+        showNewProfileModal: false,
       };
     },
     methods: {

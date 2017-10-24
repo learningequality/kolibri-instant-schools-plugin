@@ -4,7 +4,7 @@ const PageNames = {
   SIGN_IN: 'SIGN_IN',
   SIGN_UP: 'SIGN_UP',
   PROFILE: 'PROFILE',
-  CHOOSE_PROFILE: 'CHOOSE_PROFILE',
+  SELECT_PROFILE: 'SELECT_PROFILE',
 };
 
 export { PageNames };

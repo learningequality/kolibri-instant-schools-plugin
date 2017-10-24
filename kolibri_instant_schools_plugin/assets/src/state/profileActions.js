@@ -20,7 +20,7 @@ export function showSelectProfilePage(store, params) {
         return Promise.reject(response);
       }
       // On success, go to new page
-      store.dispatch('SET_PAGE_NAME', PageNames.CHOOSE_PROFILE);
+      store.dispatch('SET_PAGE_NAME', PageNames.SELECT_PROFILE);
       return store.dispatch('SET_PAGE_STATE', {
         facility,
         phone,

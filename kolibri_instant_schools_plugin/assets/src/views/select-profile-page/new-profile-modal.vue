@@ -41,8 +41,6 @@
         </div>
       </form>
     </div>
-
-
   </core-modal>
 
 </template>
@@ -65,9 +63,9 @@
     },
     data() {
       return {
+        formIsSubmitted: false,
         fullName: '',
         fullNameIsBlurred: false,
-        formIsSubmitted: false,
       };
     },
     props: {

@@ -7,7 +7,7 @@
       :class="{ 'profile-card-disabled': disabled }"
       :key="profile.username"
       role="button"
-      @click="submitLogin(profile)"
+      @click="selectProfile(profile)"
     >
       <div class="profile-icon">
         <mat-svg
@@ -40,7 +40,7 @@
       },
     },
     methods: {
-      submitLogin(profile) {
+      selectProfile(profile) {
         if (!this.disabled) {
           return this.$emit('selectprofile', profile);
         }

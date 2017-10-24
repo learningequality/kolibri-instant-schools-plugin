@@ -89,7 +89,6 @@
 
 <script>
 
-  import { kolibriLogin } from 'kolibri.coreVue.vuex.actions';
   import { PageNames } from '../../constants';
   import { facilityConfig, currentFacilityId } from 'kolibri.coreVue.vuex.getters';
   import { FacilityUsernameResource } from 'kolibri.resources';
@@ -306,7 +305,6 @@
         busy: state => state.core.signInBusy,
       },
       actions: {
-        kolibriLogin,
         showSelectProfilePage,
         showLoginError(store) {
           return store.dispatch('CORE_SET_LOGIN_ERROR', LoginErrors.INVALID_CREDENTIALS);

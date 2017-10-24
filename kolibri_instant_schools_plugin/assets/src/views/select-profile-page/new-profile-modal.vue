@@ -5,31 +5,41 @@
     @cancel="closeModal"
   >
     <div class="contents">
-      <k-textbox
-        :label="$tr('fullName')"
-        v-model="fullName"
-        :invalid="!fullNameIsValid"
-        :invalidText="$tr('required')"
-        :maxlength="120"
-        :disabled="disabled"
-        @blur="fullNameIsBlurred=true"
-      />
+      <ui-alert
+        v-if="showError"
+        type="error"
+        :dismissible="false"
+      >
+        {{ $tr('problemCreatingProfile') }}
+      </ui-alert>
 
-      <div class="buttons">
-        <k-button
-          :text="$tr('cancel')"
-          :primary="false"
-          @click="closeModal"
+      <form @submit.prevent="submit">
+        <k-textbox
+          :autofocus="true"
+          :label="$tr('fullName')"
+          v-model="fullName"
+          :invalid="!fullNameIsValid"
+          :invalidText="fullNameInvalidText"
+          :maxlength="120"
           :disabled="disabled"
+          @blur="fullNameIsBlurred=true"
         />
-        <k-button
-          :text="$tr('save')"
-          type="submit"
-          :primary="true"
-          @click="submit"
-          :disabled="disabled"
-        />
-      </div>
+
+        <div class="buttons">
+          <k-button
+            :text="$tr('cancel')"
+            :primary="false"
+            @click="closeModal"
+            :disabled="disabled"
+          />
+          <k-button
+            :text="$tr('save')"
+            type="submit"
+            :primary="true"
+            :disabled="disabled"
+          />
+        </div>
+      </form>
     </div>
 
 
@@ -43,6 +53,7 @@
   import coreModal from 'kolibri.coreVue.components.coreModal';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
   import kButton from 'kolibri.coreVue.components.kButton';
+  import uiAlert from 'keen-ui/src/UiAlert';
 
   export default {
     name: 'newProfileModal',
@@ -50,6 +61,7 @@
       coreModal,
       kButton,
       kTextbox,
+      uiAlert,
     },
     data() {
       return {
@@ -63,16 +75,26 @@
         type: Boolean,
         required: true,
       },
+      showError: {
+        type: Boolean,
+        default: false,
+      },
     },
     computed: {
       fullNameShouldValidate() {
-        return this.fullNameIsBlurred || this.formIsSubmitted;
+        return this.fullName !== '' || this.fullNameIsBlurred || this.formIsSubmitted;
       },
       fullNameIsValid() {
         if (this.fullNameShouldValidate) {
           return this.fullName !== '' && !this.profileAlreadyExists(this.fullName);
         }
         return true;
+      },
+      fullNameInvalidText() {
+        if (this.profileAlreadyExists(this.fullName)) {
+          return this.$tr('profileAlreadyExists');
+        }
+        return this.$tr('required');
       },
     },
     methods: {
@@ -103,6 +125,7 @@
       fullName: 'Full name',
       newProfileModalTitle: 'New profile',
       problemCreatingProfile: 'There was a problem creating this profile',
+      profileAlreadyExists: 'This profile already exists',
       required: 'Required',
       save: 'Save',
     },

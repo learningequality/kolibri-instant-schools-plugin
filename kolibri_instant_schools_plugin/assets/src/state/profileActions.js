@@ -44,6 +44,9 @@ export function createProfile(store, profileName) {
     if (response.status.code !== 201) {
       return Promise.reject(response);
     }
-    return store.dispatch('ADD_PROFILE', response.entity);
+    return store.dispatch('ADD_PROFILE', {
+      full_name: profileName,
+      username: response.entity,
+    });
   });
 }

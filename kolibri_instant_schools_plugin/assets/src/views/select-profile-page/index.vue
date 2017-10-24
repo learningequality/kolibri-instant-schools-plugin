@@ -16,7 +16,7 @@
         :text="$tr('newProfileButton')"
         :ariaLabel="$tr('newProfileButton')"
         :primary="true"
-        @click="showNewProfileModal=true"
+        @click="openModal"
         :disabled="disableForms"
       />
     </div>
@@ -24,8 +24,9 @@
     <new-profile-modal
       v-if="showNewProfileModal"
       @submit="addProfileToPhoneAccount"
-      @close="showNewProfileModal=false"
+      @close="closeModal"
       :disabled="disableForms"
+      :showError="newProfileFailed"
     />
   </div>
 
@@ -38,6 +39,7 @@
   import kButton from 'kolibri.coreVue.components.kButton';
   import newProfileModal from './new-profile-modal';
   import profilesList from './profiles-list';
+  import { createProfile } from '../../state/profileActions';
 
   export default {
     name: 'selectProfilePage',
@@ -50,6 +52,7 @@
       return {
         disableForms: false,
         showNewProfileModal: false,
+        newProfileFailed: false,
       };
     },
     methods: {
@@ -63,6 +66,35 @@
           this.disableForms = false;
         });
       },
+      addProfileToPhoneAccount(profileName) {
+        this.disableForms = true;
+        this.createProfile(profileName)
+          .then(() => {
+            this.showNewProfileModal = false;
+            // Wait for profile list to update before scrolling down
+            return this.$nextTick().then(() => {
+              this.scrollToBottom();
+            });
+          })
+          .catch(() => {
+            this.newProfileFailed = true;
+          })
+          .then(() => {
+            this.disableForms = false;
+          });
+      },
+      scrollToBottom() {
+        const container = document.querySelector('.content-container');
+        container.scrollTop = container.scrollHeight;
+      },
+      openModal() {
+        this.showNewProfileModal = true;
+        this.newProfileFailed = false;
+      },
+      closeModal() {
+        this.showNewProfileModal = false;
+        this.newProfileFailed = false;
+      },
     },
     vuex: {
       getters: {
@@ -71,15 +103,7 @@
         password: ({ pageState }) => pageState.password,
       },
       actions: {
-        addProfileToPhoneAccount(store, profileName) {
-          this.disableForms = true;
-          store.dispatch('ADD_PROFILE', {
-            username: 'jb',
-            full_name: 'jonathan',
-          });
-          this.showNewProfileModal = false;
-          this.disableForms = false;
-        },
+        createProfile,
         kolibriLogin,
       },
     },

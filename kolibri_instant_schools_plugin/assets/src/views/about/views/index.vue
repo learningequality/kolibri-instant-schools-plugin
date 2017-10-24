@@ -37,11 +37,9 @@
       appBarTitle() {
         return this.$tr('aboutTitle');
       },
-
       topLevelPageName() {
         return TopLevelPageNames.ABOUT;
       },
-
       currentPage() {
         if (this.pageName === PageNames.ABOUT) {
           return 'about-page';

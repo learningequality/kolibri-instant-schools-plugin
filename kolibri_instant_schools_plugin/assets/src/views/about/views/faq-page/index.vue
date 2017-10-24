@@ -28,6 +28,8 @@
       :primary="true"
       :raised="true"
       @click="goToTop"
+      class="to-top-button"
+      :class="{ 'to-top-button-visible': btnIsVisible }"
     />
 
   </div>
@@ -53,6 +55,7 @@
     data() {
       return {
         height: 5000,
+        btnIsVisible: false,
       };
     },
     computed: {
@@ -66,13 +69,25 @@
     mounted() {
       this.resizeIframe();
       window.addEventListener('resize', this.throttleResizeIframe);
+      document
+        .querySelector('.content-container')
+        .addEventListener('scroll', this.throttleUpdateBtnVisibility);
     },
     beforeDestroy() {
       window.removeEventListener('resize', this.throttleResizeIframe);
+      document
+        .querySelector('.content-container')
+        .removeEventListener('scroll', this.throttleUpdateBtnVisibility);
     },
     methods: {
+      updateBtnVisibility() {
+        this.btnIsVisible = document.querySelector('.content-container').scrollTop > 500;
+      },
+      throttleUpdateBtnVisibility: throttle(function() {
+        this.updateBtnVisibility();
+      }, 100),
       goToTop() {
-        this.$refs.backButton.$el.scrollIntoView();
+        this.$refs.backButton.$el.scrollIntoView(false);
       },
       resizeIframe() {
         this.height = this.$refs.iframe.contentWindow.document.body.scrollHeight;
@@ -89,5 +104,14 @@
 <style lang="stylus" scoped>
 
   @require '~kolibri.styles.definitions'
+
+  .to-top-button
+    position: fixed
+    right: 32px
+    bottom: 32px
+    display: none
+
+  .to-top-button-visible
+    display: block
 
 </style>

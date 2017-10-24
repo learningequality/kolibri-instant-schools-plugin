@@ -11,23 +11,23 @@
     >
     </iframe>
 
-    <router-link :to="faqRoute">
-      <k-button
-        :text="$tr('viewFaq')"
-        :primary="false"
-        :raised="true"
-      />
-    </router-link>
+    <div class="center">
+      <router-link :to="faqRoute">
+        <k-button
+          :text="$tr('viewFaq')"
+          :primary="false"
+          :raised="true"
+        />
+      </router-link>
 
-    <br>
-
-    <a :href="learnRoute">
-      <k-button
-        :text="$tr('startLearning')"
-        :primary="true"
-        :raised="true"
-      />
-    </a>
+      <a :href="learnRoute">
+        <k-button
+          :text="$tr('startLearning')"
+          :primary="true"
+          :raised="true"
+        />
+      </a>
+    </div>
 
   </div>
 
@@ -88,5 +88,8 @@
 <style lang="stylus" scoped>
 
   @require '~kolibri.styles.definitions'
+
+  .center
+    text-align: center
 
 </style>

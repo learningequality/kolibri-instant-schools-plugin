@@ -23,10 +23,12 @@ h3, h4, h5, h6{
   width: 100%;
   margin-top: 16px;
   margin-bottom: 16px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .vodafone-logo {
-  max-width: 400px;
+  max-width: 300px;
 }
 
 .instant-schools-logo {

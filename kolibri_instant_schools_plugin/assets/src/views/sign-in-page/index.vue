@@ -283,16 +283,11 @@
             password: this.password,
             facility: this.facility,
           }).catch(err => {
-            console.log(err);
+            // Handles 404 (no profiles) and 401 (bad credentials) the same way
+            this.showLoginError();
           });
-          // this.kolibriLogin({
-          //   username: this.username,
-          //   password: this.password,
-          //   facility: this.facility,
-          // });
-        } else {
-          return this.focusOnInvalidField();
         }
+        return this.focusOnInvalidField();
       },
       focusOnInvalidField() {
         if (this.usernameIsInvalid) {
@@ -310,7 +305,13 @@
         invalidCredentials: state => state.core.loginError === LoginErrors.INVALID_CREDENTIALS,
         busy: state => state.core.signInBusy,
       },
-      actions: { kolibriLogin, showSelectProfilePage },
+      actions: {
+        kolibriLogin,
+        showSelectProfilePage,
+        showLoginError(store) {
+          return store.dispatch('CORE_SET_LOGIN_ERROR', LoginErrors.INVALID_CREDENTIALS);
+        },
+      },
     },
   };
 

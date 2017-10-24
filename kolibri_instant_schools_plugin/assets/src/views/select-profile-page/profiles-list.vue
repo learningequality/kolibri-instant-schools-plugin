@@ -1,25 +1,25 @@
 <template>
 
   <div>
-    <template v-for="profile in profiles">
-      <div
-        class="profile-card"
-        :key="profile.username"
-        role="button"
-        @click="selectProfile(profile)"
-      >
-        <div class="profile-icon">
-          <mat-svg
-            category="social"
-            name="person"
-            class="person-icon"
-          />
-        </div>
-        <div class="profile-name">
-          {{ profile.full_name }}
-        </div>
+    <div
+      v-for="profile in profiles"
+      class="profile-card"
+      :class="{ 'profile-card-disabled': disabled }"
+      :key="profile.username"
+      role="button"
+      @click="submitLogin(profile)"
+    >
+      <div class="profile-icon">
+        <mat-svg
+          category="social"
+          name="person"
+          class="person-icon"
+        />
       </div>
-    </template>
+      <div class="profile-name">
+        {{ profile.full_name }}
+      </div>
+    </div>
   </div>
 
 </template>
@@ -34,10 +34,16 @@
         type: Array,
         required: true,
       },
+      disabled: {
+        type: Boolean,
+        required: true,
+      },
     },
     methods: {
-      selectProfile(profile) {
-        return this.$emit('selectprofile', profile);
+      submitLogin(profile) {
+        if (!this.disabled) {
+          return this.$emit('selectprofile', profile);
+        }
       },
     },
   };
@@ -51,6 +57,10 @@
     padding: 1.5em 1em
     cursor: pointer
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.19), 0 1px 1px rgba(0, 0, 0, 0.23)
+    margin-bottom: 1em
+    &-disabled
+      opacity: 0.5
+      cursor: default
 
   .profile-icon
     display: inline-block

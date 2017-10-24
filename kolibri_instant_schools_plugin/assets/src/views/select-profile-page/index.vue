@@ -7,6 +7,7 @@
       <profiles-list
         :profiles="profiles"
         @selectprofile="signInWithProfile"
+        :disabled="disableForms"
       />
     </div>
 
@@ -16,6 +17,7 @@
         :ariaLabel="$tr('newProfileButton')"
         :primary="true"
         @click="showNewProfileModal=true"
+        :disabled="disableForms"
       />
     </div>
 
@@ -23,6 +25,7 @@
       v-if="showNewProfileModal"
       @submit="addProfileToPhoneAccount"
       @close="showNewProfileModal=false"
+      :disabled="disableForms"
     />
   </div>
 
@@ -31,6 +34,7 @@
 
 <script>
 
+  import { kolibriLogin } from 'kolibri.coreVue.vuex.actions';
   import kButton from 'kolibri.coreVue.components.kButton';
   import newProfileModal from './new-profile-modal';
   import profilesList from './profiles-list';
@@ -44,22 +48,39 @@
     },
     data() {
       return {
+        disableForms: false,
         showNewProfileModal: false,
       };
     },
     methods: {
       signInWithProfile({ username }) {
-        console.log('signing in as ', username);
+        this.disableForms = true;
+        this.kolibriLogin({
+          facility: this.facility,
+          password: this.password,
+          username,
+        }).catch(() => {
+          this.disableForms = false;
+        });
       },
     },
     vuex: {
       getters: {
         profiles: ({ pageState }) => pageState.profiles,
+        facility: ({ pageState }) => pageState.facility,
+        password: ({ pageState }) => pageState.password,
       },
       actions: {
-        addProfileToPhoneAccount(profileName) {
-          console.log('yoyo', profileName);
+        addProfileToPhoneAccount(store, profileName) {
+          this.disableForms = true;
+          store.dispatch('ADD_PROFILE', {
+            username: 'jb',
+            full_name: 'jonathan',
+          });
+          this.showNewProfileModal = false;
+          this.disableForms = false;
         },
+        kolibriLogin,
       },
     },
     $trs: {

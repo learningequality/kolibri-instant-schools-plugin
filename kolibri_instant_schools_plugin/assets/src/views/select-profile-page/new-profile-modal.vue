@@ -8,9 +8,9 @@
       <k-textbox
         :label="$tr('fullName')"
         v-model="fullName"
-        :invalid="!fullNameIsInvalid"
+        :invalid="!fullNameIsValid"
         :invalidText="$tr('required')"
-        maxlength="120"
+        :maxlength="120"
         :disabled="disabled"
         @blur="fullNameIsBlurred=true"
       />
@@ -42,11 +42,13 @@
 
   import coreModal from 'kolibri.coreVue.components.coreModal';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
+  import kButton from 'kolibri.coreVue.components.kButton';
 
   export default {
     name: 'newProfileModal',
     components: {
       coreModal,
+      kButton,
       kTextbox,
     },
     data() {

@@ -73,9 +73,11 @@
         <router-link v-if="canSignUp" class="group-btn" :to="signUpPage">
           <k-button :text="$tr('createAccount')" :primary="false"/>
         </router-link>
-        <a class="group-btn" href="/learn">
-          <k-button :text="$tr('accessAsGuest')" :primary="false"/>
-        </a>
+        <k-button
+          :text="$tr('accessAsGuest')"
+          :primary="false"
+          @click="accessAsGuest"
+        />
       </div>
       <p class="login-text version">{{ versionMsg }}</p>
     </div></div>
@@ -100,6 +102,8 @@
   import uiAutocompleteSuggestion from 'keen-ui/src/UiAutocompleteSuggestion';
   import uiAlert from 'keen-ui/src/UiAlert';
   import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
+  import Lockr from 'lockr';
+  import router from 'kolibri.coreVue.router';
 
   export default {
     name: 'signInPage',
@@ -291,6 +295,14 @@
           this.$refs.username.focus();
         } else if (this.passwordIsInvalid) {
           this.$refs.password.focus();
+        }
+      },
+      accessAsGuest() {
+        if (Lockr.get('signedInBefore')) {
+          window.location = '/learn';
+        } else {
+          Lockr.set('signedInBefore', true);
+          window.location = '/about';
         }
       },
     },

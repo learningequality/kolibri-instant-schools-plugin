@@ -1,5 +1,6 @@
-from kolibri.deployment.default.settings.base import *
+import sys
 
-AUTHENTICATION_BACKENDS = ['kolibri.auth.backends.DeviceOwnerBackend', 'kolibri_instant_schools_plugin.auth.backends.PhoneNumberFacilityUserBackend']
+print("ERROR: `kolibri_instant_schools_plugin.auth.phone_hashing_settings` are no longer used; " +
+      "please use `kolibri_instant_schools_plugin.instant_schools_settings` instead.")
 
-USE_PHONE_NUMBER_HASHING = True
+sys.exit(1)

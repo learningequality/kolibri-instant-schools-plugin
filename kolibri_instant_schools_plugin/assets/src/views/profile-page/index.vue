@@ -54,8 +54,8 @@
         :label="$tr('name')"
         :disabled="busy"
         :maxlength="120"
-        :invalid="nameIsInvalid"
-        :invalidText="nameIsInvalidText"
+        :invalid="!nameIsValid"
+        :invalidText="$tr('required')"
         v-model="name"
       />
       <template v-else>
@@ -63,28 +63,32 @@
         <p>{{ name }}</p>
       </template>
 
-      <k-textbox
-        ref="username"
-        v-if="canEditUsername"
-        type="text"
-        autocomplete="username"
-        :label="$tr('username')"
-        :disabled="busy"
-        :maxlength="30"
-        :invalid="usernameIsInvalid"
-        :invalidText="usernameIsInvalidText"
-        @blur="usernameBlurred = true"
-        v-model="username"
-      />
-      <template v-else>
-        <h2>{{ $tr('username') }}</h2>
-        <p>{{ session.username }}</p>
+      <template v-if="canEditPassword">
+        <k-textbox
+          ref="newPw"
+          type="password"
+          :label="$tr('newPw')"
+          :disabled="busy"
+          :maxlength="120"
+          :invalid="false"
+          @blur="newPwBlurred = true"
+          v-model="newPw"
+        />
+        <k-textbox
+          ref="newPwConfirm"
+          type="password"
+          :label="$tr('newPwConfirm')"
+          :disabled="busy"
+          :maxlength="120"
+          :invalid="!newPwConfirmIsValid"
+          :invalidText="$tr('passwordsDoNotMatch')"
+          @blur="newPwConfirmBlurred = true"
+          v-model="newPwConfirm"
+        />
       </template>
 
       <k-button
-        v-if="canEditUsername || canEditName"
         type="submit"
-        class="submit"
         :text="$tr('updateProfile')"
         :primary="true"
         :disabled="busy"
@@ -124,7 +128,6 @@
     $trs: {
       genericError: 'Something went wrong',
       success: 'Profile details updated!',
-      username: 'Username',
       name: 'Full name',
       updateProfile: 'Save changes',
       isLearner: 'Learner',
@@ -135,10 +138,12 @@
       points: 'Points',
       role: 'Role',
       devicePermissions: 'Device permissions',
-      usernameNotAlphaNumUnderscore: 'Username can only contain letters, numbers, and underscores',
       required: 'This field is required',
       limitedPermissions: 'Limited permissions',
       youCan: 'You can',
+      newPw: 'New password',
+      newPwConfirm: 'New password again',
+      passwordsDoNotMatch: 'Passwords do not match',
     },
     components: {
       kButton,
@@ -150,11 +155,12 @@
     mixins: [responsiveWindow],
     data() {
       return {
-        username: this.session.username,
         name: this.session.full_name,
-        usernameBlurred: false,
-        nameBlurred: false,
         formSubmitted: false,
+        newPw: '',
+        newPwBlurred: false,
+        newPwConfirm: '',
+        newPwConfirmBlurred: false,
       };
     },
     computed: {
@@ -184,45 +190,32 @@
         }
         return '';
       },
-      canEditUsername() {
-        if (this.isCoach || this.isLearner) {
-          return this.facilityConfig.learnerCanEditUsername;
-        }
-        return true;
-      },
       canEditName() {
-        if (this.isCoach || this.isLearner) {
-          return this.facilityConfig.learnerCanEditName;
+        return this.userIsAdmin || this.facilityConfig.learnerCanEditName;
+      },
+      canEditPassword() {
+        return this.userIsAdmin || this.facilityConfig.learnerCanEditPassword;
+      },
+      // i.e. not a coach or a learner
+      userIsAdmin() {
+        return !this.isCoach && !this.isLearner;
+      },
+      nameIsValid() {
+        return this.name !== '';
+      },
+      newPwConfirmShouldValidate() {
+        return (
+          (this.newPw !== '' && this.newPwBlurred && this.newPwConfirm !== '') || this.formSubmitted
+        );
+      },
+      newPwConfirmIsValid() {
+        if (this.newPwConfirmShouldValidate) {
+          return this.newPw === this.newPwConfirm;
         }
         return true;
-      },
-      nameIsInvalidText() {
-        if (this.nameBlurred || this.formSubmitted) {
-          if (this.name === '') {
-            return this.$tr('required');
-          }
-        }
-        return '';
-      },
-      nameIsInvalid() {
-        return !!this.nameIsInvalidText;
-      },
-      usernameIsInvalidText() {
-        if (this.usernameBlurred || this.formSubmitted) {
-          if (this.username === '') {
-            return this.$tr('required');
-          }
-          if (!validateUsername(this.username)) {
-            return this.$tr('usernameNotAlphaNumUnderscore');
-          }
-        }
-        return '';
-      },
-      usernameIsInvalid() {
-        return !!this.usernameIsInvalidText;
       },
       formIsValid() {
-        return !this.usernameIsInvalid;
+        return this.nameIsValid && this.newPwConfirmIsValid;
       },
     },
     created() {
@@ -232,19 +225,22 @@
       submitEdits() {
         this.formSubmitted = true;
         this.resetProfileState();
-        if (this.formIsValid) {
-          const edits = {
-            username: this.username,
-            full_name: this.name,
-          };
-          this.editProfile(edits, this.session);
-        } else {
-          if (this.nameIsInvalid) {
-            this.$refs.name.focus();
-          } else if (this.usernameIsInvalid) {
-            this.$refs.username.focus();
-          }
+        if (!this.nameIsValid) {
+          return this.$refs.name.focus();
         }
+        if (!this.newPwConfirmIsValid) {
+          return this.$refs.newPwConfirm.focus();
+        }
+        const edits = {
+          full_name: this.name,
+        };
+        if (this.newPw !== '') {
+          edits.password = this.newPw;
+        }
+        this.editProfile(edits, this.session).then(() => {
+          this.newPw = '';
+          this.newPwConfirm = '';
+        });
       },
       getPermissionString(permission) {
         if (permission === 'can_manage_content') {
@@ -295,11 +291,8 @@
     margin-right: auto
     width: ($iphone-width - 20)px
 
-  .submit
-    margin-left: auto
-    margin-right: auto
-    display: block
-
+  button[type='submit']
+    margin-left: 0
 
   .points-icon, .points-num
     display: inline-block

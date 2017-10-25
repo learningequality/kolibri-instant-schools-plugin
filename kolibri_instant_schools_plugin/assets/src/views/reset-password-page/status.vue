@@ -51,12 +51,12 @@
       explanation() {
         switch (this.status) {
           case STATES.CHECKING_TOKEN:
-            return this.$tr('confirmingToken');
+            return this.$tr('confirmingLink');
           case STATES.PASSWORD_CHANGED:
             return this.$tr('passwordSuccessfullyChanged');
           case STATES.LINK_EXPIRED:
             return this.$tr('needToRequestNewToken');
-          case OTHER_ERROR:
+          case STATES.OTHER_ERROR:
             return this.$tr('thereWasAProblem');
           default:
             return '';
@@ -67,7 +67,7 @@
       },
     },
     $trs: {
-      confirmingToken: 'Confirming the validity of our password reset token…',
+      confirmingLink: 'Confirming the validity of the password reset link…',
       homeButton: 'Home',
       linkExpired: 'Link has expired',
       passwordChanged: 'Password changed',

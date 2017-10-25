@@ -397,7 +397,7 @@
 
   .divider
     margin: auto
-    margin-top: 48px
+    margin-top: 32px
     margin-bottom: 36px
     width: 100%
     max-width: 412px
@@ -455,6 +455,5 @@
 
   .reset-pw
     margin-top: 1.5em
-    margin-bottom: -1em
 
 </style>

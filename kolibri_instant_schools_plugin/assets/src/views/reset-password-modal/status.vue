@@ -6,7 +6,7 @@
     </div>
     <div class="buttons">
       <k-button
-        :text="buttonText"
+        :text="$tr('close')"
         @click="$emit('close')"
         :primary="true"
       />
@@ -33,16 +33,8 @@
       },
     },
     computed: {
-      buttonText() {
-        if (this.status === STATES.ACCOUNT_NOT_FOUND) {
-          return this.$tr('goBack');
-        }
-        return this.$tr('close');
-      },
       message() {
         switch (this.status) {
-          case STATES.ACCOUNT_NOT_FOUND:
-            return this.$tr('accountNotFound');
           case STATES.MESSAGE_SENT:
             return this.$tr('messageSent');
           case STATES.SMS_SERVICE_ERROR:
@@ -53,8 +45,6 @@
       },
     },
     $trs: {
-      accountNotFound:
-        'No account was found under this phone number. Check to see if your phone number was entered correctly.',
       close: 'Close',
       goBack: 'Go back',
       messageSent:

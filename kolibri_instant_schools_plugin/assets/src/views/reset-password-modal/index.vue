@@ -15,6 +15,7 @@
         @submit="submitTokenRequest"
         @close="closeModal"
         :disabled="disableForms"
+        :phoneLookupFailed="phoneLookupFailed"
       />
     </div>
   </core-modal>
@@ -46,8 +47,6 @@
     computed: {
       currentTitle() {
         switch (this.status) {
-          case STATES.ACCOUNT_NOT_FOUND:
-            return this.$tr('accountNotFound');
           case STATES.MESSAGE_SENT:
             return this.$tr('messageSent');
           case STATES.SMS_SERVICE_ERROR:
@@ -57,7 +56,10 @@
         }
       },
       showStatus() {
-        return this.status !== STATES.ENTER_PHONE_NUMBER;
+        return this.status === STATES.MESSAGE_SENT || this.status === STATES.SMS_SERVICE_ERROR;
+      },
+      phoneLookupFailed() {
+        return this.status === STATES.ACCOUNT_NOT_FOUND;
       },
     },
     methods: {

@@ -73,7 +73,7 @@
             const { code } = err.status;
             if (code === 400) {
               this.status = STATES.ACCOUNT_NOT_FOUND;
-            } else if (code === 500) {
+            } else {
               this.status = STATES.SMS_SERVICE_ERROR;
             }
           })

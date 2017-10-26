@@ -168,6 +168,12 @@
           });
         }
         options.push({ type: 'divider' });
+        options.push({
+          label: this.$tr('about'),
+          active: this.pageIsActive(TopLevelPageNames.ABOUT),
+          icon: 'info_outline',
+          href: '/about',
+        });
         if (this.isUserLoggedIn) {
           options.push({
             label: this.$tr('profile'),

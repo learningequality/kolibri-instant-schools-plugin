@@ -5,6 +5,7 @@ const PageNames = {
   SIGN_UP: 'SIGN_UP',
   PROFILE: 'PROFILE',
   SELECT_PROFILE: 'SELECT_PROFILE',
+  ABOUT: 'ABOUT',
 };
 
 export { PageNames };

@@ -174,7 +174,7 @@ function signUp(store, signUpCreds) {
     .then(() => {
       store.dispatch('SET_SIGN_UP_ERROR', null, '');
       // TODO: Better solution?
-      redirectToHome();
+      window.location = '/about';
     })
     .catch(error => {
       function _errorMessageHandler(apiError) {

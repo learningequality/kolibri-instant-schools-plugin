@@ -1,7 +1,7 @@
 from __future__ import absolute_import, print_function, unicode_literals
 from kolibri.core.webpack import hooks as webpack_hooks
 from kolibri.plugins.base import KolibriPluginBase
-from . import hooks, urls, about_urls, faq_urls
+from . import hooks, urls, about_urls
 
 
 class User(KolibriPluginBase):
@@ -29,9 +29,10 @@ class About(KolibriPluginBase):
         return "^about/"
 
 
-class FAQ(KolibriPluginBase):
-    def url_module(self):
-        return faq_urls
+class AboutAsset(webpack_hooks.WebpackBundleHook):
+    unique_slug = "about_module"
+    src_file = "assets/src/views/about/aboutApp.js"
 
-    def url_slug(self):
-        return "^faq/"
+
+class AboutInclusionHook(hooks.AboutSyncHook):
+    bundle_class = AboutAsset

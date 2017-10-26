@@ -23,7 +23,7 @@
 
     <new-profile-modal
       v-if="showNewProfileModal"
-      @submit="addProfileToPhoneAccount"
+      @submit="addProfileToAccount"
       @close="closeModal"
       :disabled="disableForms"
       :showError="newProfileFailed"
@@ -66,7 +66,7 @@
           this.disableForms = false;
         });
       },
-      addProfileToPhoneAccount(profileName) {
+      addProfileToAccount(profileName) {
         this.disableForms = true;
         this.createProfile(profileName)
           .then(() => {

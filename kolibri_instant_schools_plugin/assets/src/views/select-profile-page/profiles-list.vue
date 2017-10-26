@@ -64,10 +64,10 @@
 
   .profile-icon
     display: inline-block
+    vertical-align: middle
     padding: 0 0.5em
 
   .profile-name
     display: inline-block
-    vertical-align: super
 
 </style>

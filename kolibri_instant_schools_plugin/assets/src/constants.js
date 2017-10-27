@@ -5,6 +5,7 @@ export const PageNames = {
   SIGN_UP: 'SIGN_UP',
   PROFILE: 'PROFILE',
   RESET_PASSWORD: 'RESET_PASSWORD',
+  ABOUT: 'ABOUT',
 };
 
 export const RequestTokenStates = {

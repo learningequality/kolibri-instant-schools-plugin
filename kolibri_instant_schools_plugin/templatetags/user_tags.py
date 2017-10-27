@@ -31,3 +31,8 @@ def user_async_assets():
     :return: HTML of script tags to insert into user/user.html
     """
     return webpack_asset_render(hooks.UserAsyncHook, async=True)
+
+
+@register.simple_tag()
+def about_assets():
+    return webpack_asset_render(hooks.AboutSyncHook, async=False)

@@ -68,6 +68,8 @@
     mounted() {
       this.resizeIframe();
       window.addEventListener('resize', this.throttleResizeIframe);
+      // scroll to top
+      document.querySelector('.content-container').scrollTop = 0;
     },
     beforeDestroy() {
       window.removeEventListener('resize', this.throttleResizeIframe);

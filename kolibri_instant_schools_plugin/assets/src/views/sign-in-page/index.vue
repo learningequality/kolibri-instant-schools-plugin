@@ -66,6 +66,13 @@
           :disabled="busy"
         />
       </form>
+
+      <div class="reset-pw">
+        <a href="#" @click.prevent="showPwResetModal = true">
+          {{ $tr('resetYourPassword') }}
+        </a>
+      </div>
+
       <div class="divider"></div>
 
       <p class="login-text no-account">{{ $tr('noAccount') }}</p>
@@ -84,6 +91,11 @@
     <div class="footer-row">
       <language-switcher :footer="true" class="footer-cell"/>
     </div>
+
+    <reset-password-modal
+      v-if="showPwResetModal"
+      @close="showPwResetModal = false"
+    />
   </div>
 
 </template>
@@ -102,6 +114,7 @@
   import uiAlert from 'keen-ui/src/UiAlert';
   import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
   import { showSelectProfilePage } from '../../state/profileActions';
+  import resetPasswordModal from '../reset-password-modal';
   import Lockr from 'lockr';
   import router from 'kolibri.coreVue.router';
 
@@ -120,11 +133,13 @@
       poweredBy: 'Kolibri {version}',
       required: 'This field is required',
       requiredForCoachesAdmins: 'Password is required for coaches and admins',
+      resetYourPassword: 'Reset your password',
     },
     components: {
       kButton,
       kTextbox,
       logo,
+      resetPasswordModal,
       uiAutocompleteSuggestion,
       uiAlert,
       languageSwitcher,
@@ -139,6 +154,7 @@
       usernameBlurred: false,
       passwordBlurred: false,
       formSubmitted: false,
+      showPwResetModal: false,
     }),
     computed: {
       simpleSignIn() {
@@ -400,7 +416,7 @@
 
   .divider
     margin: auto
-    margin-top: 48px
+    margin-top: 32px
     margin-bottom: 36px
     width: 100%
     max-width: 412px
@@ -455,5 +471,8 @@
   .alert
     // Needed since alert has transparent background-color
     background-color: white
+
+  .reset-pw
+    margin-top: 1.5em
 
 </style>

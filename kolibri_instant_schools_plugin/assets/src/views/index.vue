@@ -22,6 +22,7 @@
   import signUpPage from './sign-up-page';
   import profilePage from './profile-page';
   import selectProfilePage from './select-profile-page';
+  import resetPasswordPage from './reset-password-page';
 
   export default {
     $trs: { userProfileTitle: 'Profile' },
@@ -29,6 +30,7 @@
     components: {
       coreBase,
       selectProfilePage,
+      resetPasswordPage,
       signInPage,
       signUpPage,
       profilePage,
@@ -53,6 +55,9 @@
         }
         if (this.pageName === PageNames.SELECT_PROFILE) {
           return 'selectProfilePage';
+        }
+        if (this.pageName === PageNames.RESET_PASSWORD) {
+          return 'resetPasswordPage';
         }
         return null;
       },

@@ -1,6 +1,6 @@
 <template>
 
-  <div>
+  <div class="faq-page">
 
     <router-link :to="aboutRoute">
       <k-button
@@ -20,8 +20,6 @@
       @load="resizeIframe"
     >
     </iframe>
-
-    <br>
 
     <k-button
       :text="$tr('toTop')"
@@ -72,6 +70,8 @@
       document
         .querySelector('.content-container')
         .addEventListener('scroll', this.throttleUpdateBtnVisibility);
+      // scroll to top
+      document.querySelector('.content-container').scrollTop = 0;
     },
     beforeDestroy() {
       window.removeEventListener('resize', this.throttleResizeIframe);
@@ -104,6 +104,9 @@
 <style lang="stylus" scoped>
 
   @require '~kolibri.styles.definitions'
+
+  .faq-page
+    padding-bottom: 32px
 
   .to-top-button
     position: fixed

@@ -6,6 +6,8 @@ import Vue from 'kolibri.lib.vue';
 
 import RootVue from './views';
 import * as actions from './state/actions';
+import { showPasswordResetPage } from './state/resetPasswordActions';
+
 import store from './state/store';
 import { PageNames } from './constants';
 
@@ -42,6 +44,13 @@ class UserModule extends KolibriModule {
             path: '/profile',
             handler: (toRoute, fromRoute) => {
               actions.showProfile(store);
+            },
+          },
+          {
+            name: PageNames.RESET_PASSWORD,
+            path: '/passwordreset/:phone/:token',
+            handler: toRoute => {
+              showPasswordResetPage(store, toRoute.params);
             },
           },
           {

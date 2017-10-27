@@ -66,6 +66,13 @@
           :disabled="busy"
         />
       </form>
+
+      <div class="reset-pw">
+        <a href="#" @click.prevent="showPwResetModal = true">
+          {{ $tr('resetYourPassword') }}
+        </a>
+      </div>
+
       <div class="divider"></div>
 
       <p class="login-text no-account">{{ $tr('noAccount') }}</p>
@@ -73,15 +80,22 @@
         <router-link v-if="canSignUp" class="group-btn" :to="signUpPage">
           <k-button :text="$tr('createAccount')" :primary="false"/>
         </router-link>
-        <a class="group-btn" href="/learn">
-          <k-button :text="$tr('accessAsGuest')" :primary="false"/>
-        </a>
+        <k-button
+          :text="$tr('accessAsGuest')"
+          :primary="false"
+          @click="accessAsGuest"
+        />
       </div>
       <p class="login-text version">{{ versionMsg }}</p>
     </div></div>
     <div class="footer-row">
       <language-switcher :footer="true" class="footer-cell"/>
     </div>
+
+    <reset-password-modal
+      v-if="showPwResetModal"
+      @close="showPwResetModal = false"
+    />
   </div>
 
 </template>
@@ -100,6 +114,9 @@
   import uiAutocompleteSuggestion from 'keen-ui/src/UiAutocompleteSuggestion';
   import uiAlert from 'keen-ui/src/UiAlert';
   import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
+  import resetPasswordModal from '../reset-password-modal';
+  import Lockr from 'lockr';
+  import router from 'kolibri.coreVue.router';
 
   export default {
     name: 'signInPage',
@@ -116,11 +133,13 @@
       poweredBy: 'Kolibri {version}',
       required: 'This field is required',
       requiredForCoachesAdmins: 'Password is required for coaches and admins',
+      resetYourPassword: 'Reset your password',
     },
     components: {
       kButton,
       kTextbox,
       logo,
+      resetPasswordModal,
       uiAutocompleteSuggestion,
       uiAlert,
       languageSwitcher,
@@ -135,6 +154,7 @@
       usernameBlurred: false,
       passwordBlurred: false,
       formSubmitted: false,
+      showPwResetModal: false,
     }),
     computed: {
       simpleSignIn() {
@@ -293,6 +313,14 @@
           this.$refs.password.focus();
         }
       },
+      accessAsGuest() {
+        if (Lockr.get('signedInBefore')) {
+          window.location = '/learn';
+        } else {
+          Lockr.set('signedInBefore', true);
+          window.location = '/about';
+        }
+      },
     },
     vuex: {
       getters: {
@@ -381,7 +409,7 @@
 
   .divider
     margin: auto
-    margin-top: 48px
+    margin-top: 32px
     margin-bottom: 36px
     width: 100%
     max-width: 412px
@@ -436,5 +464,8 @@
   .alert
     // Needed since alert has transparent background-color
     background-color: white
+
+  .reset-pw
+    margin-top: 1.5em
 
 </style>

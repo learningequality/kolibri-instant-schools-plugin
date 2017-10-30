@@ -74,18 +74,6 @@
         v-model="confirmedPassword"
       />
 
-      <ui-select
-        :name="$tr('selectFacility')"
-        :placeholder="$tr('selectFacility')"
-        :label="$tr('facility')"
-        :value="selectedFacility"
-        :options="facilityList"
-        :invalid="facilityIsInvalid"
-        :error="facilityIsInvalidText"
-        @blur="facilityBlurred = true"
-        @input="updateSelection"
-      />
-
       <!-- ToS modal only shows up if the box empty prior to clicking -->
       <!-- Using UI Checkbox for blur events and v-model -->
       <ui-checkbox
@@ -103,7 +91,6 @@
       >
         {{ termsNotAgreedText }}
       </label>
-
 
       <k-button :disabled="busy" :primary="true" :text="$tr('finish')" type="submit" />
 
@@ -157,8 +144,6 @@
       termsOfServiceModalHeader: 'Terms of service & privacy policy',
       appBarHeader: 'Instant Schools',
       finish: 'Finish',
-      facility: 'Facility',
-      selectFacility: 'Select a facility',
       required: 'This field is required',
     },
     components: {
@@ -177,12 +162,10 @@
       username: '',
       password: '',
       confirmedPassword: '',
-      selection: {},
       nameBlurred: false,
       usernameBlurred: false,
       passwordBlurred: false,
       confirmedPasswordBlurred: false,
-      facilityBlurred: false,
       formSubmitted: false,
       showTerms: false,
       termsAgreed: false,
@@ -197,12 +180,6 @@
           label: facility.name,
           id: facility.id,
         }));
-      },
-      selectedFacility() {
-        if (this.facilityList.length === 1) {
-          return this.facilityList[0];
-        }
-        return this.selection;
       },
       nameIsInvalidText() {
         if (this.nameBlurred || this.formSubmitted) {
@@ -272,27 +249,12 @@
       termsNotAgreed() {
         return !!this.termsNotAgreedText;
       },
-      noFacilitySelected() {
-        return !this.selectedFacility.id;
-      },
-      facilityIsInvalidText() {
-        if (this.facilityBlurred || this.formSubmitted) {
-          if (this.noFacilitySelected) {
-            return this.$tr('required');
-          }
-        }
-        return '';
-      },
-      facilityIsInvalid() {
-        return !!this.facilityIsInvalidText;
-      },
       formIsValid() {
         return (
           !this.nameIsInvalid &&
           !this.usernameIsInvalid &&
           !this.passwordIsInvalid &&
           !this.confirmedPasswordIsInvalid &&
-          !this.facilityIsInvalid &&
           !this.termsNotAgreed
         );
       },
@@ -307,15 +269,12 @@
       },
     },
     methods: {
-      updateSelection(selection) {
-        this.selection = selection;
-      },
       signUp() {
         this.formSubmitted = true;
         const canSubmit = this.formIsValid && !this.busy;
         if (canSubmit) {
           this.signUpAction({
-            facility: this.selectedFacility.id,
+            facility: this.facilityList[0],
             full_name: this.name,
             username: this.username,
             password: this.password,

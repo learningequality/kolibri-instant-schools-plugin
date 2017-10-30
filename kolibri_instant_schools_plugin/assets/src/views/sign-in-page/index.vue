@@ -103,7 +103,6 @@
 
 <script>
 
-  import { kolibriLogin } from 'kolibri.coreVue.vuex.actions';
   import { PageNames } from '../../constants';
   import { facilityConfig, currentFacilityId } from 'kolibri.coreVue.vuex.getters';
   import { FacilityUsernameResource } from 'kolibri.resources';
@@ -114,6 +113,7 @@
   import uiAutocompleteSuggestion from 'keen-ui/src/UiAutocompleteSuggestion';
   import uiAlert from 'keen-ui/src/UiAlert';
   import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
+  import { showSelectProfilePage } from '../../state/profileActions';
   import resetPasswordModal from '../reset-password-modal';
   import Lockr from 'lockr';
   import router from 'kolibri.coreVue.router';
@@ -297,14 +297,16 @@
       signIn() {
         this.formSubmitted = true;
         if (this.formIsValid) {
-          this.kolibriLogin({
-            username: this.username,
+          return this.showSelectProfilePage({
+            phone: this.username,
             password: this.password,
             facility: this.facility,
+          }).catch(err => {
+            // Handles 404 (no profiles) and 401 (bad credentials) the same way
+            this.showLoginError();
           });
-        } else {
-          this.focusOnInvalidField();
         }
+        return this.focusOnInvalidField();
       },
       focusOnInvalidField() {
         if (this.usernameIsInvalid) {
@@ -330,7 +332,12 @@
         invalidCredentials: state => state.core.loginError === LoginErrors.INVALID_CREDENTIALS,
         busy: state => state.core.signInBusy,
       },
-      actions: { kolibriLogin },
+      actions: {
+        showSelectProfilePage,
+        showLoginError(store) {
+          return store.dispatch('CORE_SET_LOGIN_ERROR', LoginErrors.INVALID_CREDENTIALS);
+        },
+      },
     },
   };
 

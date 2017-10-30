@@ -1,19 +1,19 @@
 from django.conf import settings
+from django.contrib.auth import update_session_auth_hash
 from django.db import transaction
 from django.utils.translation import ugettext as _
 from rest_framework import filters, permissions, status, viewsets, serializers
 from rest_framework.response import Response
 from kolibri.auth.models import Facility, FacilityUser
-from kolibri.auth.api import SignUpViewSet
+from kolibri.auth.api import SignUpViewSet, FacilityUserViewSet
+from kolibri.auth.serializers import FacilityUserSerializer
 
 from .mapping import get_usernames, create_new_username, normalize_phone_number
 from ..models import PasswordResetToken, PhoneToUsernameMapping
 from ..smpp.utils import send_password_reset_link, SMPPConnectionError
 
-from kolibri.auth.serializers import FacilityUserSerializer
 
-
-class PhoneNumberSignupFacilityUserSerializer(FacilityUserSerializer):
+class PhoneNumberSignupSerializer(FacilityUserSerializer):
 
     def validate_username(self, value):
         if FacilityUser.objects.filter(username__iexact=value).exists():
@@ -25,7 +25,7 @@ class PhoneNumberSignupFacilityUserSerializer(FacilityUserSerializer):
 
 class PhoneNumberSignUpViewSet(SignUpViewSet):
 
-    serializer_class = PhoneNumberSignupFacilityUserSerializer
+    serializer_class = PhoneNumberSignupSerializer
 
     def extract_request_data(self, request):
         data = super(PhoneNumberSignUpViewSet, self).extract_request_data(request)
@@ -99,6 +99,30 @@ class PasswordResetTokenViewset(viewsets.ViewSet):
             return Response("", status=status.HTTP_400_BAD_REQUEST)
 
 
+class FacilityUserProfileViewset(FacilityUserViewSet):
+
+    def perform_update(self, serializer):
+        with transaction.atomic():
+            instance = serializer.save()
+            if serializer.validated_data.get('password', ''):
+                # update the password for all accounts associated with this password
+                phone = PhoneToUsernameMapping.objects.get(username=instance.username).phone
+                set_password_for_phone(phone, serializer.validated_data['password'])
+                # prevent the user from being logged out
+                update_session_auth_hash(self.request, instance)
+
+
+def set_password_for_phone(phone, password):
+
+    # get the full list of usernames associated with this account
+    usernames = get_usernames(phone)
+
+    # update the password for each of the accounts
+    for user in FacilityUser.objects.filter(username__in=usernames):
+        user.set_password(password)
+        user.save()
+
+
 class PasswordChangeViewset(viewsets.ViewSet):
 
     def create(self, request):
@@ -107,49 +131,29 @@ class PasswordChangeViewset(viewsets.ViewSet):
 
         Usage:
 
-            If the user is not logged in (i.e. from password reset page linked from SMS), send:
-                POST {"password": "<password>", "phone": "<phone>", "token": "<token>"} to /user/api/passwordchange/
+            POST {"password": "<password>", "phone": "<phone>", "token": "<token>"} to /user/api/passwordchange/
 
-            If the user is logged in (i.e. for password change form on profile page), send:
-                POST {"password": "<password>"} to /user/api/passwordchange/
-
-                    If it succeeds, it returns status 200.
-                    If user is not logged in (or doesn't match phone) and no valid token provided, returns status 401.
+                If it succeeds, it returns status 200.
+                If user is not logged in (or doesn't match phone) and no valid token provided, returns status 401.
         """
 
-        resettoken = None
+        # extract the token, password, and phone number from the request data
+        token = request.data['token']
+        password = request.data['password']
+        phone = request.data['phone']
 
-        # extract the token from the request data
-        token = request.data.get('token', '')
+        # try to find a reset token matching the phone number and token, otherwise error out
+        try:
+            resettoken = PasswordResetToken.objects.get(phone=phone, token=token)
+        except PasswordResetToken.DoesNotExist:
+            return Response("", status=status.HTTP_401_UNAUTHORIZED)
 
-        if token:
-            # try to find a reset token matching the phone number and token, otherwise error out
-            phone = normalize_phone_number(request.data.get('phone', ''))
-            try:
-                resettoken = PasswordResetToken.objects.get(phone=phone, token=token)
-            except PasswordResetToken.DoesNotExist:
-                return Response("", status=status.HTTP_401_UNAUTHORIZED)
-        else:
-            # use the phone number associated with the logged in user
-            try:
-                phone = PhoneToUsernameMapping.objects.get(username=getattr(request.user, "username")).phone
-            except PhoneToUsernameMapping.DoesNotExist:
-                return Response("", status=status.HTTP_401_UNAUTHORIZED)
-
-        # extract the password from the request data
-        password = request.data.get('password', '')
-
-        # get the full list of usernames associated with this account
-        usernames = get_usernames(phone)
-
-        # update the password for each of the accounts
         with transaction.atomic():
-            for user in FacilityUser.objects.filter(username__in=usernames):
-                user.set_password(password)
-                user.save()
             # mark the token as having been used
-            if resettoken:
-                resettoken.use_token()
+            resettoken.use_token()
+
+            # change the password for all accounts associated with this phone number
+            set_password_for_phone(phone, password)
 
         # return a 200 to indicate having successfully changed the passwords
         return Response("", status=status.HTTP_200_OK)

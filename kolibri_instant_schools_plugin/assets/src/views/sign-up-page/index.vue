@@ -76,11 +76,11 @@
 
       <!-- ToS modal only shows up if the box empty prior to clicking -->
       <!-- Using UI Checkbox for blur events and v-model -->
-      <ui-checkbox
+      <k-checkbox
         id="terms-agreement-checkbox"
         :class="['terms-agreement-checkbox', termsNotAgreed ? 'invalid' : '']"
-        v-model="termsAgreed"
-        @change="showTerms = termsAgreed"
+        :checked="termsAgreed"
+        @change="showTerms = termsAgreed = $event"
         @blur="termsAgreementCheckboxBlurred = true"
         :label="$tr('termsAgreementLabel')"
       />
@@ -118,13 +118,12 @@
   import { PageNames } from '../../constants';
   import { validateUsername } from 'kolibri.utils.validators';
   import kButton from 'kolibri.coreVue.components.kButton';
-  import uiCheckbox from 'keen-ui/src/UiCheckbox';
+  import kCheckbox from 'kolibri.coreVue.components.kCheckbox';
   import coreModal from 'kolibri.coreVue.components.coreModal';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
   import uiToolbar from 'keen-ui/src/UiToolbar';
   import logo from 'kolibri.coreVue.components.logo';
   import uiIcon from 'keen-ui/src/UiIcon';
-  import uiSelect from 'keen-ui/src/UiSelect';
   import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
 
   export default {
@@ -152,10 +151,9 @@
       uiToolbar,
       logo,
       uiIcon,
-      uiSelect,
       languageSwitcher,
       coreModal,
-      uiCheckbox,
+      kCheckbox,
     },
     data: () => ({
       name: '',

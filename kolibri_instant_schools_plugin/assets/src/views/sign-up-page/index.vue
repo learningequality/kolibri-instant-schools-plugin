@@ -75,18 +75,6 @@
         v-model="confirmedPassword"
       />
 
-      <ui-select
-        :name="$tr('selectFacility')"
-        :placeholder="$tr('selectFacility')"
-        :label="$tr('facility')"
-        :value="selectedFacility"
-        :options="facilityList"
-        :invalid="facilityIsInvalid"
-        :error="facilityIsInvalidText"
-        @blur="facilityBlurred = true"
-        @input="updateSelection"
-      />
-
       <k-button :disabled="busy" :primary="true" :text="$tr('finish')" type="submit" />
 
     </form>
@@ -128,8 +116,6 @@
       logIn: 'Sign in',
       kolibri: 'Kolibri',
       finish: 'Finish',
-      facility: 'Facility',
-      selectFacility: 'Select a facility',
       required: 'This field is required',
     },
     components: {
@@ -152,7 +138,6 @@
       usernameBlurred: false,
       passwordBlurred: false,
       confirmedPasswordBlurred: false,
-      facilityBlurred: false,
       formSubmitted: false,
     }),
     computed: {
@@ -164,12 +149,6 @@
           label: facility.name,
           id: facility.id,
         }));
-      },
-      selectedFacility() {
-        if (this.facilityList.length === 1) {
-          return this.facilityList[0];
-        }
-        return this.selection;
       },
       nameIsInvalidText() {
         if (this.nameBlurred || this.formSubmitted) {
@@ -230,9 +209,6 @@
       confirmedPasswordIsInvalid() {
         return !!this.confirmedPasswordIsInvalidText;
       },
-      noFacilitySelected() {
-        return !this.selectedFacility.id;
-      },
       facilityIsInvalidText() {
         if (this.facilityBlurred || this.formSubmitted) {
           if (this.noFacilitySelected) {
@@ -272,7 +248,7 @@
         const canSubmit = this.formIsValid && !this.busy;
         if (canSubmit) {
           this.signUpAction({
-            facility: this.selectedFacility.id,
+            facility: this.facilityList[0],
             full_name: this.name,
             username: this.username,
             password: this.password,

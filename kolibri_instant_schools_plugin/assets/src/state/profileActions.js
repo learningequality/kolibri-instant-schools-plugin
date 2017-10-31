@@ -47,6 +47,7 @@ export function createProfile(store, profileName) {
     return store.dispatch('ADD_PROFILE', {
       full_name: profileName,
       username: response.entity,
+      isNew: true,
     });
   });
 }

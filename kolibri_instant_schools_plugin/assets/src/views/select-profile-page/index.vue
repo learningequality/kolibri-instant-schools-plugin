@@ -56,15 +56,21 @@
       };
     },
     methods: {
-      signInWithProfile({ username }) {
+      signInWithProfile({ username, isNew }) {
         this.disableForms = true;
         this.kolibriLogin({
           facility: this.facility,
           password: this.password,
           username,
-        }).catch(() => {
-          this.disableForms = false;
-        });
+        })
+          .then(() => {
+            if (isNew) {
+              window.location = '/about';
+            }
+          })
+          .catch(() => {
+            this.disableForms = false;
+          });
       },
       addProfileToAccount(profileName) {
         this.disableForms = true;

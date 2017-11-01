@@ -76,20 +76,30 @@
 
       <!-- ToS modal only shows up if the box empty prior to clicking -->
       <!-- Using UI Checkbox for blur events and v-model -->
-      <k-checkbox
-        id="terms-agreement-checkbox"
-        :class="['terms-agreement-checkbox', termsNotAgreed ? 'invalid' : '']"
-        :checked="termsAgreed"
-        @change="showTerms = termsAgreed = $event"
-        @blur="termsAgreementCheckboxBlurred = true"
-        :label="$tr('termsAgreementLabel')"
-      />
-      <label
-        v-if="termsNotAgreed"
-        for="terms-agreement-checkbox"
-        class="terms-error-box"
-      >
-        {{ termsNotAgreedText }}
+      <label for="terms-agreement-checkbox">
+        <button
+          type="button"
+          class="terms-agreement-view-prompt"
+          @click="showTerms = true"
+        >
+          {{ $tr('viewTermsOfServicePrompt') }}
+        </button>
+
+        <k-checkbox
+          id="terms-agreement-checkbox"
+          :class="['terms-agreement-checkbox', termsNotAgreed ? 'invalid' : '']"
+          :checked="termsAgreed"
+          @change="termsAgreed = $event"
+          @blur="termsAgreementCheckboxBlurred = true"
+          :label="$tr('termsAgreementLabel')"
+        />
+
+        <span
+          v-if="termsNotAgreed"
+          class="terms-agreement-error-box"
+        >
+          {{ termsNotAgreedText }}
+        </span>
       </label>
 
       <k-button :disabled="busy" :primary="true" :text="$tr('finish')" type="submit" />
@@ -141,6 +151,7 @@
       logIn: 'Sign in',
       termsAgreementLabel: 'I agree to the terms of service & privacy policy',
       termsOfServiceModalHeader: 'Terms of service & privacy policy',
+      viewTermsOfServicePrompt: 'View terms of service & privacy policy',
       appBarHeader: 'Instant Schools',
       finish: 'Finish',
       required: 'This field is required',
@@ -356,14 +367,17 @@
   .terms
     height: 80vh
     width: 80vw
-    &-agreement-checkbox
-      text-decoration: underline
-      &.invalid
-        color: $keen-invalid-md-red
-    &-error-box
-      display: block
-      color: $keen-invalid-md-red // same color as input error messages
-      font-size: 14px // same as error messages from inputs
+    &-agreement
+      &-view-prompt
+        display: block
+        text-decoration: underline
+      &-checkbox
+        &.invalid
+          color: $keen-invalid-md-red
+      &-error-box
+        display: block
+        color: $keen-invalid-md-red // same color as input error messages
+        font-size: 14px // same as error messages from inputs
 
   .app-bar-icon
     font-size: 2.5em

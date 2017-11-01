@@ -6,35 +6,38 @@ import RootVue from './views';
 import Vue from 'kolibri.lib.vue';
 import router from 'kolibri.coreVue.router';
 import store from './state/store';
+import { getCurrentSession } from 'kolibri.coreVue.vuex.actions';
 
 class AboutModule extends KolibriModule {
   ready() {
-    const routes = [
-      {
-        name: PageNames.ABOUT,
-        path: '/',
-        handler: () => {
-          showAbout(store);
+    getCurrentSession(store).then(() => {
+      const routes = [
+        {
+          name: PageNames.ABOUT,
+          path: '/',
+          handler: () => {
+            showAbout(store);
+          },
         },
-      },
-      {
-        name: PageNames.FAQ,
-        path: '/faq',
-        handler: () => {
-          showFaq(store);
+        {
+          name: PageNames.FAQ,
+          path: '/faq',
+          handler: () => {
+            showFaq(store);
+          },
         },
-      },
-      {
-        path: '*',
-        redirect: '/',
-      },
-    ];
+        {
+          path: '*',
+          redirect: '/',
+        },
+      ];
 
-    this.rootvue = new Vue({
-      el: 'rootvue',
-      name: 'AboutRoot',
-      render: createElement => createElement(RootVue),
-      router: router.init(routes),
+      this.rootvue = new Vue({
+        el: 'rootvue',
+        name: 'AboutRoot',
+        render: createElement => createElement(RootVue),
+        router: router.init(routes),
+      });
     });
   }
 }

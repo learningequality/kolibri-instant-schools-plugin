@@ -76,7 +76,7 @@
 
       <!-- ToS modal only shows up if the box empty prior to clicking -->
       <!-- Using UI Checkbox for blur events and v-model -->
-      <label for="terms-agreement-checkbox">
+      <label class="terms-agreement">
         <button
           type="button"
           class="terms-agreement-view-prompt"
@@ -86,7 +86,6 @@
         </button>
 
         <k-checkbox
-          id="terms-agreement-checkbox"
           :class="['terms-agreement-checkbox', termsNotAgreed ? 'invalid' : '']"
           :checked="termsAgreed"
           @change="termsAgreed = $event"
@@ -335,6 +334,7 @@
   $logo-size = (1.64 * 1.125)rem
   $logo-margin = (0.38 * $logo-size)rem
   $keen-invalid-md-red = #f44336
+  $form-item-spacing = 16px // defined in k-textbox
 
   // component, highest level
   #signup-page
@@ -368,10 +368,21 @@
     height: 80vh
     width: 80vw
     &-agreement
+      $height-of-prompt = 18px + 16px
+      $height-of-checkbox = 48px + 16px
+      $height-of-error = 16px
+
+      display: inline-block
+      height: $height-of-prompt + $height-of-checkbox + $height-of-error
+      margin-bottom: $form-item-spacing // margin defined for k-textbox
       &-view-prompt
         display: block
+        margin-bottom: $form-item-spacing
+        padding: 0
         text-decoration: underline
       &-checkbox
+        margin-top: 0
+        margin-bottom: $form-item-spacing
         &.invalid
           color: $keen-invalid-md-red
       &-error-box

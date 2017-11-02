@@ -367,6 +367,7 @@
   .terms
     height: 80vh
     width: 80vw
+    border: none
     &-agreement
       $height-of-prompt = 18px + 16px
       $height-of-checkbox = 48px + 16px

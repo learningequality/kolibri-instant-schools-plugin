@@ -133,7 +133,6 @@
   import kButton from 'kolibri.coreVue.components.kButton';
   import uiCheckbox from 'keen-ui/src/UiCheckbox';
   import coreModal from 'kolibri.coreVue.components.coreModal';
-  import uiAlert from 'keen-ui/src/UiAlert';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
   import uiToolbar from 'keen-ui/src/UiToolbar';
   import logo from 'kolibri.coreVue.components.logo';
@@ -164,7 +163,6 @@
     },
     components: {
       kButton,
-      uiAlert,
       kTextbox,
       uiToolbar,
       logo,

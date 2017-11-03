@@ -316,7 +316,7 @@
   $iphone-5-width = 320px
   $vertical-page-margin = 100px
   $logo-size = 36px
-  $logo-margin = (0.38 * $logo-size)px
+  $logo-margin = 16px
   $keen-invalid-md-red = #f44336
 
   // component, highest level

@@ -74,32 +74,35 @@
         v-model="confirmedPassword"
       />
 
-      <!-- ToS modal only shows up if the box empty prior to clicking -->
-      <!-- Using UI Checkbox for blur events and v-model -->
-      <label class="terms-agreement">
-        <button
-          type="button"
-          class="terms-agreement-view-prompt"
-          @click="showTerms = true"
-        >
-          {{ $tr('viewTermsOfServicePrompt') }}
-        </button>
+      <div class="terms-agreement">
+        <label for="terms-agreement-checkbox">
+          <button
+            type="button"
+            class="terms-agreement-view-prompt"
+            @click="showTerms = true"
+          >
+            {{ $tr('viewTermsOfServicePrompt') }}
+          </button>
+        </label>
 
         <k-checkbox
           :class="['terms-agreement-checkbox', termsNotAgreed ? 'invalid' : '']"
+          id="terms-agreement-checkbox"
           :checked="termsAgreed"
           @change="termsAgreed = $event"
           @blur="termsAgreementCheckboxBlurred = true"
           :label="$tr('termsAgreementLabel')"
         />
 
-        <span
+        <label
           v-if="termsNotAgreed"
+          aria-live="polite"
+          for="terms-agreement-checkbox"
           class="terms-agreement-error-box"
         >
           {{ termsNotAgreedText }}
-        </span>
-      </label>
+        </label>
+      </div>
 
       <k-button :disabled="busy" :primary="true" :text="$tr('finish')" type="submit" />
 

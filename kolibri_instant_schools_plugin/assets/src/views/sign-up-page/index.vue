@@ -340,18 +340,6 @@
     margin-right: auto
     width: ($iphone-5-width - 20)px
 
-  .terms
-    height: 80vh
-    width: 80vw
-    &-agreement-checkbox
-      text-decoration: underline
-      &.invalid
-        color: $keen-invalid-md-red
-    &-error-box
-      display: block
-      color: $keen-invalid-md-red // same color as input error messages
-      font-size: 14px // same as error messages from inputs
-
   .app-bar-icon
     display: inline-block
     margin-left: $logo-margin

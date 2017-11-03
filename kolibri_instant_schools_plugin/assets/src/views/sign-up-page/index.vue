@@ -374,11 +374,13 @@
     &-agreement
       $height-of-prompt = 18px + 16px
       $height-of-checkbox = 48px + 16px
+      $k-textbox-text-distance = 24px // distance from top of text to its label container
       $height-of-error = 16px
 
       display: inline-block
       height: $height-of-prompt + $height-of-checkbox + $height-of-error
       margin-bottom: $form-item-spacing // margin defined for k-textbox
+      margin-top: $k-textbox-text-distance
       &-view-prompt
         display: block
         margin-bottom: $form-item-spacing

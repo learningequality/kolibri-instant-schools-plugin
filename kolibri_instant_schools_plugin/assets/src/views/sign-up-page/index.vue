@@ -4,7 +4,7 @@
 
     <ui-toolbar type="colored" textColor="white">
       <template slot="icon">
-        <ui-icon class="app-bar-icon"><logo/></ui-icon>
+        <img src="../img/instant-school-logo.png" class="app-bar-icon" />
       </template>
       <template slot="brand">
         {{ $tr('kolibri') }}
@@ -109,7 +109,6 @@
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
   import uiToolbar from 'keen-ui/src/UiToolbar';
   import logo from 'kolibri.coreVue.components.logo';
-  import uiIcon from 'keen-ui/src/UiIcon';
   import uiSelect from 'keen-ui/src/UiSelect';
   import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
 
@@ -138,7 +137,6 @@
       kTextbox,
       uiToolbar,
       logo,
-      uiIcon,
       uiSelect,
       languageSwitcher,
     },

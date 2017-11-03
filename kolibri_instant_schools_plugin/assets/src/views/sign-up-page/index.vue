@@ -108,7 +108,6 @@
   import uiAlert from 'keen-ui/src/UiAlert';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
   import uiToolbar from 'keen-ui/src/UiToolbar';
-  import logo from 'kolibri.coreVue.components.logo';
   import uiSelect from 'keen-ui/src/UiSelect';
   import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
 
@@ -136,7 +135,6 @@
       uiAlert,
       kTextbox,
       uiToolbar,
-      logo,
       uiSelect,
       languageSwitcher,
     },

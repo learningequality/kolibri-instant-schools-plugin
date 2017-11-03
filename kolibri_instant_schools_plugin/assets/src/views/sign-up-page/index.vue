@@ -4,7 +4,7 @@
 
     <ui-toolbar type="colored" textColor="white">
       <template slot="icon">
-        <ui-icon class="app-bar-icon"><logo/></ui-icon>
+        <img src="../img/instant-school-logo.png" class="app-bar-icon">
       </template>
       <template slot="brand">
         {{ $tr('kolibri') }}
@@ -108,8 +108,6 @@
   import uiAlert from 'keen-ui/src/UiAlert';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
   import uiToolbar from 'keen-ui/src/UiToolbar';
-  import logo from 'kolibri.coreVue.components.logo';
-  import uiIcon from 'keen-ui/src/UiIcon';
   import uiSelect from 'keen-ui/src/UiSelect';
   import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
 
@@ -137,8 +135,6 @@
       uiAlert,
       kTextbox,
       uiToolbar,
-      logo,
-      uiIcon,
       uiSelect,
       languageSwitcher,
     },
@@ -314,23 +310,18 @@
 <style lang="stylus" scoped>
 
   @require '~kolibri.styles.definitions'
+
   $iphone-5-width = 320px
   $vertical-page-margin = 100px
-  $logo-size = (1.64 * 1.125)rem
-  $logo-margin = (0.38 * $logo-size)rem
+  $logo-size = 36px
+  $logo-margin = 16px
+  $keen-invalid-md-red = #f44336
 
   // component, highest level
   #signup-page
     width: 100%
     height: 100%
     overflow-y: auto
-
-  // Action Bar
-  #logo
-    // 1.63 * font height
-    height: $logo-size
-    display: inline-block
-    margin-left: $logo-margin
 
   #signin
     margin-right: 1em
@@ -347,19 +338,11 @@
     margin-right: auto
     width: ($iphone-5-width - 20)px
 
-  .terms
-    background-color: $core-bg-light
-    color: $core-text-annotation
-    height: 6em
-    overflow-y: scroll
-    padding: 0.5em
-    margin-bottom: 1em
-    p
-      margin-top: 0
-
   .app-bar-icon
-    font-size: 2.5em
-    margin-left: 0.25em
+    display: inline-block
+    margin-left: $logo-margin
+    height: $logo-size
+    width: $logo-size
 
   .footer
     margin: 36px

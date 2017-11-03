@@ -3,7 +3,7 @@
   <div class="wrapper-table">
     <div class="main-row"><div id="main-cell">
       <logo class="logo"/>
-      <h1 class="login-text title">{{ $tr('kolibri') }}</h1>
+      <h1 class="login-text title">{{ $tr('signInHeader') }}</h1>
       <form class="login-form" ref="form" @submit.prevent="signIn">
         <ui-alert
           v-if="invalidCredentials"
@@ -17,9 +17,10 @@
           <k-textbox
             ref="username"
             id="username"
-            autocomplete="username"
+            autocomplete="tel"
+            type="tel"
             :autofocus="true"
-            :label="$tr('username')"
+            :label="$tr('signInPhoneNumberPrompt')"
             :invalid="usernameIsInvalid"
             :invalidText="usernameIsInvalidText"
             @blur="handleUsernameBlur"
@@ -65,6 +66,7 @@
           :primary="true"
           :disabled="busy"
         />
+
       </form>
 
       <div class="reset-pw">
@@ -121,15 +123,15 @@
   export default {
     name: 'signInPage',
     $trs: {
-      kolibri: 'Kolibri',
+      signInHeader: 'Instant Schools',
       signIn: 'Sign in',
-      username: 'Username',
+      signInPhoneNumberPrompt: 'Phone Number',
       password: 'Password',
       enterPassword: 'Enter password',
       noAccount: `Don't have an account?`,
       createAccount: 'Create account',
       accessAsGuest: 'Access as guest',
-      signInError: 'Incorrect username or password',
+      signInError: 'Incorrect phone number or password',
       poweredBy: 'Kolibri {version}',
       required: 'This field is required',
       requiredForCoachesAdmins: 'Password is required for coaches and admins',
@@ -295,10 +297,11 @@
         this.showDropdown = false;
       },
       signIn() {
+        const strippedPhoneNumber = this.username.replace(/\D/g, '');
         this.formSubmitted = true;
         if (this.formIsValid) {
           return this.showSelectProfilePage({
-            phone: this.username,
+            phone: strippedPhoneNumber,
             password: this.password,
             facility: this.facility,
           }).catch(err => {

@@ -111,7 +111,6 @@
   import { LoginErrors } from 'kolibri.coreVue.vuex.constants';
   import kButton from 'kolibri.coreVue.components.kButton';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
-  import coreModal from 'kolibri.coreVue.components.coreModal';
   import logo from 'kolibri.coreVue.components.logo';
   import uiAutocompleteSuggestion from 'keen-ui/src/UiAutocompleteSuggestion';
   import uiAlert from 'keen-ui/src/UiAlert';
@@ -302,7 +301,7 @@
         this.formSubmitted = true;
         if (this.formIsValid) {
           return this.showSelectProfilePage({
-            username: strippedPhoneNumber,
+            phone: strippedPhoneNumber,
             password: this.password,
             facility: this.facility,
           }).catch(err => {

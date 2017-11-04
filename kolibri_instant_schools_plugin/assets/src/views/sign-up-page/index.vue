@@ -382,6 +382,16 @@
       margin-bottom: $form-item-spacing // margin defined for k-textbox
       margin-top: $k-textbox-text-distance
       &-view-prompt
+
+        // duplicating styles from `<a>` in core theme
+        color: $core-action-normal
+        transition: color $core-time ease-out
+        &:hover
+          color: $core-action-dark
+        &:hover:focus, &:focus
+          outline: $core-outline
+        // end dupe 
+
         display: block
         margin-bottom: $form-item-spacing
         padding: 0

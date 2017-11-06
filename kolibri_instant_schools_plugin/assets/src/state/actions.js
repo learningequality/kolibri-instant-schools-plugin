@@ -2,7 +2,7 @@ import { PageNames } from '../constants';
 import * as coreActions from 'kolibri.coreVue.vuex.actions';
 import { isUserLoggedIn } from 'kolibri.coreVue.vuex.getters';
 import router from 'kolibri.coreVue.router';
-import { SignUpResource, FacilityUserResource, FacilityResource } from 'kolibri.resources';
+import { FacilityResource } from 'kolibri.resources';
 import { createTranslator } from 'kolibri.utils.i18n';
 import { PhoneNumberSignUpResource, FacilityUserProfileResource } from '../api-resources';
 
@@ -162,7 +162,7 @@ function showSignUp(store) {
 }
 
 function signUp(store, signUpCreds) {
-  const signUpModel = SignUpResource.createModel(signUpCreds);
+  const signUpModel = PhoneNumberSignUpResource.createModel(signUpCreds);
   const signUpPromise = signUpModel.save(signUpCreds);
 
   resetSignUpState(store);

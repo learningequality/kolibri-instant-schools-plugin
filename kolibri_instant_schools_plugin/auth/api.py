@@ -101,15 +101,12 @@ class PasswordResetTokenViewset(viewsets.ViewSet):
 
 class FacilityUserProfileViewset(FacilityUserViewSet):
 
-    def perform_update(self, serializer):
+    def set_password_if_needed(self, instance, serializer):
         with transaction.atomic():
-            instance = serializer.save()
             if serializer.validated_data.get('password', ''):
                 # update the password for all accounts associated with this password
                 phone = PhoneToUsernameMapping.objects.get(username=instance.username).phone
                 set_password_for_phone(phone, serializer.validated_data['password'])
-                # prevent the user from being logged out
-                update_session_auth_hash(self.request, instance)
 
 
 def set_password_for_phone(phone, password):

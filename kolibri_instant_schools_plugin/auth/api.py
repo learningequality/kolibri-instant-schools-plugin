@@ -107,6 +107,9 @@ class FacilityUserProfileViewset(FacilityUserViewSet):
                 # update the password for all accounts associated with this password
                 phone = PhoneToUsernameMapping.objects.get(username=instance.username).phone
                 set_password_for_phone(phone, serializer.validated_data['password'])
+                # explicitly update password for this user to avoid sign out
+                instance.set_password(serializer.validated_data['password'])
+                instance.save()
 
 
 def set_password_for_phone(phone, password):

@@ -4,9 +4,7 @@ import { isUserLoggedIn } from 'kolibri.coreVue.vuex.getters';
 import router from 'kolibri.coreVue.router';
 import { SignUpResource, FacilityUserResource, FacilityResource } from 'kolibri.resources';
 import { createTranslator } from 'kolibri.utils.i18n';
-import PhoneNumberSignUpResourceConstructor from '../api-resources';
-
-const PhoneNumberSignUpResource = new PhoneNumberSignUpResourceConstructor();
+import { PhoneNumberSignUpResource, FacilityUserProfileResource } from '../api-resources';
 
 const name = 'userPageTitles';
 
@@ -39,7 +37,7 @@ function editProfile(store, edits, session) {
   // payload needs username, fullname, and facility
   // used to save changes to API
   function getUserModel() {
-    return FacilityUserResource.getModel(session.user_id);
+    return FacilityUserProfileResource.getModel(session.user_id);
   }
   const savedUserModel = getUserModel();
   const changedValues = {};
@@ -51,9 +49,9 @@ function editProfile(store, edits, session) {
   if (edits.username && edits.username !== session.username) {
     changedValues.username = edits.username;
   }
-  // if (edits.password && edits.password !== session.password) {
-  //   changedValues.password = edits.password;
-  // }
+  if (edits.password && edits.password !== session.password) {
+    changedValues.password = edits.password;
+  }
 
   // check to see if anything's changed and conditionally add last requirement
   if (!Object.keys(changedValues).length) {

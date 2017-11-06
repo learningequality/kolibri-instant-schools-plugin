@@ -7,7 +7,7 @@
         <ui-icon class="app-bar-icon"><logo/></ui-icon>
       </template>
       <template slot="brand">
-        {{ $tr('kolibri') }}
+        {{ $tr('appBarHeader') }}
       </template>
       <div slot="actions">
         <router-link id="signin" :to="signInPage">
@@ -40,10 +40,9 @@
       <k-textbox
         ref="username"
         id="username"
-        type="text"
-        autocomplete="username"
-        :label="$tr('username')"
-        :maxlength="30"
+        type="tel"
+        autocomplete="tel"
+        :label="$tr('phoneNumberLabel')"
         :invalid="usernameIsInvalid"
         :invalidText="usernameIsInvalidText"
         @blur="usernameBlurred = true"
@@ -75,21 +74,47 @@
         v-model="confirmedPassword"
       />
 
-      <ui-select
-        :name="$tr('selectFacility')"
-        :placeholder="$tr('selectFacility')"
-        :label="$tr('facility')"
-        :value="selectedFacility"
-        :options="facilityList"
-        :invalid="facilityIsInvalid"
-        :error="facilityIsInvalidText"
-        @blur="facilityBlurred = true"
-        @input="updateSelection"
-      />
+      <div class="terms-agreement">
+        <label for="terms-agreement-checkbox">
+          <button
+            type="button"
+            class="terms-agreement-view-prompt"
+            @click="showTerms = true"
+          >
+            {{ $tr('viewTermsOfServicePrompt') }}
+          </button>
+        </label>
+
+        <k-checkbox
+          :class="['terms-agreement-checkbox', termsNotAgreed ? 'invalid' : '']"
+          id="terms-agreement-checkbox"
+          :checked="termsAgreed"
+          @change="termsAgreed = $event"
+          @blur="termsAgreementCheckboxBlurred = true"
+          :label="$tr('termsAgreementLabel')"
+        />
+
+        <label
+          v-if="termsNotAgreed"
+          aria-live="polite"
+          for="terms-agreement-checkbox"
+          class="terms-agreement-error-box"
+        >
+          {{ termsNotAgreedText }}
+        </label>
+      </div>
 
       <k-button :disabled="busy" :primary="true" :text="$tr('finish')" type="submit" />
 
     </form>
+
+    <core-modal
+      v-if="showTerms"
+      @cancel="showTerms = false"
+      :title="$tr('termsOfServiceModalHeader')"
+    >
+      <iframe class="terms" src="/content/databases/tos.txt"></iframe>
+    </core-modal>
 
     <div class="footer">
       <language-switcher :footer="true"/>
@@ -105,12 +130,12 @@
   import { PageNames } from '../../constants';
   import { validateUsername } from 'kolibri.utils.validators';
   import kButton from 'kolibri.coreVue.components.kButton';
-  import uiAlert from 'keen-ui/src/UiAlert';
+  import kCheckbox from 'kolibri.coreVue.components.kCheckbox';
+  import coreModal from 'kolibri.coreVue.components.coreModal';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
   import uiToolbar from 'keen-ui/src/UiToolbar';
   import logo from 'kolibri.coreVue.components.logo';
   import uiIcon from 'keen-ui/src/UiIcon';
-  import uiSelect from 'keen-ui/src/UiSelect';
   import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
 
   export default {
@@ -118,42 +143,44 @@
     $trs: {
       createAccount: 'Create an account',
       name: 'Full name',
-      username: 'Username',
+      phoneNumberLabel: 'Phone Number',
       password: 'Password',
       reEnterPassword: 'Re-enter password',
       passwordMatchError: 'Passwords do not match',
       genericError: 'Something went wrong during sign up!',
-      usernameAlphaNumError: 'Username can only contain letters, numbers, and underscores',
-      usernameAlreadyExistsError: 'An account with that username already exists',
+      phoneNumberInvalid: 'Please enter a valid phone number',
+      accountAlreadyExistsError: 'An account with that phone number already exists',
       logIn: 'Sign in',
-      kolibri: 'Kolibri',
+      termsAgreementLabel: 'I agree to the terms of service & privacy policy',
+      termsOfServiceModalHeader: 'Terms of service & privacy policy',
+      viewTermsOfServicePrompt: 'View terms of service & privacy policy',
+      appBarHeader: 'Instant Schools',
       finish: 'Finish',
-      facility: 'Facility',
-      selectFacility: 'Select a facility',
       required: 'This field is required',
     },
     components: {
       kButton,
-      uiAlert,
       kTextbox,
       uiToolbar,
       logo,
       uiIcon,
-      uiSelect,
       languageSwitcher,
+      coreModal,
+      kCheckbox,
     },
     data: () => ({
       name: '',
       username: '',
       password: '',
       confirmedPassword: '',
-      selection: {},
       nameBlurred: false,
       usernameBlurred: false,
       passwordBlurred: false,
       confirmedPasswordBlurred: false,
-      facilityBlurred: false,
       formSubmitted: false,
+      showTerms: false,
+      termsAgreed: false,
+      termsAgreementCheckboxBlurred: false,
     }),
     computed: {
       signInPage() {
@@ -164,12 +191,6 @@
           label: facility.name,
           id: facility.id,
         }));
-      },
-      selectedFacility() {
-        if (this.facilityList.length === 1) {
-          return this.facilityList[0];
-        }
-        return this.selection;
       },
       nameIsInvalidText() {
         if (this.nameBlurred || this.formSubmitted) {
@@ -193,11 +214,11 @@
           if (this.username === '') {
             return this.$tr('required');
           }
-          if (!validateUsername(this.username)) {
-            return this.$tr('usernameAlphaNumError');
+          if (!this.validatePhoneNumber(this.username)) {
+            return this.$tr('phoneNumberInvalid');
           }
           if (!this.usernameDoesNotExistYet) {
-            return this.$tr('usernameAlreadyExistsError');
+            return this.$tr('accountAlreadyExistsError');
           }
         }
         return '';
@@ -230,19 +251,14 @@
       confirmedPasswordIsInvalid() {
         return !!this.confirmedPasswordIsInvalidText;
       },
-      noFacilitySelected() {
-        return !this.selectedFacility.id;
-      },
-      facilityIsInvalidText() {
-        if (this.facilityBlurred || this.formSubmitted) {
-          if (this.noFacilitySelected) {
-            return this.$tr('required');
-          }
+      termsNotAgreedText() {
+        if ((this.termsAgreementCheckboxBlurred || this.formSubmitted) && !this.termsAgreed) {
+          return this.$tr('required');
         }
         return '';
       },
-      facilityIsInvalid() {
-        return !!this.facilityIsInvalidText;
+      termsNotAgreed() {
+        return !!this.termsNotAgreedText;
       },
       formIsValid() {
         return (
@@ -250,7 +266,7 @@
           !this.usernameIsInvalid &&
           !this.passwordIsInvalid &&
           !this.confirmedPasswordIsInvalid &&
-          !this.facilityIsInvalid
+          !this.termsNotAgreed
         );
       },
       unknownError() {
@@ -264,15 +280,12 @@
       },
     },
     methods: {
-      updateSelection(selection) {
-        this.selection = selection;
-      },
       signUp() {
         this.formSubmitted = true;
         const canSubmit = this.formIsValid && !this.busy;
         if (canSubmit) {
           this.signUpAction({
-            facility: this.selectedFacility.id,
+            facility: this.facilityList[0],
             full_name: this.name,
             username: this.username,
             password: this.password,
@@ -291,6 +304,10 @@
         } else if (this.confirmedPasswordIsInvalid) {
           this.$refs.confirmedPassword.focus();
         }
+      },
+      validatePhoneNumber() {
+        const strippedPhoneNumber = this.username.replace(/\D/g, '');
+        return strippedPhoneNumber.length > 8;
       },
     },
     vuex: {
@@ -314,10 +331,13 @@
 <style lang="stylus" scoped>
 
   @require '~kolibri.styles.definitions'
+
   $iphone-5-width = 320px
   $vertical-page-margin = 100px
   $logo-size = (1.64 * 1.125)rem
   $logo-margin = (0.38 * $logo-size)rem
+  $keen-invalid-md-red = #f44336
+  $form-item-spacing = 16px // defined in k-textbox
 
   // component, highest level
   #signup-page
@@ -348,14 +368,43 @@
     width: ($iphone-5-width - 20)px
 
   .terms
-    background-color: $core-bg-light
-    color: $core-text-annotation
-    height: 6em
-    overflow-y: scroll
-    padding: 0.5em
-    margin-bottom: 1em
-    p
-      margin-top: 0
+    height: 80vh
+    width: 80vw
+    border: none
+    &-agreement
+      $height-of-prompt = 18px + 16px
+      $height-of-checkbox = 48px + 16px
+      $k-textbox-text-distance = 24px // distance from top of text to its label container
+      $height-of-error = 16px
+
+      display: inline-block
+      height: $height-of-prompt + $height-of-checkbox + $height-of-error
+      margin-bottom: $form-item-spacing // margin defined for k-textbox
+      margin-top: $k-textbox-text-distance
+      &-view-prompt
+
+        // duplicating styles from `<a>` in core theme
+        color: $core-action-normal
+        transition: color $core-time ease-out
+        &:hover
+          color: $core-action-dark
+        &:hover:focus, &:focus
+          outline: $core-outline
+        // end dupe 
+
+        display: block
+        margin-bottom: $form-item-spacing
+        padding: 0
+        text-decoration: underline
+      &-checkbox
+        margin-top: 0
+        margin-bottom: $form-item-spacing
+        &.invalid
+          color: $keen-invalid-md-red
+      &-error-box
+        display: block
+        color: $keen-invalid-md-red // same color as input error messages
+        font-size: 14px // same as error messages from inputs
 
   .app-bar-icon
     font-size: 2.5em

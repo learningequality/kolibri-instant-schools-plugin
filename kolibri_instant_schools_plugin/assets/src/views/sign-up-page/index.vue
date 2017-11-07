@@ -4,7 +4,7 @@
 
     <ui-toolbar type="colored" textColor="white">
       <template slot="icon">
-        <ui-icon class="app-bar-icon"><logo/></ui-icon>
+        <img src="../img/instant-school-logo.png" class="app-bar-icon">
       </template>
       <template slot="brand">
         {{ $tr('appBarHeader') }}
@@ -135,8 +135,6 @@
   import coreModal from 'kolibri.coreVue.components.coreModal';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
   import uiToolbar from 'keen-ui/src/UiToolbar';
-  import logo from 'kolibri.coreVue.components.logo';
-  import uiIcon from 'keen-ui/src/UiIcon';
   import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
 
   export default {
@@ -163,8 +161,6 @@
       kButton,
       kTextbox,
       uiToolbar,
-      logo,
-      uiIcon,
       languageSwitcher,
       coreModal,
       kCheckbox,
@@ -335,23 +331,15 @@
 
   $iphone-5-width = 320px
   $vertical-page-margin = 100px
-  $logo-size = (1.64 * 1.125)rem
-  $logo-margin = (0.38 * $logo-size)rem
+  $logo-size = 36px
+  $logo-margin = 16px
   $keen-invalid-md-red = #f44336
-  $form-item-spacing = 16px // defined in k-textbox
 
   // component, highest level
   #signup-page
     width: 100%
     height: 100%
     overflow-y: auto
-
-  // Action Bar
-  #logo
-    // 1.63 * font height
-    height: $logo-size
-    display: inline-block
-    margin-left: $logo-margin
 
   #signin
     margin-right: 1em
@@ -368,48 +356,11 @@
     margin-right: auto
     width: ($iphone-5-width - 20)px
 
-  .terms
-    height: 80vh
-    width: 80vw
-    border: none
-    &-agreement
-      $height-of-prompt = 18px + 16px
-      $height-of-checkbox = 48px + 16px
-      $k-textbox-text-distance = 24px // distance from top of text to its label container
-      $height-of-error = 16px
-
-      display: inline-block
-      height: $height-of-prompt + $height-of-checkbox + $height-of-error
-      margin-bottom: $form-item-spacing // margin defined for k-textbox
-      margin-top: $k-textbox-text-distance
-      &-view-prompt
-
-        // duplicating styles from `<a>` in core theme
-        color: $core-action-normal
-        transition: color $core-time ease-out
-        &:hover
-          color: $core-action-dark
-        &:hover:focus, &:focus
-          outline: $core-outline
-        // end dupe
-
-        display: block
-        margin-bottom: $form-item-spacing
-        padding: 0
-        text-decoration: underline
-      &-checkbox
-        margin-top: 0
-        margin-bottom: $form-item-spacing
-        &.invalid
-          color: $keen-invalid-md-red
-      &-error-box
-        display: block
-        color: $keen-invalid-md-red // same color as input error messages
-        font-size: 14px // same as error messages from inputs
-
   .app-bar-icon
-    font-size: 2.5em
-    margin-left: 0.25em
+    display: inline-block
+    margin-left: $logo-margin
+    height: $logo-size
+    width: $logo-size
 
   .footer
     margin: 36px

@@ -130,6 +130,7 @@
   import { PageNames } from '../../constants';
   import { validateUsername } from 'kolibri.utils.validators';
   import kButton from 'kolibri.coreVue.components.kButton';
+  import uiAlert from 'keen-ui/src/UiAlert';
   import kCheckbox from 'kolibri.coreVue.components.kCheckbox';
   import coreModal from 'kolibri.coreVue.components.coreModal';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
@@ -390,7 +391,7 @@
           color: $core-action-dark
         &:hover:focus, &:focus
           outline: $core-outline
-        // end dupe 
+        // end dupe
 
         display: block
         margin-bottom: $form-item-spacing

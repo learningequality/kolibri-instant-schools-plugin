@@ -65,7 +65,6 @@
     name: 'appBar',
     $trs: {
       account: 'Account',
-      profile: 'Profile',
       signOut: 'Sign Out',
       signIn: 'Sign In',
       role: 'Role',

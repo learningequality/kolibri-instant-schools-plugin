@@ -9,7 +9,7 @@ import { PhoneNumberSignUpResource, FacilityUserProfileResource } from '../api-r
 const name = 'userPageTitles';
 
 const messages = {
-  userProfilePageTitle: 'User Profile',
+  userAccountPageTitle: 'User Account',
   userSignInPageTitle: 'User Sign In',
   userSignUpPageTitle: 'User Sign Up',
 };
@@ -24,7 +24,7 @@ function showRoot(store) {
   const userSignedIn = isUserLoggedIn(store.state);
   if (userSignedIn) {
     router.getInstance().replace({
-      name: PageNames.PROFILE,
+      name: PageNames.ACCOUNT,
     });
     return;
   }
@@ -33,7 +33,7 @@ function showRoot(store) {
   });
 }
 
-function editProfile(store, edits, session) {
+function editAccount(store, edits, session) {
   // payload needs username, fullname, and facility
   // used to save changes to API
   function getUserModel() {
@@ -59,15 +59,15 @@ function editProfile(store, edits, session) {
   }
 
   // update user object with new values
-  store.dispatch('SET_PROFILE_BUSY', true);
+  store.dispatch('SET_ACCOUNT_BUSY', true);
 
   return savedUserModel.save(changedValues).then(
     userWithAttrs => {
       // dispatch changes to store
       coreActions.getCurrentSession(store, true);
-      store.dispatch('SET_PROFILE_SUCCESS', true);
-      store.dispatch('SET_PROFILE_BUSY', false);
-      store.dispatch('SET_PROFILE_ERROR', false, '');
+      store.dispatch('SET_ACCOUNT_SUCCESS', true);
+      store.dispatch('SET_ACCOUNT_BUSY', false);
+      store.dispatch('SET_ACCOUNT_ERROR', false, '');
 
       // error handling
     },
@@ -83,14 +83,14 @@ function editProfile(store, edits, session) {
       }
 
       // copying logic from user-create-modal
-      store.dispatch('SET_PROFILE_SUCCESS', false);
-      store.dispatch('SET_PROFILE_ERROR', true, _errorMessageHandler(error));
-      store.dispatch('SET_PROFILE_BUSY', false);
+      store.dispatch('SET_ACCOUNT_SUCCESS', false);
+      store.dispatch('SET_ACCOUNT_ERROR', true, _errorMessageHandler(error));
+      store.dispatch('SET_ACCOUNT_BUSY', false);
     }
   );
 }
 
-function resetProfileState(store) {
+function resetAccountState(store) {
   const pageState = {
     busy: false,
     success: false,
@@ -101,7 +101,7 @@ function resetProfileState(store) {
   store.dispatch('SET_PAGE_STATE', pageState);
 }
 
-function showProfile(store) {
+function showAccount(store) {
   const userSignedIn = isUserLoggedIn(store.state);
   if (!userSignedIn) {
     router.getInstance().replace({
@@ -109,18 +109,18 @@ function showProfile(store) {
     });
     return;
   }
-  store.dispatch('SET_PAGE_NAME', PageNames.PROFILE);
+  store.dispatch('SET_PAGE_NAME', PageNames.ACCOUNT);
   store.dispatch('CORE_SET_PAGE_LOADING', false);
   store.dispatch('CORE_SET_ERROR', null);
-  store.dispatch('CORE_SET_TITLE', translator.$tr('userProfilePageTitle'));
-  resetProfileState(store);
+  store.dispatch('CORE_SET_TITLE', translator.$tr('userAccountPageTitle'));
+  resetAccountState(store);
 }
 
 function showSignIn(store) {
   const userSignedIn = isUserLoggedIn(store.state);
   if (userSignedIn) {
     router.getInstance().replace({
-      name: PageNames.PROFILE,
+      name: PageNames.ACCOUNT,
     });
     return;
   }
@@ -145,7 +145,7 @@ function showSignUp(store) {
   const userSignedIn = isUserLoggedIn(store.state);
   if (userSignedIn) {
     router.getInstance().replace({
-      name: PageNames.PROFILE,
+      name: PageNames.ACCOUNT,
     });
     return Promise.resolve();
   }
@@ -193,7 +193,7 @@ export {
   showSignUp,
   signUp,
   resetSignUpState,
-  showProfile,
-  editProfile,
-  resetProfileState,
+  showAccount,
+  editAccount,
+  resetAccountState,
 };

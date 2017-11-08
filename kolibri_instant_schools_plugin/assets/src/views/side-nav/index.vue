@@ -93,7 +93,7 @@
       coach: 'Coach',
       device: 'Device',
       signIn: 'Sign in',
-      profile: 'Profile',
+      account: 'Account',
       signOut: 'Sign out',
       about: 'About',
       closeNav: 'Close navigation',
@@ -176,7 +176,7 @@
         });
         if (this.isUserLoggedIn) {
           options.push({
-            label: this.$tr('profile'),
+            label: this.$tr('account'),
             active: this.pageIsActive(TopLevelPageNames.USER),
             icon: 'account_circle',
             href: '/user',

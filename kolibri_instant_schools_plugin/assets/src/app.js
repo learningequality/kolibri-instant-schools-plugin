@@ -40,10 +40,10 @@ class UserModule extends KolibriModule {
             },
           },
           {
-            name: PageNames.PROFILE,
-            path: '/profile',
+            name: PageNames.ACCOUNT,
+            path: '/account',
             handler: (toRoute, fromRoute) => {
-              actions.showProfile(store);
+              actions.showAccount(store);
             },
           },
           {

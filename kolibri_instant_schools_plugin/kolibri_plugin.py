@@ -13,7 +13,7 @@ class User(KolibriPluginBase):
 
 
 class UserAsset(webpack_hooks.WebpackBundleHook):
-    unique_slug = "user_module"
+    unique_slug = "instant_schools_user_module"
     src_file = "assets/src/app.js"
 
 

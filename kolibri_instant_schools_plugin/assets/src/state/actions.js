@@ -128,6 +128,7 @@ function showSignIn(store) {
   store.dispatch('SET_PAGE_STATE', {});
   store.dispatch('CORE_SET_PAGE_LOADING', false);
   store.dispatch('CORE_SET_ERROR', null);
+  store.dispatch('CORE_SET_LOGIN_ERROR', '');
   store.dispatch('CORE_SET_TITLE', translator.$tr('userSignInPageTitle'));
 }
 

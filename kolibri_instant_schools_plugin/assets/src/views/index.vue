@@ -68,6 +68,9 @@
         if (this.pageName === PageNames.SIGN_UP) {
           return false;
         }
+        if (this.pageName === PageNames.SELECT_PROFILE) {
+          return false;
+        }
         return true;
       },
     },

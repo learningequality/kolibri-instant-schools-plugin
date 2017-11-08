@@ -107,7 +107,7 @@
         if (this.isUserLoggedIn) {
           return [
             {
-              id: 'about',
+              id: 'account',
               label: this.$tr('account'),
             },
             changeLanguage,
@@ -128,7 +128,7 @@
     },
     methods: {
       optionSelected(option) {
-        if (option.id === 'profile') {
+        if (option.id === 'account') {
           window.location = `/user`;
         } else if (option.id === 'signOut') {
           this.kolibriLogout();

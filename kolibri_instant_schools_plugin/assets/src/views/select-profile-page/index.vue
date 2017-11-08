@@ -115,7 +115,7 @@
     },
     $trs: {
       newProfileButton: 'New profile',
-      selectProfilePageHeader: 'Who is learning today?',
+      selectProfilePageHeader: 'Select profile',
     },
   };
 

@@ -89,7 +89,7 @@
 
       <k-button
         type="submit"
-        :text="$tr('updateProfile')"
+        :text="$tr('saveChanges')"
         :primary="true"
         :disabled="busy"
       />
@@ -101,7 +101,7 @@
 
 <script>
 
-  import { editProfile, resetProfileState } from '../../state/actions';
+  import { editAccount, resetAccountState } from '../../state/actions';
   import {
     facilityConfig,
     isSuperuser,
@@ -124,12 +124,12 @@
   import { PermissionTypes, UserKinds } from 'kolibri.coreVue.vuex.constants';
 
   export default {
-    name: 'profilePage',
+    name: 'accountPage',
     $trs: {
       genericError: 'Something went wrong',
-      success: 'Profile details updated!',
+      success: 'Account details updated!',
       name: 'Full name',
-      updateProfile: 'Save changes',
+      saveChanges: 'Save changes',
       isLearner: 'Learner',
       isCoach: 'Coach',
       isAdmin: 'Admin',
@@ -224,7 +224,7 @@
     methods: {
       submitEdits() {
         this.formSubmitted = true;
-        this.resetProfileState();
+        this.resetAccountState();
         if (!this.nameIsValid) {
           return this.$refs.name.focus();
         }
@@ -237,7 +237,7 @@
         if (this.newPw !== '') {
           edits.password = this.newPw;
         }
-        this.editProfile(edits, this.session).then(() => {
+        this.editAccount(edits, this.session).then(() => {
           this.newPw = '';
           this.newPwConfirm = '';
         });
@@ -267,8 +267,8 @@
         userHasPermissions,
       },
       actions: {
-        editProfile,
-        resetProfileState,
+        editAccount,
+        resetAccountState,
         fetchPoints,
       },
     },

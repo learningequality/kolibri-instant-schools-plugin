@@ -18,14 +18,14 @@ const mutations = {
   SET_PAGE_STATE(state, pageState) {
     state.pageState = pageState;
   },
-  // Profile Page Mutations
-  SET_PROFILE_BUSY(state, isBusy) {
+  // Account Page Mutations
+  SET_ACCOUNT_BUSY(state, isBusy) {
     state.pageState.busy = isBusy;
   },
-  SET_PROFILE_SUCCESS(state, isSuccessful) {
+  SET_ACCOUNT_SUCCESS(state, isSuccessful) {
     state.pageState.success = isSuccessful;
   },
-  SET_PROFILE_ERROR(state, isError, errorMessage) {
+  SET_ACCOUNT_ERROR(state, isError, errorMessage) {
     state.pageState.error = isError;
     state.pageState.errorMessage = errorMessage;
   },

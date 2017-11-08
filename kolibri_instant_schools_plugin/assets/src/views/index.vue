@@ -20,12 +20,12 @@
   import coreBase from 'kolibri.coreVue.components.coreBase';
   import signInPage from './sign-in-page';
   import signUpPage from './sign-up-page';
-  import profilePage from './profile-page';
+  import accountPage from './account-page';
   import selectProfilePage from './select-profile-page';
   import resetPasswordPage from './reset-password-page';
 
   export default {
-    $trs: { userProfileTitle: 'Profile' },
+    $trs: { userAccountTitle: 'Account' },
     name: 'userPlugin',
     components: {
       coreBase,
@@ -33,12 +33,12 @@
       resetPasswordPage,
       signInPage,
       signUpPage,
-      profilePage,
+      accountPage,
     },
     computed: {
       appBarTitle() {
-        if (this.pageName === PageNames.PROFILE) {
-          return this.$tr('userProfileTitle');
+        if (this.pageName === PageNames.ACCOUNT) {
+          return this.$tr('userAccountTitle');
         }
         return '';
       },
@@ -50,8 +50,8 @@
         if (this.pageName === PageNames.SIGN_UP) {
           return 'sign-up-page';
         }
-        if (this.pageName === PageNames.PROFILE) {
-          return 'profile-page';
+        if (this.pageName === PageNames.ACCOUNT) {
+          return 'account-page';
         }
         if (this.pageName === PageNames.SELECT_PROFILE) {
           return 'selectProfilePage';

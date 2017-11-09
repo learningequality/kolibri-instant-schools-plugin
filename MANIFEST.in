@@ -8,6 +8,7 @@ include kolibri_instant_schools_plugin/*.js
 recursive-exclude kolibri_instant_schools_plugin/* *pyc
 recursive-include kolibri_instant_schools_plugin/auth *.*
 recursive-include kolibri_instant_schools_plugin/build *.*
+recursive-include kolibri_instant_schools_plugin/smpp *.*
 recursive-include kolibri_instant_schools_plugin/static *.*
 recursive-include kolibri_instant_schools_plugin/templates *.*
 recursive-include kolibri_instant_schools_plugin/ *.py

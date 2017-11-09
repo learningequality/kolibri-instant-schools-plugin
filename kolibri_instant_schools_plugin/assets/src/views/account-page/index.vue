@@ -33,18 +33,18 @@
 
     <form @submit.prevent="submitEdits">
       <ui-alert
-        v-if="nameSuccess"
+        v-if="profileNameSuccess"
         type="success"
         :dismissible="false"
       >
-        {{ $tr('nameSuccess') }}
+        {{ $tr('profileNameSuccess') }}
       </ui-alert>
       <ui-alert
-        v-if="nameError"
+        v-if="profileNameError"
         type="error"
         :dismissible="false"
       >
-        {{ nameErrorMessage || $tr('genericError') }}
+        {{ profileNameErrorMessage || $tr('genericError') }}
       </ui-alert>
 
       <k-textbox
@@ -54,7 +54,7 @@
         autocomplete="name"
         :autofocus="false"
         :label="$tr('name')"
-        :disabled="nameBusy"
+        :disabled="profileNameBusy"
         :maxlength="120"
         :invalid="!nameIsValid"
         :invalidText="$tr('required')"
@@ -69,18 +69,19 @@
         type="submit"
         :text="$tr('saveChanges')"
         :primary="true"
-        :disabled="nameBusy"
+        :disabled="profileNameBusy"
+        class="no-ml"
       />
     </form>
 
-    <h1>Account</h1>
+    <h1>{{ $tr('account ') }}</h1>
 
     <ui-alert
-      v-if="passwordSuccess"
+      v-if="accountPasswordSuccess"
       type="success"
       :dismissible="false"
     >
-      {{ $tr('passwordSuccess') }}
+      {{ $tr('accountPasswordSuccess') }}
     </ui-alert>
 
     <k-button
@@ -88,7 +89,8 @@
       :text="$tr('changePassword')"
       :priamry="false"
       :raised="true"
-      @click="showPasswordModal(true)"
+      @click="showAccountPasswordModal(true)"
+      class="no-ml"
     />
 
     <change-password-modal v-if="passwordModalIsOpen" />
@@ -100,7 +102,7 @@
 
 <script>
 
-  import { changeName, resetNameState, showPasswordModal } from '../../state/actions';
+  import { changeName, resetNameState, showAccountPasswordModal } from '../../state/actions';
   import {
     facilityConfig,
     isSuperuser,
@@ -127,7 +129,7 @@
     name: 'accountPage',
     $trs: {
       genericError: 'Something went wrong',
-      nameSuccess: 'Profile name updated!',
+      profileNameSuccess: 'Profile name updated!',
       name: 'Profile name',
       saveChanges: 'Save changes',
       isLearner: 'Learner',
@@ -143,7 +145,8 @@
       youCan: 'You can',
       profile: 'Profile',
       changePassword: 'Change password',
-      passwordSuccess: 'Password changed',
+      accountPasswordSuccess: 'Password changed',
+      account: 'Account',
     },
     components: {
       kButton,
@@ -235,18 +238,18 @@
         getUserRole,
         getUserPermissions,
         userHasPermissions,
-        nameBusy: state => state.pageState.nameBusy,
-        nameError: state => state.pageState.nameError,
-        nameErrorMessage: state => state.pageState.nameErrorMessage,
-        nameSuccess: state => state.pageState.nameSuccess,
-        passwordSuccess: state => state.pageState.passwordSuccess,
-        passwordModalIsOpen: state => state.pageState.showPasswordModal,
+        profileNameBusy: state => state.pageState.profileNameBusy,
+        profileNameError: state => state.pageState.profileNameError,
+        profileNameErrorMessage: state => state.pageState.profileNameErrorMessage,
+        profileNameSuccess: state => state.pageState.profileNameSuccess,
+        accountPasswordSuccess: state => state.pageState.accountPasswordSuccess,
+        passwordModalIsOpen: state => state.pageState.showAccountPasswordModal,
       },
       actions: {
         changeName,
         resetNameState,
         fetchPoints,
-        showPasswordModal,
+        showAccountPasswordModal,
       },
     },
   };
@@ -268,7 +271,7 @@
     margin-right: auto
     width: ($iphone-width - 20)px
 
-  button
+  .no-ml
     margin-left: 0
 
   .points-icon, .points-num

@@ -1,15 +1,15 @@
 <template>
 
-  <core-modal :title="$tr('changePassword')" @cancel="showPasswordModal(false)">
+  <core-modal :title="$tr('changePassword')" @cancel="showAccountPasswordModal(false)">
     <p>{{ $tr('passwordChangeWarning') }}</p>
 
     <form @submit.prevent="submitForm">
       <ui-alert
-        v-if="passwordError"
+        v-if="accountPasswordError"
         type="error"
         :dismissible="false"
       >
-        {{ passwordErrorMessage || $tr('genericError') }}
+        {{ accountPasswordErrorMessage || $tr('genericError') }}
       </ui-alert>
 
       <k-textbox
@@ -39,14 +39,14 @@
           :text="$tr('cancel')"
           :primary="false"
           :raised="false"
-          @click="showPasswordModal(false)"
+          @click="showAccountPasswordModal(false)"
         />
         <k-button
           type="submit"
           :text="$tr('save')"
           :primary="true"
           :raised="true"
-          :disabled="passwordBusy"
+          :disabled="accountPasswordBusy"
         />
       </div>
 
@@ -58,7 +58,7 @@
 
 <script>
 
-  import { changePassword, showPasswordModal } from '../../state/actions';
+  import { changePassword, showAccountPasswordModal } from '../../state/actions';
   import coreModal from 'kolibri.coreVue.components.coreModal';
   import kTextbox from 'kolibri.coreVue.components.kTextbox';
   import kButton from 'kolibri.coreVue.components.kButton';
@@ -118,18 +118,18 @@
         if (this.passwordConfirmationIsInvalid) {
           return this.$refs.passwordConfirmation.focus();
         }
-        this.changePassword(this.password).then(() => this.showPasswordModal(false));
+        this.changePassword(this.password).then(() => this.showAccountPasswordModal(false));
       },
     },
     vuex: {
       actions: {
         changePassword,
-        showPasswordModal,
+        showAccountPasswordModal,
       },
       getters: {
-        passwordBusy: state => state.pageState.passwordBusy,
-        passwordError: state => state.pageState.passwordError,
-        passwordErrorMessage: state => state.pageState.passwordErrorMessage,
+        accountPasswordBusy: state => state.pageState.accountPasswordBusy,
+        accountPasswordError: state => state.pageState.accountPasswordError,
+        accountPasswordErrorMessage: state => state.pageState.accountPasswordErrorMessage,
       },
     },
     $trs: {
@@ -149,8 +149,6 @@
 
 
 <style lang="stylus" scoped>
-
-  @require '~kolibri.styles.definitions'
 
   .ta-r
     text-align: right

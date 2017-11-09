@@ -1,6 +1,6 @@
 import { PageNames } from '../constants';
 import * as coreActions from 'kolibri.coreVue.vuex.actions';
-import { isUserLoggedIn } from 'kolibri.coreVue.vuex.getters';
+import { isUserLoggedIn, currentUserId } from 'kolibri.coreVue.vuex.getters';
 import router from 'kolibri.coreVue.router';
 import { FacilityResource } from 'kolibri.resources';
 import { createTranslator } from 'kolibri.utils.i18n';
@@ -46,15 +46,15 @@ function showAccount(store) {
   store.dispatch('CORE_SET_ERROR', null);
   store.dispatch('CORE_SET_TITLE', translator.$tr('userAccountPageTitle'));
   const pageState = {
-    nameBusy: false,
-    nameSuccess: false,
-    nameError: false,
-    nameErrorMessage: '',
-    passwordError: false,
-    passwordBusy: false,
-    passwordSuccess: false,
-    passwordErrorMessage: '',
-    showPasswordModal: false,
+    profileNameBusy: false,
+    profileNameSuccess: false,
+    profileNameError: false,
+    profileNameErrorMessage: '',
+    accountPasswordError: false,
+    accountPasswordBusy: false,
+    accountPasswordSuccess: false,
+    accountPasswordErrorMessage: '',
+    showAccountPasswordModal: false,
   };
   store.dispatch('SET_PAGE_STATE', pageState);
 }
@@ -69,58 +69,58 @@ function _errorMessageHandler(apiError) {
 }
 
 function changeName(store, newName) {
-  return FacilityUserProfileResource.getModel(store.state.core.session.user_id)
+  return FacilityUserProfileResource.getModel(currentUserId(store.state))
     .save({ full_name: newName })
     .then(
       () => {
         coreActions.getCurrentSession(store, true);
-        store.dispatch('SET_NAME_SUCCESS', true);
-        store.dispatch('SET_NAME_ERROR', false, '');
-        store.dispatch('SET_NAME_BUSY', false);
+        store.dispatch('SET_PROFILE_NAME_SUCCESS', true);
+        store.dispatch('SET_PROFILE_NAME_ERROR', false, '');
+        store.dispatch('SET_PROFILE_NAME_BUSY', false);
       },
       error => {
-        store.dispatch('SET_NAME_SUCCESS', false);
-        store.dispatch('SET_NAME_ERROR', true, _errorMessageHandler(error));
-        store.dispatch('SET_NAME_BUSY', false);
+        store.dispatch('SET_PROFILE_NAME_SUCCESS', false);
+        store.dispatch('SET_PROFILE_NAME_ERROR', true, _errorMessageHandler(error));
+        store.dispatch('SET_PROFILE_NAME_BUSY', false);
       }
     );
 }
 
 function changePassword(store, newPassword) {
-  return FacilityUserProfileResource.getModel(store.state.core.session.user_id)
+  return FacilityUserProfileResource.getModel(currentUserId(store.state))
     .save({ password: newPassword })
     .then(
       () => {
         coreActions.getCurrentSession(store, true);
-        store.dispatch('SET_PASSWORD_SUCCESS', true);
-        store.dispatch('SET_PASSWORD_ERROR', false, '');
-        store.dispatch('SET_PASSWORD_BUSY', false);
+        store.dispatch('SET_ACCOUNT_PASSWORD_SUCCESS', true);
+        store.dispatch('SET_ACCOUNT_PASSWORD_ERROR', false, '');
+        store.dispatch('SET_ACCOUNT_PASSWORD_BUSY', false);
       },
       error => {
-        store.dispatch('SET_PASSWORD_SUCCESS', false);
-        store.dispatch('SET_PASSWORD_ERROR', true, _errorMessageHandler(error));
-        store.dispatch('SET_PASSWORD_BUSY', false);
+        store.dispatch('SET_ACCOUNT_PASSWORD_SUCCESS', false);
+        store.dispatch('SET_ACCOUNT_PASSWORD_ERROR', true, _errorMessageHandler(error));
+        store.dispatch('SET_ACCOUNT_PASSWORD_BUSY', false);
       }
     );
 }
 
 function resetNameState(store) {
-  store.dispatch('SET_NAME_SUCCESS', false);
-  store.dispatch('SET_NAME_ERROR', false, '');
-  store.dispatch('SET_NAME_BUSY', false);
+  store.dispatch('SET_PROFILE_NAME_SUCCESS', false);
+  store.dispatch('SET_PROFILE_NAME_ERROR', false, '');
+  store.dispatch('SET_PROFILE_NAME_BUSY', false);
 }
 
 function _resetPasswordState(store) {
-  store.dispatch('SET_PASSWORD_SUCCESS', false);
-  store.dispatch('SET_PASSWORD_ERROR', false, '');
-  store.dispatch('SET_PASSWORD_BUSY', false);
+  store.dispatch('SET_ACCOUNT_PASSWORD_SUCCESS', false);
+  store.dispatch('SET_ACCOUNT_PASSWORD_ERROR', false, '');
+  store.dispatch('SET_ACCOUNT_PASSWORD_BUSY', false);
 }
 
-function showPasswordModal(store, show) {
+function showAccountPasswordModal(store, show) {
   if (show) {
     _resetPasswordState(store);
   }
-  store.dispatch('SHOW_PASSWORD_MODAL', show);
+  store.dispatch('SHOW_ACCOUNT_PASSWORD_MODAL', show);
 }
 
 function showSignIn(store) {
@@ -205,5 +205,5 @@ export {
   resetNameState,
   changeName,
   changePassword,
-  showPasswordModal,
+  showAccountPasswordModal,
 };

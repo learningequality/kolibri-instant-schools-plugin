@@ -2,6 +2,8 @@
 
   <div class="content">
 
+    <h1>{{ $tr('profile') }}</h1>
+
     <section>
       <h2>{{ $tr('points') }}</h2>
       <points-icon class="points-icon" :active="true"/>
@@ -31,18 +33,18 @@
 
     <form @submit.prevent="submitEdits">
       <ui-alert
-        v-if="success"
+        v-if="nameSuccess"
         type="success"
         :dismissible="false"
       >
-        {{ $tr('success') }}
+        {{ $tr('nameSuccess') }}
       </ui-alert>
       <ui-alert
-        v-if="error"
+        v-if="nameError"
         type="error"
         :dismissible="false"
       >
-        {{ errorMessage || $tr('genericError') }}
+        {{ nameErrorMessage || $tr('genericError') }}
       </ui-alert>
 
       <k-textbox
@@ -52,7 +54,7 @@
         autocomplete="name"
         :autofocus="false"
         :label="$tr('name')"
-        :disabled="busy"
+        :disabled="nameBusy"
         :maxlength="120"
         :invalid="!nameIsValid"
         :invalidText="$tr('required')"
@@ -63,37 +65,34 @@
         <p>{{ name }}</p>
       </template>
 
-      <template v-if="canEditPassword">
-        <k-textbox
-          ref="newPw"
-          type="password"
-          :label="$tr('newPw')"
-          :disabled="busy"
-          :maxlength="120"
-          :invalid="false"
-          @blur="newPwBlurred = true"
-          v-model="newPw"
-        />
-        <k-textbox
-          ref="newPwConfirm"
-          type="password"
-          :label="$tr('newPwConfirm')"
-          :disabled="busy"
-          :maxlength="120"
-          :invalid="!newPwConfirmIsValid"
-          :invalidText="$tr('passwordsDoNotMatch')"
-          @blur="newPwConfirmBlurred = true"
-          v-model="newPwConfirm"
-        />
-      </template>
-
       <k-button
         type="submit"
         :text="$tr('saveChanges')"
         :primary="true"
-        :disabled="busy"
+        :disabled="nameBusy"
       />
     </form>
+
+    <h1>Account</h1>
+
+    <ui-alert
+      v-if="passwordSuccess"
+      type="success"
+      :dismissible="false"
+    >
+      {{ $tr('passwordSuccess') }}
+    </ui-alert>
+
+    <k-button
+      v-if="canEditPassword"
+      :text="$tr('changePassword')"
+      :priamry="false"
+      :raised="true"
+      @click="showPasswordModal(true)"
+    />
+
+    <change-password-modal v-if="passwordModalIsOpen" />
+
   </div>
 
 </template>
@@ -101,7 +100,7 @@
 
 <script>
 
-  import { editAccount, resetAccountState } from '../../state/actions';
+  import { changeName, resetNameState, showPasswordModal } from '../../state/actions';
   import {
     facilityConfig,
     isSuperuser,
@@ -122,13 +121,14 @@
   import permissionsIcon from 'kolibri.coreVue.components.permissionsIcon';
   import uiAlert from 'keen-ui/src/UiAlert';
   import { PermissionTypes, UserKinds } from 'kolibri.coreVue.vuex.constants';
+  import changePasswordModal from './change-password-modal';
 
   export default {
     name: 'accountPage',
     $trs: {
       genericError: 'Something went wrong',
-      success: 'Account details updated!',
-      name: 'Full name',
+      nameSuccess: 'Profile name updated!',
+      name: 'Profile name',
       saveChanges: 'Save changes',
       isLearner: 'Learner',
       isCoach: 'Coach',
@@ -141,9 +141,9 @@
       required: 'This field is required',
       limitedPermissions: 'Limited permissions',
       youCan: 'You can',
-      newPw: 'New password',
-      newPwConfirm: 'New password again',
-      passwordsDoNotMatch: 'Passwords do not match',
+      profile: 'Profile',
+      changePassword: 'Change password',
+      passwordSuccess: 'Password changed',
     },
     components: {
       kButton,
@@ -151,16 +151,13 @@
       uiAlert,
       pointsIcon,
       permissionsIcon,
+      changePasswordModal,
     },
     mixins: [responsiveWindow],
     data() {
       return {
-        name: this.session.full_name,
+        name: this.fullName,
         formSubmitted: false,
-        newPw: '',
-        newPwBlurred: false,
-        newPwConfirm: '',
-        newPwConfirmBlurred: false,
       };
     },
     computed: {
@@ -203,20 +200,6 @@
       nameIsValid() {
         return this.name !== '';
       },
-      newPwConfirmShouldValidate() {
-        return (
-          (this.newPw !== '' && this.newPwBlurred && this.newPwConfirm !== '') || this.formSubmitted
-        );
-      },
-      newPwConfirmIsValid() {
-        if (this.newPwConfirmShouldValidate) {
-          return this.newPw === this.newPwConfirm;
-        }
-        return true;
-      },
-      formIsValid() {
-        return this.nameIsValid && this.newPwConfirmIsValid;
-      },
     },
     created() {
       this.fetchPoints();
@@ -224,23 +207,14 @@
     methods: {
       submitEdits() {
         this.formSubmitted = true;
-        this.resetAccountState();
+        if (this.name === this.fullName) {
+          return;
+        }
+        this.resetNameState();
         if (!this.nameIsValid) {
           return this.$refs.name.focus();
         }
-        if (!this.newPwConfirmIsValid) {
-          return this.$refs.newPwConfirm.focus();
-        }
-        const edits = {
-          full_name: this.name,
-        };
-        if (this.newPw !== '') {
-          edits.password = this.newPw;
-        }
-        this.editAccount(edits, this.session).then(() => {
-          this.newPw = '';
-          this.newPwConfirm = '';
-        });
+        this.changeName(this.name);
       },
       getPermissionString(permission) {
         if (permission === 'can_manage_content') {
@@ -257,19 +231,22 @@
         isCoach,
         isLearner,
         totalPoints,
-        session: state => state.core.session,
-        busy: state => state.pageState.busy,
-        error: state => state.pageState.error,
-        errorMessage: state => state.pageState.errorMessage,
-        success: state => state.pageState.success,
+        fullName: state => state.core.session.full_name,
         getUserRole,
         getUserPermissions,
         userHasPermissions,
+        nameBusy: state => state.pageState.nameBusy,
+        nameError: state => state.pageState.nameError,
+        nameErrorMessage: state => state.pageState.nameErrorMessage,
+        nameSuccess: state => state.pageState.nameSuccess,
+        passwordSuccess: state => state.pageState.passwordSuccess,
+        passwordModalIsOpen: state => state.pageState.showPasswordModal,
       },
       actions: {
-        editAccount,
-        resetAccountState,
+        changeName,
+        resetNameState,
         fetchPoints,
+        showPasswordModal,
       },
     },
   };
@@ -291,7 +268,7 @@
     margin-right: auto
     width: ($iphone-width - 20)px
 
-  button[type='submit']
+  button
     margin-left: 0
 
   .points-icon, .points-num

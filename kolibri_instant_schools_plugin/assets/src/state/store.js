@@ -19,15 +19,28 @@ const mutations = {
     state.pageState = pageState;
   },
   // Account Page Mutations
-  SET_ACCOUNT_BUSY(state, isBusy) {
-    state.pageState.busy = isBusy;
+  SET_NAME_BUSY(state, isBusy) {
+    state.pageState.nameBusy = isBusy;
   },
-  SET_ACCOUNT_SUCCESS(state, isSuccessful) {
-    state.pageState.success = isSuccessful;
+  SET_NAME_SUCCESS(state, isSuccessful) {
+    state.pageState.nameSuccess = isSuccessful;
   },
-  SET_ACCOUNT_ERROR(state, isError, errorMessage) {
-    state.pageState.error = isError;
-    state.pageState.errorMessage = errorMessage;
+  SET_NAME_ERROR(state, isError, errorMessage) {
+    state.pageState.nameError = isError;
+    state.pageState.nameErrorMessage = errorMessage;
+  },
+  SET_PASSWORD_BUSY(state, isBusy) {
+    state.pageState.passwordBusy = isBusy;
+  },
+  SET_PASSWORD_SUCCESS(state, isSuccessful) {
+    state.pageState.passwordSuccess = isSuccessful;
+  },
+  SET_PASSWORD_ERROR(state, isError, errorMessage) {
+    state.pageState.passwordError = isError;
+    state.pageState.passwordErrorMessage = errorMessage;
+  },
+  SHOW_PASSWORD_MODAL(state, show) {
+    state.pageState.showPasswordModal = show;
   },
   // Sign Up Page Mutations
   SET_SIGN_UP_BUSY(state, isBusy) {

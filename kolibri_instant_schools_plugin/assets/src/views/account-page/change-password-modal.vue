@@ -1,13 +1,7 @@
 <template>
 
   <core-modal :title="$tr('changePassword')" @cancel="showPasswordModal(false)">
-    <ui-alert
-      type="warning"
-      :dismissible="false"
-      class="alert"
-    >
-      {{ $tr('passwordChangeWarning') }}
-    </ui-alert>
+    <p>{{ $tr('passwordChangeWarning') }}</p>
 
     <form @submit.prevent="submitForm">
       <ui-alert

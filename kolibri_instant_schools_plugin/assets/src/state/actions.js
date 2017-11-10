@@ -1,6 +1,6 @@
 import { PageNames } from '../constants';
 import * as coreActions from 'kolibri.coreVue.vuex.actions';
-import { isUserLoggedIn } from 'kolibri.coreVue.vuex.getters';
+import { isUserLoggedIn, currentUserId } from 'kolibri.coreVue.vuex.getters';
 import router from 'kolibri.coreVue.router';
 import { FacilityResource } from 'kolibri.resources';
 import { createTranslator } from 'kolibri.utils.i18n';
@@ -33,74 +33,6 @@ function showRoot(store) {
   });
 }
 
-function editAccount(store, edits, session) {
-  // payload needs username, fullname, and facility
-  // used to save changes to API
-  function getUserModel() {
-    return FacilityUserProfileResource.getModel(session.user_id);
-  }
-  const savedUserModel = getUserModel();
-  const changedValues = {};
-
-  // explicit checks for the only values that can be changed
-  if (edits.full_name && edits.full_name !== session.full_name) {
-    changedValues.full_name = edits.full_name;
-  }
-  if (edits.username && edits.username !== session.username) {
-    changedValues.username = edits.username;
-  }
-  if (edits.password && edits.password !== session.password) {
-    changedValues.password = edits.password;
-  }
-
-  // check to see if anything's changed and conditionally add last requirement
-  if (!Object.keys(changedValues).length) {
-    return Promise.resolve();
-  }
-
-  // update user object with new values
-  store.dispatch('SET_ACCOUNT_BUSY', true);
-
-  return savedUserModel.save(changedValues).then(
-    userWithAttrs => {
-      // dispatch changes to store
-      coreActions.getCurrentSession(store, true);
-      store.dispatch('SET_ACCOUNT_SUCCESS', true);
-      store.dispatch('SET_ACCOUNT_BUSY', false);
-      store.dispatch('SET_ACCOUNT_ERROR', false, '');
-
-      // error handling
-    },
-    error => {
-      function _errorMessageHandler(apiError) {
-        if (apiError.status.code === 400) {
-          // access the first apiError message
-          return Object.values(apiError.entity)[0][0];
-        } else if (apiError.status.code === 403) {
-          return apiError.entity[0];
-        }
-        return '';
-      }
-
-      // copying logic from user-create-modal
-      store.dispatch('SET_ACCOUNT_SUCCESS', false);
-      store.dispatch('SET_ACCOUNT_ERROR', true, _errorMessageHandler(error));
-      store.dispatch('SET_ACCOUNT_BUSY', false);
-    }
-  );
-}
-
-function resetAccountState(store) {
-  const pageState = {
-    busy: false,
-    success: false,
-    error: false,
-    errorMessage: '',
-  };
-
-  store.dispatch('SET_PAGE_STATE', pageState);
-}
-
 function showAccount(store) {
   const userSignedIn = isUserLoggedIn(store.state);
   if (!userSignedIn) {
@@ -113,7 +45,82 @@ function showAccount(store) {
   store.dispatch('CORE_SET_PAGE_LOADING', false);
   store.dispatch('CORE_SET_ERROR', null);
   store.dispatch('CORE_SET_TITLE', translator.$tr('userAccountPageTitle'));
-  resetAccountState(store);
+  const pageState = {
+    profileNameBusy: false,
+    profileNameSuccess: false,
+    profileNameError: false,
+    profileNameErrorMessage: '',
+    accountPasswordError: false,
+    accountPasswordBusy: false,
+    accountPasswordSuccess: false,
+    accountPasswordErrorMessage: '',
+    showAccountPasswordModal: false,
+  };
+  store.dispatch('SET_PAGE_STATE', pageState);
+}
+
+function _errorMessageHandler(apiError) {
+  if (apiError.status.code === 400) {
+    return Object.values(apiError.entity)[0][0];
+  } else if (apiError.status.code === 403) {
+    return apiError.entity[0];
+  }
+  return '';
+}
+
+function changeName(store, newName) {
+  return FacilityUserProfileResource.getModel(currentUserId(store.state))
+    .save({ full_name: newName })
+    .then(
+      () => {
+        coreActions.getCurrentSession(store, true);
+        store.dispatch('SET_PROFILE_NAME_SUCCESS', true);
+        store.dispatch('SET_PROFILE_NAME_ERROR', false, '');
+        store.dispatch('SET_PROFILE_NAME_BUSY', false);
+      },
+      error => {
+        store.dispatch('SET_PROFILE_NAME_SUCCESS', false);
+        store.dispatch('SET_PROFILE_NAME_ERROR', true, _errorMessageHandler(error));
+        store.dispatch('SET_PROFILE_NAME_BUSY', false);
+      }
+    );
+}
+
+function changePassword(store, newPassword) {
+  return FacilityUserProfileResource.getModel(currentUserId(store.state))
+    .save({ password: newPassword })
+    .then(
+      () => {
+        coreActions.getCurrentSession(store, true);
+        store.dispatch('SET_ACCOUNT_PASSWORD_SUCCESS', true);
+        store.dispatch('SET_ACCOUNT_PASSWORD_ERROR', false, '');
+        store.dispatch('SET_ACCOUNT_PASSWORD_BUSY', false);
+      },
+      error => {
+        store.dispatch('SET_ACCOUNT_PASSWORD_SUCCESS', false);
+        store.dispatch('SET_ACCOUNT_PASSWORD_ERROR', true, _errorMessageHandler(error));
+        store.dispatch('SET_ACCOUNT_PASSWORD_BUSY', false);
+      }
+    );
+}
+
+function resetNameState(store) {
+  store.dispatch('SET_PROFILE_NAME_SUCCESS', false);
+  store.dispatch('SET_PROFILE_NAME_ERROR', false, '');
+  store.dispatch('SET_PROFILE_NAME_BUSY', false);
+}
+
+function _resetPasswordState(store) {
+  store.dispatch('SET_ACCOUNT_PASSWORD_SUCCESS', false);
+  store.dispatch('SET_ACCOUNT_PASSWORD_ERROR', false, '');
+  store.dispatch('SET_ACCOUNT_PASSWORD_BUSY', false);
+}
+
+function showAccountPasswordModal(store, show) {
+  if (show) {
+    _resetPasswordState(store);
+  }
+  store.dispatch('SHOW_ACCOUNT_PASSWORD_MODAL', show);
 }
 
 function showSignIn(store) {
@@ -195,6 +202,8 @@ export {
   signUp,
   resetSignUpState,
   showAccount,
-  editAccount,
-  resetAccountState,
+  resetNameState,
+  changeName,
+  changePassword,
+  showAccountPasswordModal,
 };

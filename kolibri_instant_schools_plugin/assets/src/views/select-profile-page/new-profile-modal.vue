@@ -113,7 +113,9 @@
       getters: {
         profileAlreadyExists(state) {
           return function findMatch(profileName) {
-            return Boolean(state.pageState.profiles.find(profile => profile.full_name === profileName));
+            return Boolean(
+              state.pageState.profiles.find(profile => profile.full_name === profileName)
+            );
           };
         },
       },

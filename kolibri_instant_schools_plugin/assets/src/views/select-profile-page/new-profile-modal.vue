@@ -16,13 +16,13 @@
       <form @submit.prevent="submit">
         <k-textbox
           :autofocus="true"
-          :label="$tr('fullName')"
-          v-model="fullName"
-          :invalid="!fullNameIsValid"
-          :invalidText="fullNameInvalidText"
+          :label="$tr('profileName')"
+          v-model="profileName"
+          :invalid="!profileNameIsValid"
+          :invalidText="profileNameInvalidText"
           :maxlength="120"
           :disabled="disabled"
-          @blur="fullNameIsBlurred=true"
+          @blur="profileNameIsBlurred=true"
         />
 
         <div class="buttons">
@@ -64,8 +64,8 @@
     data() {
       return {
         formIsSubmitted: false,
-        fullName: '',
-        fullNameIsBlurred: false,
+        profileName: '',
+        profileNameIsBlurred: false,
       };
     },
     props: {
@@ -79,17 +79,17 @@
       },
     },
     computed: {
-      fullNameShouldValidate() {
-        return this.fullName !== '' || this.fullNameIsBlurred || this.formIsSubmitted;
+      profileNameShouldValidate() {
+        return this.profileName !== '' || this.profileNameIsBlurred || this.formIsSubmitted;
       },
-      fullNameIsValid() {
-        if (this.fullNameShouldValidate) {
-          return this.fullName !== '' && !this.profileAlreadyExists(this.fullName);
+      profileNameIsValid() {
+        if (this.profileNameShouldValidate) {
+          return this.profileName !== '' && !this.profileAlreadyExists(this.profileName);
         }
         return true;
       },
-      fullNameInvalidText() {
-        if (this.profileAlreadyExists(this.fullName)) {
+      profileNameInvalidText() {
+        if (this.profileAlreadyExists(this.profileName)) {
           return this.$tr('profileAlreadyExists');
         }
         return this.$tr('required');
@@ -98,8 +98,8 @@
     methods: {
       submit() {
         this.formIsSubmitted = true;
-        if (this.fullNameIsValid) {
-          return this.$emit('submit', this.fullName);
+        if (this.profileNameIsValid) {
+          return this.$emit('submit', this.profileName);
         }
       },
       closeModal() {
@@ -112,15 +112,17 @@
     vuex: {
       getters: {
         profileAlreadyExists(state) {
-          return function findMatch(fullName) {
-            return Boolean(state.pageState.profiles.find(profile => profile.full_name === fullName));
+          return function findMatch(profileName) {
+            return Boolean(
+              state.pageState.profiles.find(profile => profile.full_name === profileName)
+            );
           };
         },
       },
     },
     $trs: {
       cancel: 'Cancel',
-      fullName: 'Full name',
+      profileName: 'Profile name',
       newProfileModalTitle: 'New profile',
       problemCreatingProfile: 'There was a problem creating this profile',
       profileAlreadyExists: 'This profile already exists',

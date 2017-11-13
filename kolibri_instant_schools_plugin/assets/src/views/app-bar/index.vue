@@ -1,0 +1,179 @@
+<template>
+
+  <ui-toolbar
+    :title="title"
+    type="colored"
+    textColor="white"
+    class="app-bar"
+    @nav-icon-click="$emit('toggleSideNav')"
+    :style="{ height: height + 'px' }">
+
+    <div>
+      <div class="app-bar-title-icon"></div>
+      {{ title }}
+    </div>
+
+    <div slot="actions">
+      <slot name="app-bar-actions"/>
+
+      <ui-button
+        icon="person"
+        type="primary"
+        color="primary"
+        :ariaLabel="$tr('account')"
+        :has-dropdown="true"
+        ref="accountButton"
+        class="username-text"
+      >
+        <template v-if="isUserLoggedIn">{{ fullName }}</template>
+
+        <keen-menu-port
+          slot="dropdown"
+          :options="accountMenuOptions"
+          @close="$refs.accountButton.closeDropdown()"
+          @select="optionSelected"
+        >
+          <template slot="header" v-if="isUserLoggedIn">
+            <div class="role">{{ $tr('role') }}</div>
+            <div v-if="isAdmin">{{ $tr('admin') }}</div>
+            <div v-else-if="isCoach">{{ $tr('coach') }}</div>
+            <div v-else-if="isLearner">{{ $tr('learner') }}</div>
+          </template>
+        </keen-menu-port>
+      </ui-button>
+
+      <language-switcher :modalOpen="showLanguageModal" @close="showLanguageModal=false"/>
+    </div>
+  </ui-toolbar>
+
+</template>
+
+
+<script>
+
+  import { kolibriLogout } from 'kolibri.coreVue.vuex.actions';
+  import { isUserLoggedIn, isAdmin, isCoach, isLearner } from 'kolibri.coreVue.vuex.getters';
+  import responsiveWindow from 'kolibri.coreVue.mixins.responsiveWindow';
+  import uiToolbar from 'keen-ui/src/UiToolbar';
+  import uiIconButton from 'keen-ui/src/UiIconButton';
+  import keenMenuPort from '../side-nav/keen-menu-port';
+  import uiButton from 'keen-ui/src/UiButton';
+  import { redirectBrowser } from 'kolibri.utils.browser';
+  import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
+  export default {
+    mixins: [responsiveWindow],
+    name: 'appBar',
+    $trs: {
+      account: 'Account',
+      signOut: 'Sign Out',
+      signIn: 'Sign In',
+      role: 'Role',
+      admin: 'Admin',
+      coach: 'Coach',
+      learner: 'Learner',
+      languageSwitchMenuOption: 'Change language',
+    },
+    props: {
+      title: {
+        type: String,
+        required: true,
+      },
+      navShown: {
+        type: Boolean,
+        required: true,
+      },
+      height: {
+        type: Number,
+        required: true,
+      },
+    },
+    data: () => ({
+      showLanguageModal: false,
+    }),
+    components: {
+      uiToolbar,
+      uiIconButton,
+      keenMenuPort,
+      uiButton,
+      languageSwitcher,
+    },
+    computed: {
+      accountMenuOptions() {
+        const changeLanguage = {
+          id: 'language',
+          label: this.$tr('languageSwitchMenuOption'),
+        };
+        if (this.isUserLoggedIn) {
+          return [
+            {
+              id: 'account',
+              label: this.$tr('account'),
+            },
+            changeLanguage,
+            {
+              id: 'signOut',
+              label: this.$tr('signOut'),
+            },
+          ];
+        }
+        return [
+          {
+            id: 'signIn',
+            label: this.$tr('signIn'),
+          },
+          changeLanguage,
+        ];
+      },
+    },
+    methods: {
+      optionSelected(option) {
+        if (option.id === 'account') {
+          window.location = `/user`;
+        } else if (option.id === 'signOut') {
+          this.kolibriLogout();
+        } else if (option.id === 'signIn') {
+          redirectBrowser();
+        } else if (option.id === 'language') {
+          this.showLanguageModal = true;
+        }
+      },
+    },
+    vuex: {
+      actions: { kolibriLogout },
+      getters: {
+        fullName: state => state.core.session.full_name,
+        isUserLoggedIn,
+        isAdmin,
+        isCoach,
+        isLearner,
+      },
+    },
+  };
+
+</script>
+
+
+<style lang="stylus" scoped>
+
+  @require '~kolibri.styles.definitions'
+
+  .app-bar
+    overflow: hidden
+
+  .username-text
+    text-transform: none
+
+  .role
+    font-size: small
+    margin-bottom: 8px
+
+  // Will display icon in app bar if variables are defined
+  .app-bar-title-icon
+    background: $app-bar-title-icon
+    height: $app-bar-title-icon-height
+    width: $app-bar-title-icon-height
+    display: inline-block
+    vertical-align: middle
+    background-size: cover
+
+</style>

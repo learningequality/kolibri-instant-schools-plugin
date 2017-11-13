@@ -168,6 +168,7 @@
       languageSwitcher,
       coreModal,
       kCheckbox,
+      uiAlert,
     },
     data: () => ({
       name: '',

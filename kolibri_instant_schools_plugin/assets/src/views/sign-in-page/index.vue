@@ -3,7 +3,7 @@
   <div class="wrapper-table">
     <div class="main-row"><div id="main-cell">
       <img class="logo" src="../img/instant-school-logo.png">
-      <h1 class="login-text title">{{ $tr('kolibri') }}</h1>
+      <h1 class="login-text title">{{ $tr('signInHeader') }}</h1>
       <form class="login-form" ref="form" @submit.prevent="signIn">
         <ui-alert
           v-if="invalidCredentials"
@@ -104,7 +104,7 @@
   export default {
     name: 'signInPage',
     $trs: {
-      kolibri: 'Kolibri',
+      signInHeader: 'Instant Schools',
       signIn: 'Sign in',
       username: 'Username',
       password: 'Password',

@@ -310,7 +310,7 @@
     vertical-align: middle
     color: $core-bg-light
     font-weight: bold
-    font-size: 18px
+    font-size: 16px
 
   .side-nav-scrollable-area
     position: fixed

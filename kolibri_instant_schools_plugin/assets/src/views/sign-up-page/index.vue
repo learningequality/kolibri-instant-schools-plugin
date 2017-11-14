@@ -335,12 +335,20 @@
   $logo-size = 36px
   $logo-margin = 16px
   $keen-invalid-md-red = #f44336
+  $form-item-spacing = 16px // defined in k-textbox
 
   // component, highest level
   #signup-page
     width: 100%
     height: 100%
     overflow-y: auto
+
+  // Action Bar
+  #logo
+    // 1.63 * font height
+    height: $logo-size
+    display: inline-block
+    margin-left: $logo-margin
 
   #signin
     margin-right: 1em
@@ -356,6 +364,45 @@
     margin-left: auto
     margin-right: auto
     width: ($iphone-5-width - 20)px
+
+  .terms
+    height: 80vh
+    width: 80vw
+    border: none
+    &-agreement
+      $height-of-prompt = 18px + 16px
+      $height-of-checkbox = 48px + 16px
+      $k-textbox-text-distance = 24px // distance from top of text to its label container
+      $height-of-error = 16px
+
+      display: inline-block
+      height: $height-of-prompt + $height-of-checkbox + $height-of-error
+      margin-bottom: $form-item-spacing // margin defined for k-textbox
+      margin-top: $k-textbox-text-distance
+      &-view-prompt
+
+        // duplicating styles from `<a>` in core theme
+        color: $core-action-normal
+        transition: color $core-time ease-out
+        &:hover
+          color: $core-action-dark
+        &:hover:focus, &:focus
+          outline: $core-outline
+        // end dupe 
+
+        display: block
+        margin-bottom: $form-item-spacing
+        padding: 0
+        text-decoration: underline
+      &-checkbox
+        margin-top: 0
+        margin-bottom: $form-item-spacing
+        &.invalid
+          color: $keen-invalid-md-red
+      &-error-box
+        display: block
+        color: $keen-invalid-md-red // same color as input error messages
+        font-size: 14px // same as error messages from inputs
 
   .app-bar-icon
     display: inline-block

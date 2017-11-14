@@ -37,6 +37,14 @@
           />
 
           <div class="side-nav-scrollable-area-footer">
+            <img class="side-nav-scrollable-area-footer-logo" src="../img/instant-school-logo.png">
+            <div class="side-nav-scrollable-area-footer-info">
+              <!-- Not translated -->
+              <p>Instant Schools</p>
+              <p>© 2017 Vodafone Foundation</p>
+            </div>
+          </div>
+          <div class="side-nav-scrollable-area-footer">
             <logo class="side-nav-scrollable-area-footer-logo"/>
             <div class="side-nav-scrollable-area-footer-info">
               <p>{{ footerMsg }}</p>

@@ -74,7 +74,7 @@
       />
     </form>
 
-    <h1>{{ $tr('account ') }}</h1>
+    <h1>{{ $tr('account') }}</h1>
 
     <ui-alert
       v-if="accountPasswordSuccess"

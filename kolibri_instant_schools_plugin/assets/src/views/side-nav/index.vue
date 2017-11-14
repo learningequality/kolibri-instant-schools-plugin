@@ -20,7 +20,7 @@
             icon="close"
             @click="toggleNav"
           />
-          <span class="side-nav-header-name">Kolibri</span>
+          <span class="side-nav-header-name">Instant Schools</span>
         </div>
 
         <div
@@ -310,7 +310,7 @@
     vertical-align: middle
     color: $core-bg-light
     font-weight: bold
-    font-size: 18px
+    font-size: 16px
 
   .side-nav-scrollable-area
     position: fixed

@@ -270,6 +270,7 @@
     margin-left: auto
     margin-right: auto
     width: ($iphone-width - 20)px
+    max-width: 100%
 
   .no-ml
     margin-left: 0

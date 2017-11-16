@@ -341,7 +341,6 @@
   #signup-page
     width: 100%
     height: 100%
-    overflow-y: auto
 
   // Action Bar
   #logo
@@ -364,6 +363,7 @@
     margin-left: auto
     margin-right: auto
     width: ($iphone-5-width - 20)px
+    max-width: 100%
 
   .terms
     height: 80vh
@@ -379,16 +379,21 @@
       height: $height-of-prompt + $height-of-checkbox + $height-of-error
       margin-bottom: $form-item-spacing // margin defined for k-textbox
       margin-top: $k-textbox-text-distance
+      max-width: 100%
       &-view-prompt
 
         // duplicating styles from `<a>` in core theme
         color: $core-action-normal
         transition: color $core-time ease-out
+        max-width: 100%
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
         &:hover
           color: $core-action-dark
         &:hover:focus, &:focus
           outline: $core-outline
-        // end dupe 
+        // end dupe
 
         display: block
         margin-bottom: $form-item-spacing

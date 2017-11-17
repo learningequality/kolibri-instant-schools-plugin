@@ -27,7 +27,7 @@ How can I install this plugin for development?
 3. If you have an existing DB, destroy it
 4. Run `kolibri manage migrate --database=instant_schools`
 5. Run `kolibri plugin kolibri_instant_schools_plugin enable` and `kolibri plugin kolibri.plugins.user disable`
-6. Copy `kolibri_instant_schools_plugin/assets/src/views/about` to `~/.kolibri/content/databases/`
+6. Copy `kolibri_instant_schools_plugin/assets/src/views/about/views/about` to `~/.kolibri/content/databases/` (note nested 'about' folders!)
 7. Run the devserver: `kolibri manage devserver --debug -- --webpack --lint`
 
 If things aren't working, double and triple check that the user plugin is disabled and the instant_schools plugin is enabled in `kolibri_settings.json` because it often gets reset.

@@ -43,7 +43,7 @@
   export default {
     name: 'aboutPage',
     $trs: {
-      viewFaq: 'View FAQ',
+      viewFaq: 'More information',
       startLearning: 'Start learning',
     },
     components: {

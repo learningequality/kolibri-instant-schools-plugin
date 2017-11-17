@@ -1,34 +1,47 @@
 <template>
 
-  <div>
-    <div
-      v-for="profile in profiles"
-      class="profile-card"
-      :class="{ 'profile-card-disabled': disabled }"
-      :key="profile.username"
-      role="button"
-      @click="selectProfile(profile)"
-    >
-      <div class="profile-icon">
-        <mat-svg
-          category="social"
-          name="person"
-          class="person-icon"
+  <table class="table">
+    <tr v-for="profile in profiles" :key="profile.username">
+      <!--
+        Adding click on this table cell as a convenience.
+        Accessibility is not affected because it's redundant with
+        the 'select' button in the next table cell.
+      -->
+      <td @click="selectProfile(profile)" class="name-wrapper">
+        <div class="profile-icon">
+          <mat-svg
+            category="social"
+            name="person"
+            class="person-icon"
+          />
+        </div>
+        <div class="profile-name">
+          {{ profile.full_name }}
+        </div>
+      </td>
+      <td>
+        <k-button
+          :text="$tr('select')"
+          :primary="true"
+          :disabled="disabled"
+          @click="selectProfile(profile)"
         />
-      </div>
-      <div class="profile-name">
-        {{ profile.full_name }}
-      </div>
-    </div>
-  </div>
+      </td>
+    </tr>
+  </table>
 
 </template>
 
 
 <script>
 
+  import kButton from 'kolibri.coreVue.components.kButton';
+
   export default {
     name: 'profilesList',
+    components: {
+      kButton,
+    },
     props: {
       profiles: {
         type: Array,
@@ -46,6 +59,9 @@
         }
       },
     },
+    $trs: {
+      select: 'Select',
+    },
   };
 
 </script>
@@ -53,14 +69,10 @@
 
 <style lang="stylus" scoped>
 
-  .profile-card
-    padding: 1.5em 1em
-    cursor: pointer
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.19), 0 1px 1px rgba(0, 0, 0, 0.23)
-    margin-bottom: 1em
-    &-disabled
-      opacity: 0.5
-      cursor: default
+  .name-wrapper
+    vertical-align: middle
+    white-space: nowrap
+    width: 100%
 
   .profile-icon
     display: inline-block
@@ -69,5 +81,11 @@
 
   .profile-name
     display: inline-block
+    max-width: 150px
+    overflow: hidden
+    text-overflow: ellipsis
+
+  .table
+    width: 100%
 
 </style>

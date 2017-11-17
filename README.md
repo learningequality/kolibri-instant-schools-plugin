@@ -23,7 +23,7 @@ How can I install this plugin for development?
 ------------------------------
 
 1. Run `pip install -e <LOCAL-PATH-TO-REPO>`
-2. Set a `DJANGO_SETTINGS_MODULE` environment variable set to `kolibri_instant_schools_plugin.instant_schools_settings`
+2. Set a `DJANGO_SETTINGS_MODULE` environment variable to `kolibri_instant_schools_plugin.instant_schools_settings`
 3. If you have an existing DB, destroy it
 4. Run `kolibri manage migrate --database=instant_schools`
 5. Run `kolibri plugin kolibri_instant_schools_plugin enable` and `kolibri plugin kolibri.plugins.user disable`

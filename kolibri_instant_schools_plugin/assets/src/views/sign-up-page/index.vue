@@ -147,7 +147,7 @@
       reEnterPassword: 'Re-enter password',
       passwordMatchError: 'Passwords do not match',
       genericError: 'Something went wrong during sign up!',
-      phoneNumberInvalid: 'Please enter a valid phone number',
+      phoneNumberInvalid: 'A valid phone number has at least 9 digits',
       accountAlreadyExistsError: 'An account with that phone number already exists',
       logIn: 'Sign in',
       termsAgreementLabel: 'I agree to the terms of service & privacy policy',
@@ -388,7 +388,7 @@
           color: $core-action-dark
         &:hover:focus, &:focus
           outline: $core-outline
-        // end dupe 
+        // end dupe
 
         display: block
         margin-bottom: $form-item-spacing

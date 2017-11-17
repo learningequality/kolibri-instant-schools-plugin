@@ -113,7 +113,7 @@
       @cancel="showTerms = false"
       :title="$tr('termsOfServiceModalHeader')"
     >
-      <iframe class="terms" src="/content/databases/tos.txt"></iframe>
+      <iframe class="terms" src="/content/databases/about/tos.txt"></iframe>
     </core-modal>
 
     <div class="footer">

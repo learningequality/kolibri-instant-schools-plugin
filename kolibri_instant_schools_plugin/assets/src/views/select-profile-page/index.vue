@@ -35,8 +35,7 @@
       <div class="buttons">
         <k-button
           :text="$tr('newProfileButton')"
-          :ariaLabel="$tr('newProfileButton')"
-          :primary="true"
+          :primary="false"
           @click="openModal"
           :disabled="disableForms"
         />
@@ -185,6 +184,8 @@
     margin-left: auto
     margin-right: auto
     width: ($iphone-5-width - 10)px
+    padding-left: 8px
+    padding-right: 8px
 
   .buttons button
     margin-left: 0

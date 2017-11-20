@@ -2,12 +2,7 @@
 
   <table class="table">
     <tr v-for="profile in profiles" :key="profile.username">
-      <!--
-        Adding click on this table cell as a convenience.
-        Accessibility is not affected because it's redundant with
-        the 'select' button in the next table cell.
-      -->
-      <td @click="selectProfile(profile)" class="name-wrapper">
+      <td class="name-wrapper">
         <div class="profile-icon">
           <mat-svg
             category="social"

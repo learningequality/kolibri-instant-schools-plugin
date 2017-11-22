@@ -2,7 +2,7 @@
 
   <div class="wrapper-table">
     <div class="main-row"><div id="main-cell">
-      <img class="logo" src="../img/instant-school-logo.png">
+      <img class="logo" src="../img/instant-school-logo.png" alt="">
       <h1 class="login-text title">{{ $tr('signInHeader') }}</h1>
       <form class="login-form" ref="form" @submit.prevent="signIn">
         <ui-alert

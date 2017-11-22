@@ -14,7 +14,7 @@
         />
       </template>
       <div>
-        <img class="app-bar-icon" src="../img/instant-school-logo.png">
+        <img class="app-bar-icon" src="../img/instant-school-logo.png" alt="">
         <span class="brand">{{ $tr('instantSchoolsBrand') }}</span>
       </div>
     </ui-toolbar>

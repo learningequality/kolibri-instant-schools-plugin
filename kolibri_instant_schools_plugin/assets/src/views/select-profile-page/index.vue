@@ -14,9 +14,7 @@
         />
       </template>
       <div>
-        <ui-icon class="app-bar-icon">
-          <logo />
-        </ui-icon>
+        <img class="app-bar-icon" src="../img/instant-school-logo.png" alt="">
         <span class="brand">{{ $tr('instantSchoolsBrand') }}</span>
       </div>
     </ui-toolbar>
@@ -63,19 +61,15 @@
   import { createProfile } from '../../state/profileActions';
   import { showSignIn } from '../../state/actions';
   import UiToolbar from 'keen-ui/src/UiToolbar';
-  import UiIcon from 'keen-ui/src/UiIcon';
   import UiIconButton from 'keen-ui/src/UiIconButton';
-  import logo from 'kolibri.coreVue.components.logo';
 
   export default {
     name: 'selectProfilePage',
     components: {
       kButton,
-      logo,
       newProfileModal,
       profilesList,
       UiToolbar,
-      UiIcon,
       UiIconButton,
     },
     data() {
@@ -171,9 +165,9 @@
     margin-left: $logo-margin
 
   .app-bar-icon
-    font-size: 40px
-    margin-left: 4px
     margin-right: 8px
+    height: 36px
+    vertical-align: middle
 
   .brand
     color: white

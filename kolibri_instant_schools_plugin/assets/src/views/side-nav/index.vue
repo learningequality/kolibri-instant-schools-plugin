@@ -37,7 +37,7 @@
           />
 
           <div class="side-nav-scrollable-area-footer">
-            <img class="side-nav-scrollable-area-footer-logo" src="../img/instant-school-logo.png">
+            <img class="side-nav-scrollable-area-footer-logo" src="../img/instant-school-logo.png" alt="">
             <div class="side-nav-scrollable-area-footer-info">
               <!-- Not translated -->
               <p>Instant Schools</p>

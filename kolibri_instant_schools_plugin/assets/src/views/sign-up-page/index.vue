@@ -4,7 +4,7 @@
 
     <ui-toolbar type="colored" textColor="white">
       <template slot="icon">
-        <img src="../img/instant-school-logo.png" class="app-bar-icon">
+        <img src="../img/instant-school-logo.png" class="app-bar-icon" alt="">
       </template>
       <template slot="brand">
         {{ $tr('appBarHeader') }}

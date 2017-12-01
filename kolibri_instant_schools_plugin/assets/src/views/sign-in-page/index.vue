@@ -78,13 +78,16 @@
       <div class="divider"></div>
 
       <p class="login-text no-account">{{ $tr('noAccount') }}</p>
-      <div id="btn-group">
-        <router-link v-if="canSignUp" class="group-btn" :to="signUpPage">
+      <div>
+        <router-link v-if="canSignUp" :to="signUpPage">
           <k-button :text="$tr('createAccount')" :primary="false"/>
         </router-link>
+      </div>
+      <div>
         <k-button
           :text="$tr('accessAsGuest')"
           :primary="false"
+          :raised="false"
           @click="accessAsGuest"
         />
       </div>
@@ -372,6 +375,13 @@
   @require '~kolibri.styles.definitions'
 
   $login-text = #D8D8D8
+
+  .k-button-secondary-flat
+    color: $core-bg-canvas
+    font-weight: normal
+    &:hover
+      background: none
+      color: $core-text-disabled
 
   .k-button-secondary-raised
     background-color: $core-text-default

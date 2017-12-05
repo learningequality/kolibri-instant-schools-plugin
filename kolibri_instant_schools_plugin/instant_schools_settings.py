@@ -1,6 +1,9 @@
 from kolibri.deployment.default.settings.base import *
 
-USE_PHONE_NUMBER_MAPPING = True
+OLD_DB_PATH = os.path.join(KOLIBRI_HOME, 'db.sqlite3')
+OLD_HASH_DB_PATH = os.path.join(KOLIBRI_HOME, 'phonehashreverselookup.db')
+
+DATABASES["default"]["NAME"] = os.path.join(KOLIBRI_HOME, 'instant_schools_primary.sqlite3')
 
 DATABASES["instant_schools"] = {
     'ENGINE': 'django.db.backends.sqlite3',

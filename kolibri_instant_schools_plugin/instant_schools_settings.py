@@ -17,3 +17,10 @@ DATABASE_ROUTERS = ["kolibri_instant_schools_plugin.db_router.InstantSchoolsRout
 
 if "kolibri_instant_schools_plugin" not in INSTALLED_APPS:
     INSTALLED_APPS += ["kolibri_instant_schools_plugin"]
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('sw-tz', 'Kiswahili'),
+    ('fr-fr', 'Français'),
+    ('pt-pt', 'Português'),
+]

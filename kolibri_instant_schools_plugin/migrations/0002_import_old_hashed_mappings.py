@@ -8,41 +8,10 @@ from django.db import migrations
 import os
 import sqlite3
 
-REVERSE_LOOKUP_DB_PATH = os.path.join(settings.KOLIBRI_HOME, "phonehashreverselookup.db")
-
-
-def get_phone_numbers():
-    """Look up the phone number / hash pairs from the reverse lookup database."""
-    
-    if not os.path.isfile(REVERSE_LOOKUP_DB_PATH):
-        return []
-
-    conn = sqlite3.connect(REVERSE_LOOKUP_DB_PATH)
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT phone, hashval FROM lookup")
-    result = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-
-    return result
-
-
-def import_old_hashed_mappings(apps, schema_editor):
-
-    PhoneToUsernameMapping = apps.get_model('kolibri_instant_schools_plugin', 'PhoneToUsernameMapping')
-
-    for phone, username in get_phone_numbers():
-        PhoneToUsernameMapping.objects.get_or_create(username=username, defaults={"phone": phone})
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
         ('kolibri_instant_schools_plugin', '0001_initial'),
     ]
 
-    operations = [
-        migrations.RunPython(import_old_hashed_mappings, lambda *args, **kwargs: None),
-    ]
+    # this is a dummy migration that should no longer do anything; it's now handled more correctly in the migratev1database command

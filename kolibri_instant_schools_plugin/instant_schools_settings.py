@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from kolibri.deployment.default.settings.base import *
 
 OLD_DB_PATH = os.path.join(KOLIBRI_HOME, 'db.sqlite3')

@@ -31,7 +31,7 @@ class Command(BaseCommand):
         # ensure the new databases have both been migrated
         call_command("migrate")
         call_command("migrate", database="instant_schools")
-        
+
         # load the old databases
         old_db_session, old_classes = self.load_database(settings.OLD_DB_PATH)
         old_hash_db_session, old_hash_classes = self.load_database(settings.OLD_HASH_DB_PATH)
@@ -174,15 +174,11 @@ class Command(BaseCommand):
     def load_database(self, path):
 
         engine = create_engine("sqlite:///" + path, convert_unicode=True)
-        
-        metadata = MetaData()
 
-        metadata.reflect(bind=engine)
-        
-        Base = automap_base(metadata=metadata)
-        
-        Base.prepare()
-        
+        Base = automap_base()
+
+        Base.prepare(engine, reflect=True)
+
         session = sessionmaker(bind=engine, autoflush=False)()
 
         return session, Base.classes

@@ -1,4 +1,5 @@
 import hashlib
+import warnings
 
 from django.conf import settings
 from django.core.management import call_command
@@ -45,7 +46,12 @@ class Command(BaseCommand):
         AttemptLog_ = old_classes.logger_attemptlog
         MasteryLog_ = old_classes.logger_masterylog
         UserSessionLog_ = old_classes.logger_usersessionlog
-        Lookup_ = old_hash_classes.lookup
+
+        # try to load the phone hashing lookup table, if it exists
+        try:
+            Lookup_ = old_hash_classes.lookup
+        except AttributeError:
+            Lookup_ = None
 
         # MIGRATE: Facility
         old_facility = old_db_session.query(Collection_).filter(Collection_.kind == "facility")[0]
@@ -73,6 +79,9 @@ class Command(BaseCommand):
             # migrate the phone number mapping
             old_username = old_user.username
             if len(old_username) == 30:
+                # skip the user if we don't have the lookup table, as we can't get their phone number
+                if Lookup_ is None:
+                    continue
                 phonenumber = old_hash_db_session.query(Lookup_).filter(Lookup_.hashval == old_username).first().phone
             else:
                 phonenumber = old_username
@@ -92,6 +101,8 @@ class Command(BaseCommand):
 
         # MIGRATE: ContentSummaryLog
         for old_log in old_db_session.query(ContentSummaryLog_).all():
+            if old_log.user_id not in USER_ID_MAPPING:
+                continue
             new_log, _ = ContentSummaryLog.objects.get_or_create(
                 user_id=USER_ID_MAPPING[old_log.user_id],
                 content_id=old_log.content_id,
@@ -108,6 +119,8 @@ class Command(BaseCommand):
 
         # MIGRATE: ContentSessionLog
         for old_log in old_db_session.query(ContentSessionLog_).all():
+            if old_log.user_id not in USER_ID_MAPPING:
+                continue
             new_log, _ = ContentSessionLog.objects.get_or_create(
                 user_id=USER_ID_MAPPING[old_log.user_id],
                 content_id=old_log.content_id,
@@ -123,6 +136,8 @@ class Command(BaseCommand):
 
         # MIGRATE: UserSessionLog
         for old_log in old_db_session.query(UserSessionLog_).all():
+            if old_log.user_id not in USER_ID_MAPPING:
+                continue
             new_log, _ = UserSessionLog.objects.get_or_create(
                 user_id=USER_ID_MAPPING[old_log.user_id],
                 channels=old_log.channels,
@@ -133,6 +148,8 @@ class Command(BaseCommand):
 
         # MIGRATE: MasteryLog
         for old_log in old_db_session.query(MasteryLog_).all():
+            if old_log.summarylog_id not in SUMMARYLOG_ID_MAPPING:
+                continue
             summarylog = ContentSummaryLog.objects.get(id=SUMMARYLOG_ID_MAPPING[old_log.summarylog_id])
             new_log, _ = MasteryLog.objects.get_or_create(
                 user_id=summarylog.user_id,
@@ -148,6 +165,8 @@ class Command(BaseCommand):
 
         # MIGRATE: AttemptLog
         for old_log in old_db_session.query(AttemptLog_).all():
+            if old_log.masterylog_id not in MASTERYLOG_ID_MAPPING or old_log.sessionlog_id not in SESSIONLOG_ID_MAPPING:
+                continue
             sessionlog = ContentSessionLog.objects.get(id=SESSIONLOG_ID_MAPPING[old_log.sessionlog_id])
             new_log, _ = AttemptLog.objects.get_or_create(
                 user_id=sessionlog.user_id,
@@ -170,6 +189,10 @@ class Command(BaseCommand):
         device_settings, _ = DeviceSettings.objects.get_or_create()
         device_settings.is_provisioned = True
         device_settings.save()
+
+        self.stdout.write(self.style.SUCCESS(
+            "Database has been successfully migrated! You may now start the server."
+        ))
 
     def load_database(self, path):
 

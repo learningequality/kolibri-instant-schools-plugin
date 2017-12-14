@@ -1,7 +1,9 @@
+import requests
 import smpplib2.gsm
 import smpplib2.client
 import smpplib2.consts
 import smpplib2.exceptions
+import urllib
 
 from ..auth.mapping import normalize_phone_number
 
@@ -14,7 +16,7 @@ DEST_ADDR_TON = smpplib2.consts.SMPP_TON_INTL
 DEST_ADDR_NPI = smpplib2.consts.SMPP_NPI_ISDN
 
 
-class SMPPConnectionError(Exception):
+class SMSConnectionError(Exception):
     pass
 
 
@@ -34,6 +36,10 @@ def send_message(phone, message):
 
     conf = read_config()
 
+    # if a URL template has been specified, use the HTTP method of sending a message (e.g for Ghana)
+    if conf["SMS_HTTP_URL_TEMPLATE"]:
+        return send_message_by_http(phone, message, conf["SMS_HTTP_URL_TEMPLATE"])
+
     # encode the message into parts
     parts, encoding_flag, msg_type_flag = smpplib2.gsm.make_parts(message)
 
@@ -42,7 +48,7 @@ def send_message(phone, message):
         client = smpplib2.client.Client(conf['SMSC_ADDRESS'], conf['SMSC_PORT'])
         client.connect()
     except smpplib2.exceptions.ConnectionError:
-        raise SMPPConnectionError("Unable to connect to SMSC server %s:%s (message was not sent)" % (conf['SMSC_ADDRESS'], conf['SMSC_PORT']))
+        raise SMSConnectionError("Unable to connect to SMSC server %s:%s (message was not sent)" % (conf['SMSC_ADDRESS'], conf['SMSC_PORT']))
 
     # log into the SMSC server
     client.bind_transceiver(system_id=conf['SMSC_SYSTEM_ID'], password=conf['SMSC_PASSWORD'])
@@ -57,10 +63,21 @@ def send_message(phone, message):
 
             dest_addr_ton=DEST_ADDR_TON,
             dest_addr_npi=DEST_ADDR_NPI,
-            destination_addr=phone,
+            destination_addr=normalize_phone_number(phone),
             short_message=part,
 
             data_coding=encoding_flag,
             esm_class=msg_type_flag,
             registered_delivery=True,
         )
+
+
+def send_message_by_http(phone, message, url_template):
+
+    url = url_template.format(message=urllib.quote(message), phone=normalize_phone_number(phone))
+    response = requests.get(url, timeout=20)
+
+    print response.status_code, response.content
+
+    if response.status_code != 200:
+        raise SMSConnectionError("Error sending message via HTTP SMS server with address %s\n\t\tResponse: %s" % (url, response.content))

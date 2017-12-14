@@ -9,8 +9,8 @@ from ..models import PhoneToUsernameMapping
 
 
 def normalize_phone_number(phone):
-    """Remove everything except digits from the phone number string."""
-    return re.sub("\D", "", str(phone))
+    """Remove everything except digits and "+" symbol from the phone number string."""
+    return re.sub("[^\d\+]", "", str(phone))
 
 
 def get_usernames(phone):

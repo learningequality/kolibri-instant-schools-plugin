@@ -1,27 +1,30 @@
-const coreApp = require('kolibri');
-const PageNames = require('../constants').PageNames;
-const coreActions = require('kolibri.coreVue.vuex.actions');
-const coreGetters = require('kolibri.coreVue.vuex.getters');
-const router = require('kolibri.coreVue.router');
+import { PageNames } from '../constants';
+import * as coreActions from 'kolibri.coreVue.vuex.actions';
+import { isUserLoggedIn, currentUserId } from 'kolibri.coreVue.vuex.getters';
+import router from 'kolibri.coreVue.router';
+import { FacilityResource } from 'kolibri.resources';
+import { createTranslator } from 'kolibri.utils.i18n';
+import { PhoneNumberSignUpResource, FacilityUserProfileResource } from '../api-resources';
 
-const FacilityUserResource = coreApp.resources.FacilityUserResource;
+const name = 'userPageTitles';
 
-coreApp.resources.registerResource(
-  'PhoneNumberSignUpResource',
-  require('../api-resources').PhoneNumberSignUpResource
-);
+const messages = {
+  userAccountPageTitle: 'User Account',
+  userSignInPageTitle: 'User Sign In',
+  userSignUpPageTitle: 'User Sign Up',
+};
 
-const PhoneNumberSignUpResource = coreApp.resources.PhoneNumberSignUpResource;
+const translator = createTranslator(name, messages);
 
 function redirectToHome() {
   window.location = '/';
 }
 
 function showRoot(store) {
-  const userSignedIn = coreGetters.isUserLoggedIn(store.state);
+  const userSignedIn = isUserLoggedIn(store.state);
   if (userSignedIn) {
     router.getInstance().replace({
-      name: PageNames.PROFILE,
+      name: PageNames.ACCOUNT,
     });
     return;
   }
@@ -30,96 +33,101 @@ function showRoot(store) {
   });
 }
 
-function editProfile(store, edits) {
-  // payload needs username, fullname, and facility
-  // used to save changes to API
-  const session = store.state.core.session;
-  const savedUserModel = FacilityUserResource.getModel(session.user_id);
-  const changedValues = {};
-
-  // explicit checks for the only values that can be changed
-  if (edits.full_name && edits.full_name !== session.full_name) {
-    changedValues.full_name = edits.full_name;
-  }
-  if (edits.username && edits.username !== session.username) {
-    changedValues.username = edits.username;
-  }
-  if (edits.password && edits.password !== session.password) {
-    changedValues.password = edits.password;
-  }
-
-  // check to see if anything's changed and conditionally add last requirement
-  if (Object.keys(changedValues).length) {
-    changedValues.facility = session.facility_id;
-  } else {
-    return;
-  }
-
-  // update user object with new values
-  store.dispatch('SET_PROFILE_BUSY', true);
-
-  savedUserModel.save(changedValues).then(userWithAttrs => {
-    // dispatch changes to store
-    coreActions.getCurrentSession(store);
-    store.dispatch('SET_PROFILE_SUCCESS', true);
-    store.dispatch('SET_PROFILE_BUSY', false);
-    store.dispatch('SET_PROFILE_EROR', false, '');
-
-  // error handling
-  }, error => {
-    function _errorMessageHandler(apiError) {
-      if (apiError.status.code === 400) {
-        // access the first apiError message
-        return Object.values(apiError.entity)[0][0];
-      } else if (apiError.status.code === 403) {
-        return apiError.entity[0];
-      }
-      return '';
-    }
-
-    // copying logic from user-create-modal
-    store.dispatch('SET_PROFILE_SUCCESS', false);
-    store.dispatch('SET_PROFILE_EROR', true, _errorMessageHandler(error));
-    store.dispatch('SET_PROFILE_BUSY', false);
-  });
-}
-
-
-function resetProfileState(store) {
-  const pageState = {
-    busy: false,
-    success: false,
-    error: false,
-    errorMessage: '',
-  };
-
-  store.dispatch('SET_PAGE_STATE', pageState);
-}
-
-function setProfileError(store, errorFlag, errorMessage) {
-  store.dispatch('SET_PROFILE_EROR', errorFlag, errorMessage);
-}
-
-function showProfile(store) {
-  const userSignedIn = coreGetters.isUserLoggedIn(store.state);
+function showAccount(store) {
+  const userSignedIn = isUserLoggedIn(store.state);
   if (!userSignedIn) {
     router.getInstance().replace({
       name: PageNames.SIGN_IN,
     });
     return;
   }
-  store.dispatch('SET_PAGE_NAME', PageNames.PROFILE);
+  store.dispatch('SET_PAGE_NAME', PageNames.ACCOUNT);
   store.dispatch('CORE_SET_PAGE_LOADING', false);
   store.dispatch('CORE_SET_ERROR', null);
-  store.dispatch('CORE_SET_TITLE', 'User Profile');
-  resetProfileState(store);
+  store.dispatch('CORE_SET_TITLE', translator.$tr('userAccountPageTitle'));
+  const pageState = {
+    profileNameBusy: false,
+    profileNameSuccess: false,
+    profileNameError: false,
+    profileNameErrorMessage: '',
+    accountPasswordError: false,
+    accountPasswordBusy: false,
+    accountPasswordSuccess: false,
+    accountPasswordErrorMessage: '',
+    showAccountPasswordModal: false,
+  };
+  store.dispatch('SET_PAGE_STATE', pageState);
+}
+
+function _errorMessageHandler(apiError) {
+  if (apiError.status.code === 400) {
+    return Object.values(apiError.entity)[0][0];
+  } else if (apiError.status.code === 403) {
+    return apiError.entity[0];
+  }
+  return '';
+}
+
+function changeName(store, newName) {
+  return FacilityUserProfileResource.getModel(currentUserId(store.state))
+    .save({ full_name: newName })
+    .then(
+      () => {
+        coreActions.getCurrentSession(store, true);
+        store.dispatch('SET_PROFILE_NAME_SUCCESS', true);
+        store.dispatch('SET_PROFILE_NAME_ERROR', false, '');
+        store.dispatch('SET_PROFILE_NAME_BUSY', false);
+      },
+      error => {
+        store.dispatch('SET_PROFILE_NAME_SUCCESS', false);
+        store.dispatch('SET_PROFILE_NAME_ERROR', true, _errorMessageHandler(error));
+        store.dispatch('SET_PROFILE_NAME_BUSY', false);
+      }
+    );
+}
+
+function changePassword(store, newPassword) {
+  return FacilityUserProfileResource.getModel(currentUserId(store.state))
+    .save({ password: newPassword })
+    .then(
+      () => {
+        coreActions.getCurrentSession(store, true);
+        store.dispatch('SET_ACCOUNT_PASSWORD_SUCCESS', true);
+        store.dispatch('SET_ACCOUNT_PASSWORD_ERROR', false, '');
+        store.dispatch('SET_ACCOUNT_PASSWORD_BUSY', false);
+      },
+      error => {
+        store.dispatch('SET_ACCOUNT_PASSWORD_SUCCESS', false);
+        store.dispatch('SET_ACCOUNT_PASSWORD_ERROR', true, _errorMessageHandler(error));
+        store.dispatch('SET_ACCOUNT_PASSWORD_BUSY', false);
+      }
+    );
+}
+
+function resetNameState(store) {
+  store.dispatch('SET_PROFILE_NAME_SUCCESS', false);
+  store.dispatch('SET_PROFILE_NAME_ERROR', false, '');
+  store.dispatch('SET_PROFILE_NAME_BUSY', false);
+}
+
+function _resetPasswordState(store) {
+  store.dispatch('SET_ACCOUNT_PASSWORD_SUCCESS', false);
+  store.dispatch('SET_ACCOUNT_PASSWORD_ERROR', false, '');
+  store.dispatch('SET_ACCOUNT_PASSWORD_BUSY', false);
+}
+
+function showAccountPasswordModal(store, show) {
+  if (show) {
+    _resetPasswordState(store);
+  }
+  store.dispatch('SHOW_ACCOUNT_PASSWORD_MODAL', show);
 }
 
 function showSignIn(store) {
-  const userSignedIn = coreGetters.isUserLoggedIn(store.state);
+  const userSignedIn = isUserLoggedIn(store.state);
   if (userSignedIn) {
     router.getInstance().replace({
-      name: PageNames.PROFILE,
+      name: PageNames.ACCOUNT,
     });
     return;
   }
@@ -127,9 +135,9 @@ function showSignIn(store) {
   store.dispatch('SET_PAGE_STATE', {});
   store.dispatch('CORE_SET_PAGE_LOADING', false);
   store.dispatch('CORE_SET_ERROR', null);
-  store.dispatch('CORE_SET_TITLE', 'User Sign In');
+  store.dispatch('CORE_SET_LOGIN_ERROR', '');
+  store.dispatch('CORE_SET_TITLE', translator.$tr('userSignInPageTitle'));
 }
-
 
 function resetSignUpState(store) {
   const pageState = {
@@ -142,54 +150,60 @@ function resetSignUpState(store) {
 }
 
 function showSignUp(store) {
-  const userSignedIn = coreGetters.isUserLoggedIn(store.state);
+  const userSignedIn = isUserLoggedIn(store.state);
   if (userSignedIn) {
     router.getInstance().replace({
-      name: PageNames.PROFILE,
+      name: PageNames.ACCOUNT,
     });
-    return;
+    return Promise.resolve();
   }
-  store.dispatch('SET_PAGE_NAME', PageNames.SIGN_UP);
-  store.dispatch('CORE_SET_PAGE_LOADING', false);
-  store.dispatch('CORE_SET_ERROR', null);
-  store.dispatch('CORE_SET_TITLE', 'User Sign Up');
-  resetSignUpState(store);
+  const FacilityCollection = FacilityResource.getCollection().fetch();
+
+  return FacilityCollection.then(facilities => {
+    store.dispatch('CORE_SET_FACILITIES', facilities);
+    store.dispatch('SET_PAGE_NAME', PageNames.SIGN_UP);
+    store.dispatch('CORE_SET_PAGE_LOADING', false);
+    store.dispatch('CORE_SET_ERROR', null);
+    store.dispatch('CORE_SET_TITLE', translator.$tr('userSignUpPageTitle'));
+    resetSignUpState(store);
+  }).catch(error => coreActions.handleApiError(store, error));
 }
 
 function signUp(store, signUpCreds) {
   const signUpModel = PhoneNumberSignUpResource.createModel(signUpCreds);
   const signUpPromise = signUpModel.save(signUpCreds);
 
-  store.dispatch('SET_SIGN_UP_BUSY', true);
   resetSignUpState(store);
+  store.dispatch('SET_SIGN_UP_BUSY', true);
 
-  signUpPromise.then(() => {
-    store.dispatch('SET_SIGN_UP_ERROR', null, '');
-    store.dispatch('SET_SIGN_UP_BUSY', false);
-    // TODO: Better solution?
-    redirectToHome();
-  }).catch(error => {
-    function _errorMessageHandler(apiError) {
-      if (apiError.status.code === 400 || apiError.status.code === 200) {
-        return apiError.entity[0];
+  signUpPromise
+    .then(() => {
+      store.dispatch('SET_SIGN_UP_ERROR', null, '');
+      // TODO: Better solution?
+      window.location = '/about';
+    })
+    .catch(error => {
+      function _errorMessageHandler(apiError) {
+        if (apiError.status.code === 400 || apiError.status.code === 200) {
+          return apiError.entity[0];
+        }
+        return '';
       }
-      return '';
-    }
 
-    store.dispatch('SET_SIGN_UP_ERROR', error.status.code, _errorMessageHandler(error));
-    store.dispatch('SET_SIGN_UP_BUSY', false);
-  });
+      store.dispatch('SET_SIGN_UP_ERROR', error.status.code, _errorMessageHandler(error));
+      store.dispatch('SET_SIGN_UP_BUSY', false);
+    });
 }
 
-
-module.exports = {
+export {
   showRoot,
   showSignIn,
   showSignUp,
   signUp,
   resetSignUpState,
-  showProfile,
-  editProfile,
-  resetProfileState,
-  setProfileError,
+  showAccount,
+  resetNameState,
+  changeName,
+  changePassword,
+  showAccountPasswordModal,
 };

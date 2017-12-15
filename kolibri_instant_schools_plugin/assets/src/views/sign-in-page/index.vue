@@ -1,56 +1,106 @@
 <template>
 
-  <div class="login-page">
-    <div id="login-content">
-      <img class="logo" src="../img/instant-school-logo.png" alt="logo">
-      <h1 class="login-text title">{{ $tr('instantSchool') }}</h1>
-      <form id="login-form" ref="form" @submit.prevent="signIn">
-        <core-textbox
-          :label="$tr('username')"
-          id="username"
-          type="tel"
-          :placeholder="$tr('enterUsername')"
-          :aria-label="$tr('username')"
-          v-model="username"
-          autocomplete="tel"
-          required
-          autofocus/>
-        <core-textbox
-          :label="$tr('password')"
-          id="password"
-          type="password"
-          :placeholder="$tr('enterPassword')"
-          :aria-label="$tr('password')"
-          v-model="password"
-          autocomplete="current-password"
-          required/>
-        <icon-button id="login-btn" :text="$tr('signIn')" :primary="true" type="submit"></icon-button>
-
-        <p v-if="loginError" class="sign-in-error">{{ $tr('signInError') }}</p>
-
-        <a @click.prevent="showResetModal = true" role="link" href="#" id="password-reset">
-          {{ $tr('resetPassword') }}
-        </a>
+  <div class="wrapper-table">
+    <div class="main-row"><div id="main-cell">
+      <img class="logo" src="../img/instant-school-logo.png" alt="">
+      <h1 class="login-text title">{{ $tr('signInHeader') }}</h1>
+      <form class="login-form" ref="form" @submit.prevent="signIn">
+        <ui-alert
+          v-if="invalidCredentials"
+          type="error"
+          class="alert"
+          :dismissible="false"
+        >
+          {{ $tr('signInError') }}
+        </ui-alert>
+        <transition name="textbox">
+          <k-textbox
+            ref="username"
+            id="username"
+            autocomplete="tel"
+            type="tel"
+            :autofocus="true"
+            :label="$tr('signInPhoneNumberPrompt')"
+            :invalid="usernameIsInvalid"
+            :invalidText="usernameIsInvalidText"
+            @blur="handleUsernameBlur"
+            @input="showDropdown = true"
+            @keydown="handleKeyboardNav"
+            v-model="username"
+          />
+        </transition>
+        <transition name="list">
+          <ul
+            v-if="simpleSignIn && suggestions.length"
+            v-show="showDropdown"
+            class="suggestions"
+          >
+            <ui-autocomplete-suggestion
+              v-for="(suggestion, i) in suggestions"
+              :key="i"
+              :suggestion="suggestion"
+              :class="{ highlighted: highlightedIndex === i }"
+              @click.native="fillUsername(suggestion)"
+            />
+          </ul>
+        </transition>
+        <transition name="textbox">
+          <k-textbox
+            v-if="(!simpleSignIn || (simpleSignIn && (passwordMissing || invalidCredentials)))"
+            ref="password"
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            :label="$tr('password')"
+            :autofocus="simpleSignIn"
+            :invalid="passwordIsInvalid"
+            :invalidText="passwordIsInvalidText"
+            @blur="passwordBlurred = true"
+            v-model="password"
+          />
+        </transition>
+        <k-button
+          class="login-btn"
+          type="submit"
+          :text="$tr('signIn')"
+          :primary="true"
+          :disabled="busy"
+        />
 
       </form>
-      <core-modal
-        :title="$tr('resetPassword')"
-        v-if="showResetModal"
-        @cancel="showResetModal = false">
-        <iframe class="reset" src="/content/databases/reset.txt"></iframe>
-      </core-modal>
-      <div id="divid-line"></div>
 
-      <h2 class="login-text no-account">{{ $tr('noAccount') }}</h2>
-      <div id="btn-group">
-        <router-link class="group-btn" :to="signUp">
-          <icon-button id="signup-button" :text="$tr('createAccount')" :primary="true"></icon-button>
-        </router-link>
-        <a class="group-btn" href="/learn">
-          <icon-button id="guest-access-button" :text="$tr('accessAsGuest')" :primary="false"></icon-button>
+      <div class="reset-pw">
+        <a href="#" @click.prevent="showPwResetModal = true">
+          {{ $tr('resetYourPassword') }}
         </a>
       </div>
+
+      <div class="divider"></div>
+
+      <p class="login-text no-account">{{ $tr('noAccount') }}</p>
+      <div>
+        <router-link v-if="canSignUp" :to="signUpPage">
+          <k-button :text="$tr('createAccount')" :primary="false"/>
+        </router-link>
+      </div>
+      <div>
+        <k-button
+          :text="$tr('accessAsGuest')"
+          :primary="false"
+          :raised="false"
+          @click="accessAsGuest"
+        />
+      </div>
+      <p class="login-text version">{{ versionMsg }}</p>
+    </div></div>
+    <div class="footer-row">
+      <language-switcher :footer="true" class="footer-cell"/>
     </div>
+
+    <reset-password-modal
+      v-if="showPwResetModal"
+      @close="showPwResetModal = false"
+    />
   </div>
 
 </template>
@@ -58,56 +108,241 @@
 
 <script>
 
-  const actions = require('kolibri.coreVue.vuex.actions');
-  const PageNames = require('../../constants').PageNames;
+  import { PageNames } from '../../constants';
+  import { facilityConfig, currentFacilityId } from 'kolibri.coreVue.vuex.getters';
+  import { FacilityUsernameResource } from 'kolibri.resources';
+  import { LoginErrors } from 'kolibri.coreVue.vuex.constants';
+  import kButton from 'kolibri.coreVue.components.kButton';
+  import kTextbox from 'kolibri.coreVue.components.kTextbox';
+  import logo from 'kolibri.coreVue.components.logo';
+  import uiAutocompleteSuggestion from 'keen-ui/src/UiAutocompleteSuggestion';
+  import uiAlert from 'keen-ui/src/UiAlert';
+  import languageSwitcher from 'kolibri.coreVue.components.languageSwitcher';
+  import { showSelectProfilePage } from '../../state/profileActions';
+  import resetPasswordModal from '../reset-password-modal';
+  import Lockr from 'lockr';
+  import router from 'kolibri.coreVue.router';
 
-  module.exports = {
-    $trNameSpace: 'signInPage',
+  export default {
+    name: 'signInPage',
     $trs: {
-      instantSchool: 'INSTANT SCHOOLS',
-      signIn: 'Log In',
-      username: 'Phone Number',
-      enterUsername: 'Enter phone number',
+      signInHeader: 'Instant Schools',
+      signIn: 'Sign in',
+      signInPhoneNumberPrompt: 'Phone Number',
       password: 'Password',
-      enterPassword: 'Enter Password',
+      enterPassword: 'Enter password',
       noAccount: `Don't have an account?`,
-      createAccount: 'Create Account',
-      accessAsGuest: 'Access as Guest',
-      signInError: 'Incorrect username or password',
-      resetPassword: 'Reset your password',
+      createAccount: 'Create account',
+      accessAsGuest: 'Access as guest',
+      signInError: 'Incorrect phone number or password',
+      poweredBy: 'Kolibri {version}',
+      required: 'This field is required',
+      requiredForCoachesAdmins: 'Password is required for coaches and admins',
+      resetYourPassword: 'Reset your password',
     },
     components: {
-      'icon-button': require('kolibri.coreVue.components.iconButton'),
-      'core-textbox': require('kolibri.coreVue.components.textbox'),
-      'core-modal': require('kolibri.coreVue.components.coreModal'),
+      kButton,
+      kTextbox,
+      logo,
+      resetPasswordModal,
+      uiAutocompleteSuggestion,
+      uiAlert,
+      languageSwitcher,
     },
     data: () => ({
       username: '',
       password: '',
-      showResetModal: false,
+      usernameSuggestions: [],
+      suggestionTerm: '',
+      showDropdown: true,
+      highlightedIndex: -1,
+      usernameBlurred: false,
+      passwordBlurred: false,
+      formSubmitted: false,
+      showPwResetModal: false,
     }),
     computed: {
-      signUp() {
+      simpleSignIn() {
+        return this.facilityConfig.learnerCanLoginWithNoPassword;
+      },
+      suggestions() {
+        // Filter suggestions on the client side so we don't hammer the server
+        return this.usernameSuggestions.filter(sug =>
+          sug.toLowerCase().startsWith(this.username.toLowerCase())
+        );
+      },
+      // TODO: not used
+      uniqueMatch() {
+        // If we have a matching username entered, don't show any suggestions.
+        return (
+          this.suggestions.length === 1 &&
+          this.suggestions[0].toLowerCase() === this.username.toLowerCase()
+        );
+      },
+      usernameIsInvalidText() {
+        if (this.usernameBlurred || this.formSubmitted) {
+          if (this.username === '') {
+            return this.$tr('required');
+          }
+        }
+        return '';
+      },
+      usernameIsInvalid() {
+        return !!this.usernameIsInvalidText;
+      },
+      passwordIsInvalidText() {
+        if (this.passwordBlurred || this.formSubmitted) {
+          if (this.simpleSignIn && this.password === '') {
+            return this.$tr('requiredForCoachesAdmins');
+          } else if (this.password === '') {
+            return this.$tr('required');
+          }
+        }
+        return '';
+      },
+      passwordIsInvalid() {
+        return !!this.passwordIsInvalidText;
+      },
+      formIsValid() {
+        if (this.simpleSignIn) {
+          return !this.usernameIsInvalid;
+        }
+        return !this.usernameIsInvalid && !this.passwordIsInvalid;
+      },
+      canSignUp() {
+        return this.facilityConfig.learnerCanSignUp;
+      },
+      signUpPage() {
         return { name: PageNames.SIGN_UP };
       },
-    },
-    methods: {
-      signIn() {
-        this.kolibriLogin({
-          username: this.username,
-          password: this.password,
-        });
+      versionMsg() {
+        return this.$tr('poweredBy', { version: __version });
       },
-      openPasswordResetModal() {
-        this.$refs.passwordResetModal.open();
+    },
+    watch: { username: 'setSuggestionTerm' },
+    methods: {
+      setSuggestionTerm(newVal) {
+        if (newVal !== null && typeof newVal !== 'undefined') {
+          // Only check if defined or not null
+          if (newVal.length < 3) {
+            // Don't search for suggestions if less than 3 characters entered
+            this.suggestionTerm = '';
+            this.usernameSuggestions = [];
+          } else if (
+            (!newVal.startsWith(this.suggestionTerm) && this.suggestionTerm.length) ||
+            !this.suggestionTerm.length
+          ) {
+            // We have already set a suggestion search term
+            // The currently set suggestion term does not match the current username
+            // Or we do not currently have a suggestion term set
+            // Set it to the new term and fetch new suggestions
+            this.suggestionTerm = newVal;
+            this.setSuggestions();
+          }
+        }
+      },
+      setSuggestions() {
+        FacilityUsernameResource.getCollection({
+          facility: this.facility,
+          search: this.suggestionTerm,
+        })
+          .fetch()
+          .then(users => {
+            this.usernameSuggestions = users.map(user => user.username);
+            this.showDropdown = true;
+          })
+          .catch(() => {
+            this.usernameSuggestions = [];
+          });
+      },
+      handleKeyboardNav(e) {
+        switch (e.code) {
+          case 'ArrowDown':
+            if (this.showDropdown && this.suggestions.length) {
+              this.highlightedIndex = Math.min(
+                this.highlightedIndex + 1,
+                this.suggestions.length - 1
+              );
+            }
+            break;
+          case 'ArrowUp':
+            if (this.showDropdown && this.suggestions.length) {
+              this.highlightedIndex = Math.max(this.highlightedIndex - 1, -1);
+            }
+            break;
+          case 'Escape':
+            this.showDropdown = false;
+            break;
+          case 'Enter':
+            if (this.highlightedIndex < 0) {
+              this.showDropdown = false;
+            } else {
+              this.fillUsername(this.suggestions[this.highlightedIndex]);
+              e.preventDefault();
+            }
+            break;
+          default:
+            this.showDropdown = true;
+        }
+      },
+      fillUsername(username) {
+        // Only do this if we have been passed a non-null value
+        if (username !== null && typeof username !== 'undefined') {
+          this.username = username;
+          this.showDropdown = false;
+          this.highlightedIndex = -1;
+          // focus on input after selection
+          this.$refs.username.$el.querySelector('input').focus();
+        }
+      },
+      handleUsernameBlur() {
+        this.usernameBlurred = true;
+        this.showDropdown = false;
+      },
+      signIn() {
+        const strippedPhoneNumber = this.username.replace(/\D/g, '');
+        this.formSubmitted = true;
+        if (this.formIsValid) {
+          return this.showSelectProfilePage({
+            phone: strippedPhoneNumber,
+            password: this.password,
+            facility: this.facility,
+          }).catch(err => {
+            // Handles 404 (no profiles) and 401 (bad credentials) the same way
+            this.showLoginError();
+          });
+        }
+        return this.focusOnInvalidField();
+      },
+      focusOnInvalidField() {
+        if (this.usernameIsInvalid) {
+          this.$refs.username.focus();
+        } else if (this.passwordIsInvalid) {
+          this.$refs.password.focus();
+        }
+      },
+      accessAsGuest() {
+        if (Lockr.get('signedInBefore')) {
+          window.location = '/learn';
+        } else {
+          Lockr.set('signedInBefore', true);
+          window.location = '/about';
+        }
       },
     },
     vuex: {
       getters: {
-        loginError: state => state.core.loginError === 401,
+        facility: currentFacilityId,
+        facilityConfig,
+        passwordMissing: state => state.core.loginError === LoginErrors.PASSWORD_MISSING,
+        invalidCredentials: state => state.core.loginError === LoginErrors.INVALID_CREDENTIALS,
+        busy: state => state.core.signInBusy,
       },
       actions: {
-        kolibriLogin: actions.kolibriLogin,
+        showSelectProfilePage,
+        showLoginError(store) {
+          return store.dispatch('CORE_SET_LOGIN_ERROR', LoginErrors.INVALID_CREDENTIALS);
+        },
       },
     },
   };
@@ -117,10 +352,11 @@
 
 <style lang="stylus">
 
-  $login-text = #D8D8D8
-  $login-red = #f44336
+  @require '~kolibri.styles.definitions'
 
-  #login-content
+  $login-text = #D8D8D8
+
+  #main-cell
     .ui-
       &textbox__
         &label-text
@@ -130,127 +366,126 @@
           color: $login-text
           &:autofill
             background-color: transparent
-      &button
-        background-color: $login-red
-
-        &#guest-access-button
-          background-color: transparent
-          color: $login-text
-          border: 2px solid $login-red
-
-      &modal__
-        &container
-            max-height: 90vh
-            max-width: 90vw
 
 </style>
 
 
 <style lang="stylus" scoped>
 
-  $login-overlay = #201A21
+  @require '~kolibri.styles.definitions'
+
   $login-text = #D8D8D8
-  $login-section-margin = 25px
-  $title-size = 1.3em
 
-  .reset
-    width: 100%
-    height: 40vh
+  .k-button-secondary-flat
+    color: $core-bg-canvas
+    font-weight: normal
+    &:hover
+      background: none
+      color: $core-text-disabled
 
-  // wrappers
-  .login-page
-    background-color: $login-overlay
+  .k-button-secondary-raised
+    background-color: $core-text-default
+    color: $core-bg-canvas
+    &:hover
+      background-color: #0E0E0E
+
+  .wrapper-table
+    text-align: center
+    background-color: #201A21
     height: 100%
-    background: url(../img/instant-background.jpg) no-repeat center center fixed
+    width: 100%
+    display: table
+
+  .main-row
+    display: table-row
+
+  #main-cell
+    background: url(../img/instant-background.jpg) no-repeat center center
     background-size: cover
-    overflow-y: auto
+    display: table-cell
+    vertical-align: middle
+    height: 100%
 
-  #login-content
-    display: block
-    margin-top: $login-section-margin
-    margin-left: auto
-    margin-right: auto
-
-
-  // Logo stuff
   .logo
-    display: block
-    margin: auto
-    margin-top: 34px
-    width: 30%
-    height: auto
-    max-width: 120px
-    min-width: 45px
-    margin-bottom: $login-section-margin
+    margin-top: 36px
+    width: 120px
 
-    // All text on screen (excluding buttons, fields)
   .login-text
     color: $login-text
-  .title
-    font-weight: 100
-    font-size: $title-size
-    letter-spacing: 0.1em
-    text-align: center
-    margin-top: 0
-    margin-bottom: 30px
 
-  // form
-  #login-form
+  .title
+    font-size: 1.3em
+
+  .login-form
     width: 70%
     max-width: 300px
-    margin-left: auto
-    margin-right: auto
-    margin-bottom: $login-section-margin
-
-  #login-btn
-    display: block
+    position: relative
+    text-align: left
     margin: auto
-    width: 100%
-    margin-bottom: $login-section-margin
 
-  #password-reset
+  .login-btn
     display: block
-    text-align: center
-    margin-right: auto
-    margin-left: auto
-    font-size: 0.8em
-    color: $login-text
-    margin-bottom: $login-section-margin
-    &-phone-number
-      display: block
-      text-align: center
+    width: 100%
 
-  // seperator between login and accountless options
-  #divid-line
-    width: 412px
-    max-width: 90%
+  .divider
+    margin: auto
+    margin-top: 32px
+    margin-bottom: 36px
+    width: 100%
+    max-width: 412px
     height: 1px
     background-color: $core-text-annotation
-    background-color: $login-text
-    margin-left: auto
-    margin-right: auto
-    margin-bottom: $login-section-margin
 
-  // accountless options
-  .no-account
-    text-align: center
-    font-weight: normal
-    font-size: $title-size * 0.8
-    margin-top: 0
-    margin-bottom: $login-section-margin
-  #btn-group
-    display: table
-    margin-left: auto
-    margin-right: auto
-    margin-top: $login-section-margin
-    text-align: center
-  .group-btn
-    padding: 5px
-    display: inline-block
-    text-decoration: none
+  .version
+    font-size: 0.8em
+    margin-top: 36px
+    margin-bottom: 36px
 
-  // error text
+  .footer-row
+    display: table-row
+    background-color: $core-bg-canvas
+
+  .footer-cell
+    display: table-cell
+    vertical-align: middle
+
   .sign-in-error
-    color: red
+    color: $core-text-error
+
+  .suggestions
+    background-color: white
+    box-shadow: 1px 2px 8px darken(white, 10%)
+    color: $core-text-default
+    display: block
+    list-style-type: none
+    margin: 0
+    width: 100%
+    padding: 0
+    z-index: 8
+    // Move up snug against the textbox
+    margin-top: -1em
+    position: absolute
+
+  .highlighted
+    background-color: rgba(black, 0.10)
+
+  .textbox-enter-active
+    transition: opacity 0.5s
+
+  .textbox-enter
+    opacity: 0
+
+  .list-leave-active
+    transition: opacity 0.1s
+
+  .textbox-leave
+    transform: opacity 0
+
+  .alert
+    // Needed since alert has transparent background-color
+    background-color: white
+
+  .reset-pw
+    margin-top: 1.5em
 
 </style>

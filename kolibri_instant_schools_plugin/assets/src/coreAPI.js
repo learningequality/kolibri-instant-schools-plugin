@@ -1,19 +1,17 @@
+import theme from './styles/theme.styl';
+import keenVars from './styles/keen.scss';
+import sideNav from './views/side-nav';
+import appBar from './views/app-bar';
 
-module.exports = {
+export default {
   styles: {
-    theme: {
-      module: require('./styles/theme.styl'),
-    },
-    keenVars: {
-      module: require('./styles/keen.scss'),
-    },
+    theme,
+    keenVars,
   },
   coreVue: {
     components: {
-      navBar: {
-        module: require('./views/nav-bar'),
-      },
+      sideNav,
+      appBar,
     },
   },
 };
-

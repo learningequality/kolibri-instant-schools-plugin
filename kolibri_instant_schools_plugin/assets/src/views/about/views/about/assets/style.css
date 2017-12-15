@@ -1,0 +1,47 @@
+body {
+  background-color: white;
+  font-family: sans-serif;
+  color: #3A3A3A;
+  overflow: hidden;
+  padding-bottom: 16px;
+}
+
+h1 {
+  font-size: 1.5em;
+}
+
+h2 {
+  font-size: 1.17em;
+}
+
+h3, h4, h5, h6 {
+  font-size: 1em;
+}
+
+.vodafone-logo {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.vodafone-logo {
+  max-width: 300px;
+}
+
+.icon {
+  display: inline;
+  width: 2em;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table, th, td {
+  text-align: left;
+  border: 1px solid #686868;
+  padding: 8px;
+}

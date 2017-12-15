@@ -17,6 +17,7 @@ def write_default_config():
     config.set('SMPP', 'smsc_password', 'password')
     config.set('SMPP', 'source_address', '11111111')
     config.set('SMPP', 'sms_message_template', 'To reset your Instant Schools account password, please click the following link: {url}')
+    config.set('SMPP', 'sms_http_url_template', '')
 
     with open(CONF_PATH, 'wb') as configfile:
         config.write(configfile)
@@ -30,6 +31,16 @@ def read_config():
     config.read(CONF_PATH)
 
     try:
+        sms_http_url_template = config.get('SMPP', 'sms_http_url_template'),
+        if sms_http_url_template and isinstance(sms_http_url_template, tuple):
+            sms_http_url_template = sms_http_url_template[0]
+        if sms_http_url_template:
+            if "{phone}" not in sms_http_url_template or "{message}" not in sms_http_url_template:
+                raise Exception("In the SMS config (%s) sms_http_url_template must contain both {{message}} and {{phone}}" % (CONF_PATH))
+    except (ValueError, ConfigParser.NoOptionError):
+        sms_http_url_template = ""
+
+    try:
 
         if config.get('SMPP', 'SMSC_ADDRESS') == '127.0.0.1':
             logging.warn("You must update the SMPP config at %s in order to send SMS messages." % CONF_PATH)
@@ -41,6 +52,7 @@ def read_config():
             'SMSC_PASSWORD': config.get('SMPP', 'smsc_password'),
             'SOURCE_ADDRESS': config.get('SMPP', 'source_address'),
             'SMS_MESSAGE_TEMPLATE': config.get('SMPP', 'sms_message_template'),
+            'SMS_HTTP_URL_TEMPLATE': sms_http_url_template,
         }
 
     except (ValueError, ConfigParser.NoOptionError) as e:

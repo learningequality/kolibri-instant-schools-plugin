@@ -10,7 +10,7 @@ from kolibri.auth.serializers import FacilityUserSerializer
 
 from .mapping import get_usernames, create_new_username, normalize_phone_number
 from ..models import PasswordResetToken, PhoneToUsernameMapping
-from ..smpp.utils import send_password_reset_link, SMPPConnectionError
+from ..smpp.utils import send_password_reset_link, SMSConnectionError
 
 
 class PhoneNumberSignupSerializer(FacilityUserSerializer):
@@ -70,7 +70,7 @@ class PasswordResetTokenViewset(viewsets.ViewSet):
         # send the password reset URL to the phone number via SMS
         try:
             send_password_reset_link(phone, token.token, baseurl)
-        except SMPPConnectionError:
+        except SMSConnectionError:
             return Response(_("Error sending SMS message; please try again later."),
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

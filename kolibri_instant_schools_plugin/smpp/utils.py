@@ -51,7 +51,7 @@ def send_message(phone, message):
         raise SMSConnectionError("Unable to connect to SMSC server %s:%s (message was not sent)" % (conf['SMSC_ADDRESS'], conf['SMSC_PORT']))
 
     # log into the SMSC server
-    client.bind_transceiver(system_id=conf['SMSC_SYSTEM_ID'], password=conf['SMSC_PASSWORD'])
+    client.bind_transceiver(system_id=conf['SMSC_SYSTEM_ID'], password=conf['SMSC_PASSWORD'], system_type='smpp')
 
     # loop over and send each of the message parts
     for part in parts:

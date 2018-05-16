@@ -103,87 +103,106 @@ class Command(BaseCommand):
         for old_log in old_db_session.query(ContentSummaryLog_).all():
             if old_log.user_id not in USER_ID_MAPPING:
                 continue
-            new_log, _ = ContentSummaryLog.objects.get_or_create(
-                user_id=USER_ID_MAPPING[old_log.user_id],
-                content_id=old_log.content_id,
-                channel_id=old_log.channel_id,
-                start_timestamp=old_log.start_timestamp,
-                end_timestamp=old_log.end_timestamp,
-                completion_timestamp=old_log.completion_timestamp,
-                time_spent=old_log.time_spent,
-                progress=old_log.progress,
-                kind=old_log.kind,
-                extra_fields=old_log.extra_fields,
-            )
-            SUMMARYLOG_ID_MAPPING[old_log.id] = new_log.id
+            try:
+                new_log, _ = ContentSummaryLog.objects.get_or_create(
+                    user_id=USER_ID_MAPPING[old_log.user_id],
+                    content_id=old_log.content_id,
+                    defaults={
+                        "channel_id": old_log.channel_id,
+                        "time_spent": old_log.time_spent,
+                        "progress": old_log.progress,
+                        "kind": old_log.kind,
+                        "extra_fields": old_log.extra_fields,
+                        "start_timestamp": old_log.start_timestamp,
+                        "end_timestamp": old_log.end_timestamp,
+                        "completion_timestamp": old_log.completion_timestamp,
+                    },
+                )
+                SUMMARYLOG_ID_MAPPING[old_log.id] = new_log.id
+            except:
+                pass
 
         # MIGRATE: ContentSessionLog
         for old_log in old_db_session.query(ContentSessionLog_).all():
             if old_log.user_id not in USER_ID_MAPPING:
                 continue
-            new_log, _ = ContentSessionLog.objects.get_or_create(
-                user_id=USER_ID_MAPPING[old_log.user_id],
-                content_id=old_log.content_id,
-                channel_id=old_log.channel_id,
-                start_timestamp=old_log.start_timestamp,
-                end_timestamp=old_log.end_timestamp,
-                time_spent=old_log.time_spent,
-                progress=old_log.progress,
-                kind=old_log.kind,
-                extra_fields=old_log.extra_fields,
-            )
-            SESSIONLOG_ID_MAPPING[old_log.id] = new_log.id
+            try:
+                new_log, _ = ContentSessionLog.objects.get_or_create(
+                    user_id=USER_ID_MAPPING[old_log.user_id],
+                    content_id=old_log.content_id,
+                    channel_id=old_log.channel_id,
+                    start_timestamp=old_log.start_timestamp,
+                    end_timestamp=old_log.end_timestamp,
+                    time_spent=old_log.time_spent,
+                    progress=old_log.progress,
+                    kind=old_log.kind,
+                    extra_fields=old_log.extra_fields,
+                )
+                SESSIONLOG_ID_MAPPING[old_log.id] = new_log.id
+            except:
+                pass
 
         # MIGRATE: UserSessionLog
         for old_log in old_db_session.query(UserSessionLog_).all():
             if old_log.user_id not in USER_ID_MAPPING:
                 continue
-            new_log, _ = UserSessionLog.objects.get_or_create(
-                user_id=USER_ID_MAPPING[old_log.user_id],
-                channels=old_log.channels,
-                start_timestamp=old_log.start_timestamp,
-                last_interaction_timestamp=old_log.last_interaction_timestamp,
-                pages=old_log.pages,
-            )
+            try:
+                new_log, _ = UserSessionLog.objects.get_or_create(
+                    user_id=USER_ID_MAPPING[old_log.user_id],
+                    channels=old_log.channels,
+                    start_timestamp=old_log.start_timestamp,
+                    last_interaction_timestamp=old_log.last_interaction_timestamp,
+                    pages=old_log.pages,
+                )
+            except:
+                pass
 
         # MIGRATE: MasteryLog
         for old_log in old_db_session.query(MasteryLog_).all():
             if old_log.summarylog_id not in SUMMARYLOG_ID_MAPPING:
                 continue
-            summarylog = ContentSummaryLog.objects.get(id=SUMMARYLOG_ID_MAPPING[old_log.summarylog_id])
-            new_log, _ = MasteryLog.objects.get_or_create(
-                user_id=summarylog.user_id,
-                summarylog_id=summarylog.id,
-                mastery_criterion=old_log.mastery_criterion,
-                start_timestamp=old_log.start_timestamp,
-                end_timestamp=old_log.end_timestamp,
-                completion_timestamp=old_log.completion_timestamp,
-                mastery_level=old_log.mastery_level,
-                complete=old_log.complete,
-            )
-            MASTERYLOG_ID_MAPPING[old_log.id] = new_log.id
+            try:
+                summarylog = ContentSummaryLog.objects.get(id=SUMMARYLOG_ID_MAPPING[old_log.summarylog_id])
+                new_log, _ = MasteryLog.objects.get_or_create(
+                    user_id=summarylog.user_id,
+                    summarylog_id=summarylog.id,
+                    defaults={
+                        "mastery_criterion": old_log.mastery_criterion,
+                        "start_timestamp": old_log.start_timestamp,
+                        "end_timestamp": old_log.end_timestamp,
+                        "completion_timestamp": old_log.completion_timestamp,
+                        "mastery_level": old_log.mastery_level,
+                        "complete": old_log.complete,
+                    }
+                )
+                MASTERYLOG_ID_MAPPING[old_log.id] = new_log.id
+            except:
+                pass
 
         # MIGRATE: AttemptLog
         for old_log in old_db_session.query(AttemptLog_).all():
             if old_log.masterylog_id not in MASTERYLOG_ID_MAPPING or old_log.sessionlog_id not in SESSIONLOG_ID_MAPPING:
                 continue
-            sessionlog = ContentSessionLog.objects.get(id=SESSIONLOG_ID_MAPPING[old_log.sessionlog_id])
-            new_log, _ = AttemptLog.objects.get_or_create(
-                user_id=sessionlog.user_id,
-                item=old_log.item,
-                start_timestamp=old_log.start_timestamp,
-                end_timestamp=old_log.end_timestamp,
-                completion_timestamp=old_log.completion_timestamp,
-                time_spent=old_log.time_spent,
-                complete=old_log.complete,
-                correct=old_log.correct,
-                hinted=old_log.hinted,
-                answer=old_log.answer,
-                simple_answer=old_log.simple_answer,
-                interaction_history=old_log.interaction_history,
-                masterylog_id=MASTERYLOG_ID_MAPPING[old_log.masterylog_id],
-                sessionlog_id=sessionlog.id,
-            )
+            try:
+                sessionlog = ContentSessionLog.objects.get(id=SESSIONLOG_ID_MAPPING[old_log.sessionlog_id])
+                new_log, _ = AttemptLog.objects.get_or_create(
+                    user_id=sessionlog.user_id,
+                    item=old_log.item,
+                    start_timestamp=old_log.start_timestamp,
+                    end_timestamp=old_log.end_timestamp,
+                    completion_timestamp=old_log.completion_timestamp,
+                    time_spent=old_log.time_spent,
+                    complete=old_log.complete,
+                    correct=old_log.correct,
+                    hinted=old_log.hinted,
+                    answer=old_log.answer,
+                    simple_answer=old_log.simple_answer,
+                    interaction_history=old_log.interaction_history,
+                    masterylog_id=MASTERYLOG_ID_MAPPING[old_log.masterylog_id],
+                    sessionlog_id=sessionlog.id,
+                )
+            except:
+                pass
 
         # CREATE: DeviceSettings
         device_settings, _ = DeviceSettings.objects.get_or_create()

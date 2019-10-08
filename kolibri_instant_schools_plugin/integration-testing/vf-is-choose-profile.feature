@@ -15,7 +15,12 @@ Feature: Multiple users need to be able to sign in to Kolibri with the same mobi
       Then I see the *Select profile* page again
         And I see my profile name in the list
 
-    Scenario: I see my own profile
+    Scenario: I see my own profile for the first time
       When I click the *Select* button for my profile
-          And I click the *Start learning* button 
-        Then I see the *Learn > Channels* page
+      Then I see the *About* page
+      When I click the *Start learning* button 
+      Then I see the *Learn > Channels* page
+
+    Scenario: I see my own profile for >=2nd time
+      When I click the *Select* button for my profile
+      Then I see the *Learn > Channels* page

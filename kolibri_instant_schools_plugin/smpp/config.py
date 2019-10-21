@@ -3,8 +3,9 @@ import logging
 import os
 
 from django.conf import settings
+from kolibri.utils import conf
 
-CONF_PATH = os.path.join(settings.KOLIBRI_HOME, "smpp.conf")
+CONF_PATH = os.path.join(conf.KOLIBRI_HOME, "smpp.conf")
 
 def write_default_config():
 

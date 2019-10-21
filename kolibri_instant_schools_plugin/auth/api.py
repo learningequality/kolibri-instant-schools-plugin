@@ -4,9 +4,9 @@ from django.db import transaction
 from django.utils.translation import ugettext as _
 from rest_framework import filters, permissions, status, viewsets, serializers
 from rest_framework.response import Response
-from kolibri.auth.models import Facility, FacilityUser
-from kolibri.auth.api import SignUpViewSet, FacilityUserViewSet
-from kolibri.auth.serializers import FacilityUserSerializer
+from kolibri.core.auth.models import Facility, FacilityUser
+from kolibri.core.auth.api import SignUpViewSet, FacilityUserViewSet
+from kolibri.core.auth.serializers import FacilityUserSerializer
 
 from .mapping import get_usernames, create_new_username, normalize_phone_number
 from ..models import PasswordResetToken, PhoneToUsernameMapping

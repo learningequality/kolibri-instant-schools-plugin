@@ -6,11 +6,11 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 
-from kolibri.auth.constants.role_kinds import ADMIN
-from kolibri.auth.constants.facility_presets import mappings
-from kolibri.auth.models import Facility, FacilityUser, Role
+from kolibri.core.auth.constants.role_kinds import ADMIN
+from kolibri.core.auth.constants.facility_presets import mappings
+from kolibri.core.auth.models import Facility, FacilityUser, Role
 from kolibri.core.device.models import DevicePermissions, DeviceSettings
-from kolibri.logger.models import ContentSummaryLog, ContentSessionLog, MasteryLog, UserSessionLog, AttemptLog
+from kolibri.core.logger.models import ContentSummaryLog, ContentSessionLog, MasteryLog, UserSessionLog, AttemptLog
 from ...models import PhoneToUsernameMapping
 
 from sqlalchemy import MetaData, create_engine

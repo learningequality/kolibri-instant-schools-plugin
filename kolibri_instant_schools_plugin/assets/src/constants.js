@@ -1,12 +1,18 @@
-// a name for every URL pattern
 export const PageNames = {
   ROOT: 'ROOT',
   SIGN_IN: 'SIGN_IN',
   SIGN_UP: 'SIGN_UP',
-  ACCOUNT: 'ACCOUNT',
+  PROFILE: 'PROFILE',
   SELECT_PROFILE: 'SELECT_PROFILE',
   RESET_PASSWORD: 'RESET_PASSWORD',
   ABOUT: 'ABOUT',
+  FAQ: 'FAQ',
+};
+
+export const pageNameToModuleMap = {
+  [PageNames.SIGN_IN]: 'signIn',
+  [PageNames.SIGN_UP]: 'signUp',
+  [PageNames.PROFILE]: 'profile',
 };
 
 export const RequestTokenStates = {

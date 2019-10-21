@@ -4,11 +4,14 @@ user template tags
 ========================
 Tags for including plugin javascript assets into a template.
 """
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
 
-from __future__ import absolute_import, print_function, unicode_literals
 from django import template
-from kolibri.core.webpack.utils import webpack_asset_render
+
 from .. import hooks
+from kolibri.core.webpack.utils import webpack_asset_render
 
 register = template.Library()
 
@@ -20,7 +23,7 @@ def user_assets():
     by any concrete hook that subclasses UserSyncHook.
     :return: HTML of script tags to insert into user/user.html
     """
-    return webpack_asset_render(hooks.UserSyncHook, async=False)
+    return webpack_asset_render(hooks.UserSyncHook, is_async=False)
 
 
 @register.simple_tag()
@@ -30,9 +33,9 @@ def user_async_assets():
     by any concrete hook that subclasses UserSyncHook.
     :return: HTML of script tags to insert into user/user.html
     """
-    return webpack_asset_render(hooks.UserAsyncHook, async=True)
+    return webpack_asset_render(hooks.UserAsyncHook, is_async=True)
 
 
 @register.simple_tag()
 def about_assets():
-    return webpack_asset_render(hooks.AboutSyncHook, async=False)
+    return webpack_asset_render(hooks.AboutSyncHook, is_async=False)

@@ -21,19 +21,21 @@ class SMSConnectionError(Exception):
 
 
 def send_password_reset_link(phone, token, baseurl):
-    
+
     conf = read_config()
 
     phone = normalize_phone_number(phone)
     baseurl = baseurl.rstrip("/")
 
     url = "{baseurl}/user/#/passwordreset/{phone}/{token}".format(baseurl=baseurl, token=token, phone=phone)
-    
+
     send_message(phone, conf['SMS_MESSAGE_TEMPLATE'].format(url=url))
 
 
 def send_message(phone, message):
 
+    print(message)
+    return
     conf = read_config()
 
     # if a URL template has been specified, use the HTTP method of sending a message (e.g for Ghana)
@@ -59,7 +61,7 @@ def send_message(phone, message):
         pdu = client.send_message(
             source_addr_ton=SOURCE_ADDR_TON,
             source_addr_npi=SOURCE_ADDR_NPI,
-            source_addr=conf['SOURCE_ADDRESS'], 
+            source_addr=conf['SOURCE_ADDRESS'],
 
             dest_addr_ton=DEST_ADDR_TON,
             dest_addr_npi=DEST_ADDR_NPI,

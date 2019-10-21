@@ -15,7 +15,7 @@ class InstantSchoolsRouter(object):
     def allow_relation(self, obj1, obj2, **hints):
         if obj1._meta.app_label == "kolibri_instant_schools_plugin" and \
            obj2._meta.app_label == "kolibri_instant_schools_plugin":
-           return True
+            return True
         return None
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):

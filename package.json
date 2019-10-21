@@ -1,0 +1,30 @@
+{
+  "name": "kolibri-instant-schools",
+  "version": "0.0.1",
+  "description": "Custom plugin for Vodafone.",
+  "scripts": {
+    "build": "kolibri-tools build prod --plugins kolibri_instant_schools_plugin",
+    "django-devserver": "DJANGO_SETTINGS_MODULE=kolibri_instant_schools_plugin.dev_settings kolibri --debug manage runserver \"0.0.0.0:8000\" ",
+    "watch": "kolibri-tools build dev --plugins kolibri_instant_schools_plugin --port 4000",
+    "watch-hot": "kolibri-tools build dev --plugins kolibri_instant_schools_plugin --port 4000 --hot",
+    "devserver": "npm-run-all --parallel django-devserver watch lint:watch",
+    "devserver-hot": "npm-run-all --parallel django-devserver watch-hot lint:watch",
+    "clean": "kolibri-tools build clean --file ./build_plugins.txt",
+    "lint": "kolibri-tools lint",
+    "lint-all": "kolibri-tools lint 'kolibri_instant_schools_plugin/assets/**/*.{js,vue,scss,less,css}'",
+    "lint-all:fix": "yarn run lint-all -w",
+    "lint:fix": "yarn run lint -w",
+    "lint:watch": "yarn lint-all -w -m",
+    "test": "yarn run test-jest --watch",
+    "test-jest": "kolibri-tools test --config ./jest.conf.js"
+  },
+  "devDependencies": {
+    "kolibri-tools": "^0.12.0-beta.6",
+    "yarn-run-all": "^3.1.1"
+  },
+  "engines": {
+    "node": "10.x",
+    "npm": ">= 3"
+  },
+  "dependencies": {}
+}

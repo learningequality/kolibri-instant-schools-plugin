@@ -34,8 +34,6 @@ def send_password_reset_link(phone, token, baseurl):
 
 def send_message(phone, message):
 
-    print(message)
-    return
     conf = read_config()
 
     # if a URL template has been specified, use the HTTP method of sending a message (e.g for Ghana)

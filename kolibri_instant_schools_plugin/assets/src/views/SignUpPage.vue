@@ -115,9 +115,9 @@
     >
       <iframe class="terms" src="/content/databases/about/tos.txt"></iframe>
       <KButton
-        :text="cancel"
+        :text="$tr('close')"
         :primary="false"
-        :disabled="disabled"
+        :disabled="false"
         @click="showTerms = false"
       />
     </KModal>
@@ -134,7 +134,6 @@
 <script>
 
   import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
-  import { validateUsername } from 'kolibri.utils.validators';
   import KButton from 'kolibri.coreVue.components.KButton';
   import KTextbox from 'kolibri.coreVue.components.KTextbox';
   import KCheckbox from 'kolibri.coreVue.components.KCheckbox';
@@ -330,7 +329,6 @@
       required: 'This field is required',
       documentTitle: 'User Sign Up',
       privacyLink: 'Usage and privacy in Kolibri',
-      passwordMatchError: 'Passwords do not match',
       genericError: 'Something went wrong during sign up!',
       phoneNumberInvalid: 'A valid phone number has at least 9 digits',
       usernameAlreadyExistsError: 'An account with that phone number already exists',
@@ -339,8 +337,7 @@
       termsOfServiceModalHeader: 'Terms of service & privacy policy',
       viewTermsOfServicePrompt: 'View terms of service & privacy policy',
       appBarHeader: 'Instant Schools',
-      finish: 'Finish',
-      required: 'This field is required',
+      close: 'Close',
     },
   };
 

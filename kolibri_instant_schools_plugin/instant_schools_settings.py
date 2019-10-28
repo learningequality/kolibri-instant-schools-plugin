@@ -18,7 +18,7 @@ DATABASES["instant_schools"] = {
     }
 }
 
-DATABASE_ROUTERS = ["kolibri_instant_schools_plugin.db_router.InstantSchoolsRouter"]
+DATABASE_ROUTERS += ("kolibri_instant_schools_plugin.db_router.InstantSchoolsRouter",)
 
 
 LANGUAGES = [

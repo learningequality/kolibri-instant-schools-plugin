@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 
-from kolibri.auth.models import FacilityUser
+from kolibri.core.auth.models import FacilityUser
 
 from ...auth.mapping import normalize_phone_number
 
@@ -18,7 +18,7 @@ class Command(BaseCommand):
             help='Phone number to which to send a test SMS')
 
     def handle(self, *args, **options):
-        
+
         phonenumber = normalize_phone_number(options['phonenumber'])
 
         send_message(phonenumber, "This is a test! %s" % timezone.now())

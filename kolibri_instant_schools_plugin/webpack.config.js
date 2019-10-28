@@ -5,5 +5,5 @@
 
 module.exports = {
   // allows plugin to override core kolibri components
-  coreAPISpec: './assets/src/coreAPI.js',
+  // coreAPISpec: './assets/src/coreAPI.js',
 };

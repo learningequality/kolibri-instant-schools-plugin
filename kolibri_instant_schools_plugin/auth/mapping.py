@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from django.conf import settings
 
-from kolibri.auth.models import FacilityUser
+from kolibri.core.auth.models import FacilityUser
 from ..models import PhoneToUsernameMapping
 
 
@@ -15,7 +15,7 @@ def normalize_phone_number(phone):
 
 def get_usernames(phone):
     """Look up the usernames associated with this phone number."""
-    
+
     # normalize the phone number to only digits
     phone = normalize_phone_number(phone)
 

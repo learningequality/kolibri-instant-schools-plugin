@@ -1,74 +1,29 @@
-import KolibriModule from 'kolibri_module';
-import * as coreActions from 'kolibri.coreVue.vuex.actions';
 import router from 'kolibri.coreVue.router';
+import RootVue from './views/UserIndex';
+import routes from './routes';
+import pluginModule from './modules/pluginModule';
+import KolibriApp from 'kolibri_app';
 
-import Vue from 'kolibri.lib.vue';
-
-import RootVue from './views';
-import * as actions from './state/actions';
-import { showPasswordResetPage } from './state/resetPasswordActions';
-
-import store from './state/store';
-import { PageNames } from './constants';
-
-class UserModule extends KolibriModule {
+class UserModule extends KolibriApp {
+  get stateSetters() {
+    return [() => this.store.dispatch('setFacilitiesAndConfig')];
+  }
+  get routes() {
+    return routes;
+  }
+  get RootVue() {
+    return RootVue;
+  }
+  get pluginModule() {
+    return pluginModule;
+  }
   ready() {
-    coreActions
-      .getCurrentSession(store)
-      .then(() => coreActions.getFacilityConfig(store))
-      .then(() => {
-        const routes = [
-          {
-            name: PageNames.ROOT,
-            path: '/',
-            handler: (toRoute, fromRoute) => {
-              actions.showRoot(store);
-            },
-          },
-          {
-            name: PageNames.SIGN_IN,
-            path: '/signin',
-            handler: (toRoute, fromRoute) => {
-              actions.showSignIn(store);
-            },
-          },
-          {
-            name: PageNames.SIGN_UP,
-            path: '/create_account',
-            handler: (toRoute, fromRoute) => {
-              actions.showSignUp(store);
-            },
-          },
-          {
-            name: PageNames.ACCOUNT,
-            path: '/account',
-            handler: (toRoute, fromRoute) => {
-              actions.showAccount(store);
-            },
-          },
-          {
-            name: PageNames.RESET_PASSWORD,
-            path: '/passwordreset/:phone/:token',
-            handler: toRoute => {
-              showPasswordResetPage(store, toRoute.params);
-            },
-          },
-          {
-            path: '*',
-            redirect: '/',
-          },
-        ];
-
-        this.rootvue = new Vue({
-          el: 'rootvue',
-          name: 'UserRoot',
-          render: createElement => createElement(RootVue),
-          router: router.init(routes),
-        });
+    return super.ready().then(() => {
+      router.afterEach((toRoute, fromRoute) => {
+        this.store.dispatch('resetModuleState', { toRoute, fromRoute });
       });
+    });
   }
 }
 
-const userModule = new UserModule();
-
-export { userModule as default };
+export default new UserModule();

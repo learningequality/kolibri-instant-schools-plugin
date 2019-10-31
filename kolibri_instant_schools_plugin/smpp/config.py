@@ -1,4 +1,3 @@
-import ConfigParser
 import logging
 import os
 
@@ -6,6 +5,12 @@ from django.conf import settings
 from kolibri.utils import conf
 
 CONF_PATH = os.path.join(conf.KOLIBRI_HOME, "smpp.conf")
+
+#py2/py3 compatibility
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser
 
 def write_default_config():
 

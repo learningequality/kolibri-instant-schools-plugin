@@ -1,8 +1,8 @@
 import requests
-import smpplib2.gsm
-import smpplib2.client
-import smpplib2.consts
-import smpplib2.exceptions
+import smpplib.gsm
+import smpplib.client
+import smpplib.consts
+import smpplib.exceptions
 import urllib
 
 from ..auth.mapping import normalize_phone_number
@@ -10,10 +10,10 @@ from ..auth.mapping import normalize_phone_number
 from .config import read_config
 
 
-SOURCE_ADDR_TON = smpplib2.consts.SMPP_TON_INTL
-SOURCE_ADDR_NPI = smpplib2.consts.SMPP_NPI_ISDN
-DEST_ADDR_TON = smpplib2.consts.SMPP_TON_INTL
-DEST_ADDR_NPI = smpplib2.consts.SMPP_NPI_ISDN
+SOURCE_ADDR_TON = smpplib.consts.SMPP_TON_INTL
+SOURCE_ADDR_NPI = smpplib.consts.SMPP_NPI_ISDN
+DEST_ADDR_TON = smpplib.consts.SMPP_TON_INTL
+DEST_ADDR_NPI = smpplib.consts.SMPP_NPI_ISDN
 
 
 class SMSConnectionError(Exception):
@@ -41,13 +41,13 @@ def send_message(phone, message):
         return send_message_by_http(phone, message, conf["SMS_HTTP_URL_TEMPLATE"])
 
     # encode the message into parts
-    parts, encoding_flag, msg_type_flag = smpplib2.gsm.make_parts(message)
+    parts, encoding_flag, msg_type_flag = smpplib.gsm.make_parts(message)
 
     # try connecting to the SMSC server
     try:
-        client = smpplib2.client.Client(conf['SMSC_ADDRESS'], conf['SMSC_PORT'])
+        client = smpplib.client.Client(conf['SMSC_ADDRESS'], conf['SMSC_PORT'])
         client.connect()
-    except smpplib2.exceptions.ConnectionError:
+    except smpplib.exceptions.ConnectionError:
         raise SMSConnectionError("Unable to connect to SMSC server %s:%s (message was not sent)" % (conf['SMSC_ADDRESS'], conf['SMSC_PORT']))
 
     # log into the SMSC server
@@ -76,8 +76,6 @@ def send_message_by_http(phone, message, url_template):
 
     url = url_template.format(message=urllib.quote(message), phone=normalize_phone_number(phone))
     response = requests.get(url, timeout=20)
-
-    print response.status_code, response.content
 
     if response.status_code != 200:
         raise SMSConnectionError("Error sending message via HTTP SMS server with address %s\n\t\tResponse: %s" % (url, response.content))

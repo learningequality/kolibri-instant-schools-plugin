@@ -13,6 +13,6 @@ Feature: Visitors and users view About and FAQ pages
       Given that I am on the the *About* page
         When I click the *More information* button
         Then I am on the the *FAQ* page
-        When I click the *Bacl to About* button
+        When I click the *Back to About* button
         Then I am on the the *About* page again
         

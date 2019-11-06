@@ -11,7 +11,7 @@ Feature: Vodafone subscriber signs up for an account
     When I fill out my full name <full_name>
      And I fill out my mobile number <mobile-number>
      And I fill out my password <password>
-     And I activate the checkbox for Terms of service
+     And I activate the checkbox for the Terms of service
      And I click the *Finish* button 
     Then I am on the the *About* page
     When I click the *Start learning* button 
@@ -21,6 +21,11 @@ Feature: Vodafone subscriber signs up for an account
     Given A user already exists with mobile number <mobile-number>
     When I try to sign up for a new account with the same mobile number <mobile-number>
     Then I get a validation message shown next to the *Phone number* field 'An account with that phone number already exists'
+
+  Scenario: Incorrect number of mobile digits
+    Given I am on *Create an account* page
+    When I enter a mobile number with less then 9 digits
+    Then I see the error notification *A valid phone number has at least 9 digits* below the field 
 
   Examples:
   | mobile-number | password      |

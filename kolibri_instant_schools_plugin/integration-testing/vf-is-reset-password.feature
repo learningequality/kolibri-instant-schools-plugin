@@ -3,7 +3,7 @@ Feature: Users need to be able to reset the password needed to access IS Kolibri
   Background:
     Given that I have an account for IS Kolibri with a mobile number <mobile-number>
       And I am on the Kolibri sign in page
-      And I fogot the password <password> used to access my account
+      And I forgot the password <password> used to access my account
 
     Scenario: Request password reset
       When I click the *Reset your password* link

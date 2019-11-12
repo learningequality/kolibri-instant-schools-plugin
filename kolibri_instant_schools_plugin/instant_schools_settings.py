@@ -25,5 +25,5 @@ LANGUAGES = [
     ('en', 'English'),
     ('sw-tz', 'Kiswahili'),
     ('fr-fr', 'Français'),
-    ('pt-pt', 'Português'),
+    ('pt-br', 'Português'),
 ]

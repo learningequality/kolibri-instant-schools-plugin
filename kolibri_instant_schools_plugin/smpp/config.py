@@ -25,7 +25,7 @@ def write_default_config():
     config.set('SMPP', 'sms_message_template', 'To reset your Instant Schools account password, please click the following link: {url}')
     config.set('SMPP', 'sms_http_url_template', '')
 
-    with open(CONF_PATH, 'wb') as configfile:
+    with open(CONF_PATH, 'w') as configfile:
         config.write(configfile)
 
 def read_config():

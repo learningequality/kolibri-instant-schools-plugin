@@ -66,26 +66,26 @@
       this.resizeIframe();
       window.addEventListener('resize', this.throttleResizeIframe);
       document
-        .querySelector('.content-container')
+        .querySelector('.main-wrapper')
         .addEventListener('scroll', this.throttleUpdateBtnVisibility);
       // scroll to top
-      document.querySelector('.content-container').scrollTop = 0;
+      document.querySelector('.main-wrapper').scrollTop = 0;
     },
     beforeDestroy() {
       window.removeEventListener('resize', this.throttleResizeIframe);
       document
-        .querySelector('.content-container')
+        .querySelector('.main-wrapper')
         .removeEventListener('scroll', this.throttleUpdateBtnVisibility);
     },
     methods: {
       updateBtnVisibility() {
-        this.btnIsVisible = document.querySelector('.content-container').scrollTop > 500;
+        this.btnIsVisible = document.querySelector('.main-wrapper').scrollTop > 500;
       },
       throttleUpdateBtnVisibility: throttle(function() {
         this.updateBtnVisibility();
       }, 100),
       goToTop() {
-        this.$refs.bacKButton.$el.scrollIntoView(false);
+        this.$refs.backButton.$el.scrollIntoView(false);
       },
       resizeIframe() {
         this.height = this.$refs.iframe.contentWindow.document.body.scrollHeight;

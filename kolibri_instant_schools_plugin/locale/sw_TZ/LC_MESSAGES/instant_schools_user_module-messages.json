@@ -164,7 +164,7 @@
   "SignUpPage.username": "Jina la mtumiaji",
   "SignUpPage.usernameAlphaNumError": "Jina la mtumiaji ni lazima liwe na herufi, namba and kistari chini",
   "SignUpPage.usernameAlreadyExistsError": "Akaunti lenye jina hilo la mtumiaji tayari linatumika",
-  "UserIndex.userProfileTitle": "Wasifu",
+  "UserIndex.userProfileTitle": "Akaunti",
   "UserIndex.userSignInTitle": "Jiandikishe",
   "UserPageSnackbars.dismiss": "Ondoa",
   "UserPageSnackbars.signedOut": "Uliondolewa moja kwa moja kwa sababu ya kutotumia",

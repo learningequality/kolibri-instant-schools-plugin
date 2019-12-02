@@ -1,7 +1,6 @@
 <template>
-
   <CoreMenuOption
-    :label="$tr('profile')"
+    :label="$tr('account')"
     :link="url"
   >
     <mat-svg
@@ -10,7 +9,6 @@
       category="action"
     />
   </CoreMenuOption>
-
 </template>
 
 
@@ -27,7 +25,7 @@
       CoreMenuOption,
     },
     $trs: {
-      profile: 'Profile',
+      account: 'Account',
     },
     computed: {
       url() {

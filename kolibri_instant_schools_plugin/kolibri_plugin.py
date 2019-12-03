@@ -117,6 +117,7 @@ class InstantSchoolsThemeHook(theme_hook.ThemeHook):
             },
             # side-nav config
             theme_hook.SIDE_NAV: {
+                theme_hook.TITLE: "Instant Schools",
                 theme_hook.BRANDED_FOOTER: {
                     theme_hook.LOGO: {
                         theme_hook.IMG_SRC: static('instant-school-logo.png'),

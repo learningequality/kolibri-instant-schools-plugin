@@ -13,12 +13,6 @@
       <UserTypeDisplay :distinguishCoachTypes="false" :userType="getUserKind" />
     </section>
 
-    <section v-if="facilityName">
-      <h2>{{ facilityString }}</h2>
-      <p>{{ facilityName }}</p>
-    </section>
-
-
     <section v-if="userHasPermissions">
       <h2>{{ $tr('devicePermissions') }}</h2>
       <p>
@@ -99,7 +93,6 @@
   import { crossComponentTranslator } from 'kolibri.utils.i18n';
   import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
   import KLabeledIcon from 'kolibri.coreVue.components.KLabeledIcon';
-  import find from 'lodash/find';
   import pickBy from 'lodash/pickBy';
   import themeMixin from 'kolibri.coreVue.mixins.themeMixin';
   import responsiveWindow from 'kolibri.coreVue.mixins.responsiveWindow';
@@ -169,12 +162,6 @@
       },
       facilityString() {
         return SignUpPageStrings.$tr('facility');
-      },
-      facilityName() {
-        const match = find(this.$store.getters.facilities, {
-          id: this.$store.getters.currentFacilityId,
-        });
-        return match ? match.name : '';
       },
       passwordModalVisible() {
         return this.passwordState.modal;

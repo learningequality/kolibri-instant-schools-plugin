@@ -58,7 +58,7 @@
       },
     },
     $trs: {
-      userProfileTitle: 'Profile',
+      userProfileTitle: 'Account',
       userSignInTitle: 'Sign in',
       about: 'About',
     },

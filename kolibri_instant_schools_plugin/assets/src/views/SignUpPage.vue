@@ -58,15 +58,6 @@
         @blur="confirmedPasswordBlurred = true"
       />
 
-      <template v-if="currentFacility">
-        <h2>
-          {{ $tr('facility') }}
-        </h2>
-        <p>
-          {{ currentFacility.name }}
-        </p>
-      </template>
-
       <p class="privacy-link">
         <KButton
           :text="$tr('viewTermsOfServicePrompt')"
@@ -121,12 +112,6 @@
         @click="showTerms = false"
       />
     </KModal>
-
-    <FacilityModal
-      v-if="facilityModalVisible"
-      @cancel="closeFacilityModal"
-      @submit="closeFacilityModal"
-    />
   </div>
 </template>
 
@@ -170,7 +155,6 @@
       confirmedPasswordBlurred: false,
       facilityBlurred: false,
       formSubmitted: false,
-      facilityModalVisible: false,
       showTerms: false,
       termsAgreed: false,
       termsAgreementCheckboxBlurred: false,
@@ -267,22 +251,11 @@
         return getUrlParameter('next');
       },
     },
-    beforeMount() {
-      if (!this.currentFacility) {
-        this.facilityModalVisible = true;
-      }
-    },
     methods: {
       ...mapActions('signUp', ['signUpNewUser']),
       ...mapMutations('signUp', {
         resetSignUpState: 'RESET_STATE',
       }),
-      closeFacilityModal() {
-        this.facilityModalVisible = false;
-        this.$nextTick().then(() => {
-          this.$refs.name.focus();
-        });
-      },
       signUp() {
         this.formSubmitted = true;
         const canSubmit = this.formIsValid && !this.busy;

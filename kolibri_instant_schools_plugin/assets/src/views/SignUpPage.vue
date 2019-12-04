@@ -102,6 +102,7 @@
     <KModal
       v-if="showTerms"
       :title="$tr('termsOfServiceModalHeader')"
+      :size="'large'"
       @cancel="showTerms = false"
     >
       <iframe class="terms" src="/content/databases/about/tos.txt"></iframe>
@@ -124,7 +125,6 @@
   import KCheckbox from 'kolibri.coreVue.components.KCheckbox';
   import KModal from 'kolibri.coreVue.components.KModal';
   import { ERROR_CONSTANTS } from 'kolibri.coreVue.vuex.constants';
-  import FacilityModal from './SignInPage/FacilityModal';
   import getUrlParameter from './getUrlParameter';
   import LanguageSwitcherFooter from './LanguageSwitcherFooter';
 
@@ -136,7 +136,6 @@
       };
     },
     components: {
-      FacilityModal,
       KButton,
       KTextbox,
       KCheckbox,

@@ -144,7 +144,7 @@
             >
               <KExternalLink
                 :text="$tr('accessAsGuest')"
-                :href="guestURL"
+                :href="aboutUrl"
                 :primary="false"
                 appearance="flat-button"
               />
@@ -350,8 +350,8 @@
       logoText() {
         return this.$theme.signIn.title ? this.$theme.signIn.title : this.$tr('kolibri');
       },
-      guestURL() {
-        return urls['kolibri:core:guest']();
+      aboutUrl() {
+        return urls['kolibri:about:about']();
       },
       backgroundImageStyle() {
         if (this.$theme.signIn.background) {

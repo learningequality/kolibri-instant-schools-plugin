@@ -15,4 +15,10 @@ Feature: Visitors and users view About and FAQ pages
         Then I am on the the *FAQ* page
         When I click the *Back to About* button
         Then I am on the the *About* page again
-        
+
+    Scenario: View *Back to top* button on FAQ page
+      Given that I am on the the *FAQ* page
+        And I scroll down
+      Then I see the *Back to top* button in the lower right corner
+      When I click the *Back to top* button
+      Then I see the top of the *FAQ* page again

@@ -144,7 +144,8 @@
             >
               <KExternalLink
                 :text="$tr('accessAsGuest')"
-                :href="aboutUrl"
+                :href="guestUrl"
+                @click.native="checkGuestUrl"
                 :primary="false"
                 appearance="flat-button"
               />
@@ -269,6 +270,7 @@
         privacyModalVisible: false,
         whatsThisModalVisible: false,
         showPwResetModal: false,
+        guestUrl: urls['kolibri:about:about'](),
       };
     },
     computed: {
@@ -406,6 +408,16 @@
     },
     methods: {
       ...mapActions('signIn', ['showSelectProfilePage']),
+      checkGuestUrl() {
+        if(document.cookie.includes('accessed_as_guest')) {
+          this.guestUrl = urls['kolibri:learn:learn']();
+        } else {
+          var date = new Date();
+          date.setTime(date.getTime() + (365*24*60*60*1000));
+          var expires = "; expires=" + date.toUTCString();
+          document.cookie = "accessed_as_guest=true; path=/" + expires;
+        }
+      },
       closeFacilityModal() {
         this.facilityModalVisible = false;
         this.$nextTick().then(() => {

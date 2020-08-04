@@ -65,7 +65,7 @@ class PasswordResetTokenViewset(viewsets.ViewSet):
         token = PasswordResetToken.generate_new_token(phone=phone)
 
         # determine base URL from the scheme/host in this request, so we send people back to a server they can access
-        baseurl = "{scheme}://{host}".format(scheme=request.scheme, host=request.META['HTTP_X_FORWARDED_FOR'])
+        baseurl = "{scheme}://{host}".format(scheme=request.scheme, host=request.get_host())
 
         # send the password reset URL to the phone number via SMS
         try:

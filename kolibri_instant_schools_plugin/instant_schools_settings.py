@@ -27,3 +27,6 @@ LANGUAGES = [
     ('fr-fr', 'Français'),
     ('pt-br', 'Português'),
 ]
+
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True

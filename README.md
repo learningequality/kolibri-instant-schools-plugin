@@ -6,7 +6,7 @@ How can I install this plugin for development?
 ------------------------------
 
 1. Ensure you have (Kolibri)[https://github.com/learningequality/kolibri] setup for local development. Note that all commands below are to be done in the Kolibri repo unless specified otherwise. Also, be sure you're checking out the correct version branch. As of August 2020, this would be `release-v0.12.x`.
-2. `git clone` this `kolibri_instant_schools_plugin` repository.
+2. `git clone` this `kolibri_instant_schools_plugin` repository and then `cd` back into where you setup your Kolibri for development.
 3. Set and export the following local variables for use in your development environment: `KOLIBRI_HOME` - this ought to be a new path that was not previously used as a `KOLIBRI_HOME`. Also set `DJANGO_SETTINGS_MODULE` to `kolibri_instant_schools_plugin.instant_schools_settings`.
 4. Run `pip install -e ../relative/path/to/kolibri_instant_schools_plugin`
 5. Run `kolibri manage migrate --database=instant_schools`

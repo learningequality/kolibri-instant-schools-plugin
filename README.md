@@ -47,11 +47,18 @@ How do I test SMPP locally?
 
 This will start a server that will be used for the SMPP testing. You can see output of SMPP activity logged in the console where this is run.
 
-Managing the About and FAQ Pages
----------------------------------
+Notes about nginx configuration and SMPP and SMS Password Reset
+------------------------------------------
+
+If you are running nginx as a reverse proxy, you will need to ensure that the following headers are set so that the password reset generates the link with the proper host in the URL:
 
 
-
+```
+proxy_set_header X-Forwarded-Host $host;  # allows django to determine the name/addr of the server that the client originally connected to (see request.get_host()) 
+proxy_set_header X-Forwarded-Port $server_port;  # same idea as above, but for port number (see request.get_port()) 
+proxy_set_header X-Forwarded-Server $host; 
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+```
 
 How can I install this plugin, but not for development?
 ------------------------------

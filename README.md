@@ -36,6 +36,7 @@ kolibri.plugins.default_theme
 
 If things aren't working, double and triple check that the user plugin is disabled and the instant_schools plugin is enabled in `kolibri_settings.json` which is located in your `KOLIBRI_HOME` folder.
 
+9. (Optional) - Copy the `kolibri_instant_schools_plugin/assets/src/views/about/views/about` to `$(KOLIBRI_HOME)/content/databases`. Note that the about folders are indeed nested and that is not a typo. 
 
 How do I test SMPP locally?
 ----------------------------
@@ -45,6 +46,11 @@ How do I test SMPP locally?
 3. Now, `cd SMPPSim` and you can run `sudo sh startsmppsim.sh` from that folder anytime to test SMPP.
 
 This will start a server that will be used for the SMPP testing. You can see output of SMPP activity logged in the console where this is run.
+
+Managing the About and FAQ Pages
+---------------------------------
+
+
 
 
 How can I install this plugin, but not for development?

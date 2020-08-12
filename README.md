@@ -32,7 +32,11 @@ kolibri.plugins.document_epub_render
 kolibri.plugins.default_theme
 ```
 
-8. Running the devserver. In the `package.json` file in Kolibri, update all of the script entries that define a settings module to point to the `kolibri_instant_schools_plugin.instant_schools_settings` rather than the `kolibri.deployment.default.*.**` settings. Doing this will allow you to easily spin up the development server with hot reloading.
+8. Running the devserver. You may wish to run the server so that you can do frontend development. I suggest the following changes to make this easier for you:
+
+In the `package.json` file in Kolibri, update all of the script entries that define a settings module to point to the `kolibri_instant_schools_plugin.instant_schools_settings` rather than the `kolibri.deployment.default.*.**` settings. Doing this will allow you to easily spin up the development server with hot reloading and you can run `yarn run devserver` or `yarn run devserver-hot` to start the full development server.
+
+If you only need to work on Django backend and have the `DJANGO_SETTINGS_MODULE` env variable set, then you can run `yarn build` and `kolibri start --foreground`.
 
 If things aren't working, double and triple check that the user plugin is disabled and the instant_schools plugin is enabled in `kolibri_settings.json` which is located in your `KOLIBRI_HOME` folder.
 

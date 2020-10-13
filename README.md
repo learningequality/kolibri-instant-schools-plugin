@@ -91,3 +91,7 @@ How to publish to PyPi?
 
     `make release`
 
+How to use a custom title for the app?
+--------------------------------------
+
+The Instant Schools plugin will look for an environment variable `INSTANT_SCHOOLS_APP_TITLE`. If there is nothing set for that variable, the default title "Instant Schools" will be used.

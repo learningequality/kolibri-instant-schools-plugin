@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from . import hooks
 from os import getenv
+from datetime import datetime
 from kolibri.core.auth.constants.user_kinds import ANONYMOUS
 from kolibri.core.hooks import NavigationHook
 from kolibri.core.hooks import RoleBasedRedirectHook
@@ -65,6 +66,7 @@ class AboutInclusionHook(hooks.AboutSyncHook):
 
 
 class InstantSchoolsThemeHook(theme_hook.ThemeHook):
+
     @property
     def theme(self):
         return {
@@ -125,7 +127,7 @@ class InstantSchoolsThemeHook(theme_hook.ThemeHook):
                         theme_hook.IMG_SRC: static('instant-school-logo.png'),
                     },
                     theme_hook.PARAGRAPH_ARRAY:
-                        [APP_TITLE, "\xa9 2020 Vodafone Foundation"],
+                        [APP_TITLE, "\xa9 {} Vodafone Foundation".format(datetime.now().year)],
                 },
                 theme_hook.SHOW_K_FOOTER_LOGO: True
             },

@@ -3,6 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 from . import hooks
+from os import getenv
+from datetime import datetime
 from kolibri.core.auth.constants.user_kinds import ANONYMOUS
 from kolibri.core.hooks import NavigationHook
 from kolibri.core.hooks import RoleBasedRedirectHook
@@ -11,6 +13,7 @@ from kolibri.plugins.base import KolibriPluginBase
 from kolibri.core import theme_hook
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
+APP_TITLE = getenv('INSTANT_SCHOOLS_APP_TITLE') or 'Instant Schools'
 
 class User(KolibriPluginBase):
     translated_view_urls = "urls"
@@ -63,6 +66,7 @@ class AboutInclusionHook(hooks.AboutSyncHook):
 
 
 class InstantSchoolsThemeHook(theme_hook.ThemeHook):
+
     @property
     def theme(self):
         return {
@@ -104,7 +108,7 @@ class InstantSchoolsThemeHook(theme_hook.ThemeHook):
             theme_hook.SIGN_IN: {
                 theme_hook.BACKGROUND: static("instant-background.jpg"),
                 theme_hook.SCRIM_OPACITY: 0,
-                theme_hook.TITLE: "Instant Schools",
+                theme_hook.TITLE: APP_TITLE,
                 theme_hook.TOP_LOGO: {
                     theme_hook.IMG_SRC: static('instant-school-logo.png'),
                     theme_hook.IMG_STYLE: "padding-left: 64px; padding-right: 64px; margin-bottom: 8px; margin-top: 8px",
@@ -117,13 +121,13 @@ class InstantSchoolsThemeHook(theme_hook.ThemeHook):
             },
             # side-nav config
             theme_hook.SIDE_NAV: {
-                theme_hook.TITLE: "Instant Schools",
+                theme_hook.TITLE: APP_TITLE,
                 theme_hook.BRANDED_FOOTER: {
                     theme_hook.LOGO: {
                         theme_hook.IMG_SRC: static('instant-school-logo.png'),
                     },
                     theme_hook.PARAGRAPH_ARRAY:
-                        ["Instant Schools", "\xa9 2017 Vodafone Foundation"],
+                        [APP_TITLE, "\xa9 {} Vodafone Foundation".format(datetime.now().year)],
                 },
                 theme_hook.SHOW_K_FOOTER_LOGO: True
             },

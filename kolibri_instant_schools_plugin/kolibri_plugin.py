@@ -13,7 +13,8 @@ from kolibri.plugins.base import KolibriPluginBase
 from kolibri.core import theme_hook
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
-APP_TITLE = getenv('INSTANT_SCHOOLS_APP_TITLE') or 'Instant Schools'
+APP_TITLE = getenv("INSTANT_SCHOOLS_APP_TITLE") or "Instant Schools"
+
 
 class User(KolibriPluginBase):
     translated_view_urls = "urls"
@@ -66,7 +67,6 @@ class AboutInclusionHook(hooks.AboutSyncHook):
 
 
 class InstantSchoolsThemeHook(theme_hook.ThemeHook):
-
     @property
     def theme(self):
         return {
@@ -110,7 +110,7 @@ class InstantSchoolsThemeHook(theme_hook.ThemeHook):
                 theme_hook.SCRIM_OPACITY: 0,
                 theme_hook.TITLE: APP_TITLE,
                 theme_hook.TOP_LOGO: {
-                    theme_hook.IMG_SRC: static('instant-school-logo.png'),
+                    theme_hook.IMG_SRC: static("instant-school-logo.png"),
                     theme_hook.IMG_STYLE: "padding-left: 64px; padding-right: 64px; margin-bottom: 8px; margin-top: 8px",
                     theme_hook.IMG_ALT: None,
                 },
@@ -124,17 +124,19 @@ class InstantSchoolsThemeHook(theme_hook.ThemeHook):
                 theme_hook.TITLE: APP_TITLE,
                 theme_hook.BRANDED_FOOTER: {
                     theme_hook.LOGO: {
-                        theme_hook.IMG_SRC: static('instant-school-logo.png'),
+                        theme_hook.IMG_SRC: static("instant-school-logo.png"),
                     },
-                    theme_hook.PARAGRAPH_ARRAY:
-                        [APP_TITLE, "\xa9 {} Vodafone Foundation".format(datetime.now().year)],
+                    theme_hook.PARAGRAPH_ARRAY: [
+                        APP_TITLE,
+                        "\xa9 {} Vodafone Foundation".format(datetime.now().year),
+                    ],
                 },
-                theme_hook.SHOW_K_FOOTER_LOGO: True
+                theme_hook.SHOW_K_FOOTER_LOGO: True,
             },
             # app bar config
             theme_hook.APP_BAR: {
                 theme_hook.TOP_LOGO: {
-                    theme_hook.IMG_SRC: static('instant-school-logo.png')
+                    theme_hook.IMG_SRC: static("instant-school-logo.png")
                 }
-            }
+            },
         }

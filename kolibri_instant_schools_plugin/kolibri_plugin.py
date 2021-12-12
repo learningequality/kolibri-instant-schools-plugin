@@ -69,74 +69,74 @@ class AboutInclusionHook(hooks.AboutSyncHook):
 class InstantSchoolsThemeHook(theme_hook.ThemeHook):
     @property
     def theme(self):
+
+        logo_file = static("instant-school-logo.png")
+
         return {
-            # metadata
-            theme_hook.THEME_NAME: "Instant Schools Theme",
-            theme_hook.THEME_VERSION: 1,  # increment when changes are made
             # specify primary and secondary brand colors
-            theme_hook.BRAND_COLORS: {
-                theme_hook.PRIMARY: {
-                    theme_hook.COLOR_V50: "#fde7e6",
-                    theme_hook.COLOR_V100: "#ffc7b8",
-                    theme_hook.COLOR_V200: "#ffa18a",
-                    theme_hook.COLOR_V300: "#ff7a5b",
-                    theme_hook.COLOR_V400: "#ff5937",
-                    theme_hook.COLOR_V500: "#ff3011",
-                    theme_hook.COLOR_V600: "#fd290c",
-                    theme_hook.COLOR_V700: "#ef2005",
-                    theme_hook.COLOR_V800: "#e11300",
-                    theme_hook.COLOR_V900: "#c90000",
+            "brandColors": {
+                "primary": {
+                    "v_50": "#fde7e6",
+                    "v_100": "#ffc7b8",
+                    "v_200": "#ffa18a",
+                    "v_300": "#ff7a5b",
+                    "v_400": "#ff5937",
+                    "v_500": "#ff3011",
+                    "v_600": "#fd290c",
+                    "v_700": "#ef2005",
+                    "v_800": "#e11300",
+                    "v_900": "#c90000",
                 },
-                theme_hook.SECONDARY: {
-                    theme_hook.COLOR_V50: "#f7f7f7",
-                    theme_hook.COLOR_V100: "#eeeeee",
-                    theme_hook.COLOR_V200: "#e3e3e3",
-                    theme_hook.COLOR_V300: "#d1d1d1",
-                    theme_hook.COLOR_V400: "#acacac",
-                    theme_hook.COLOR_V500: "#8b8b8b",
-                    theme_hook.COLOR_V600: "#646464",
-                    theme_hook.COLOR_V700: "#515151",
-                    theme_hook.COLOR_V800: "#333333",
-                    theme_hook.COLOR_V900: "#131313",
+                "secondary": {
+                    "v_50": "#f7f7f7",
+                    "v_100": "#eeeeee",
+                    "v_200": "#e3e3e3",
+                    "v_300": "#d1d1d1",
+                    "v_400": "#acacac",
+                    "v_500": "#8b8b8b",
+                    "v_600": "#646464",
+                    "v_700": "#515151",
+                    "v_800": "#333333",
+                    "v_900": "#131313",
                 },
             },
-            theme_hook.TOKEN_MAPPING: {
+            "tokenMapping": {
                 "primary": "#e11300",
                 "appBar": "#333333",
             },
             # sign-in page config
-            theme_hook.SIGN_IN: {
-                theme_hook.BACKGROUND: static("instant-background.jpg"),
-                theme_hook.SCRIM_OPACITY: 0,
-                theme_hook.TITLE: APP_TITLE,
-                theme_hook.TOP_LOGO: {
-                    theme_hook.IMG_SRC: static("instant-school-logo.png"),
-                    theme_hook.IMG_STYLE: "padding-left: 64px; padding-right: 64px; margin-bottom: 8px; margin-top: 8px",
-                    theme_hook.IMG_ALT: None,
+            "signIn": {
+                "background": static("instant-background.jpg"),
+                "scrimOpacity": 0,
+                "title": APP_TITLE,
+                "topLogo": {
+                    "src": logo_file,
+                    "style": "padding-left: 64px; padding-right: 64px; margin-bottom: 8px; margin-top: 8px",
+                    "alt": None,
                 },
-                theme_hook.TITLE_STYLE: "font-style: NotoSans; color: #212121 !important",
-                theme_hook.SHOW_POWERED_BY: False,
-                theme_hook.SHOW_TITLE: True,
-                theme_hook.SHOW_K_FOOTER_LOGO: False,
+                "titleStyle": "font-style: NotoSans; color: #212121 !important",
+                "showPoweredBy": False,
+                "showTitle": True,
+                "showKolibriFooterLogo": False,
             },
             # side-nav config
-            theme_hook.SIDE_NAV: {
-                theme_hook.TITLE: APP_TITLE,
-                theme_hook.BRANDED_FOOTER: {
-                    theme_hook.LOGO: {
-                        theme_hook.IMG_SRC: static("instant-school-logo.png"),
+            "sideNav": {
+                "title": APP_TITLE,
+                "brandedFooter": {
+                    "logo": {
+                        "src": logo_file,
                     },
-                    theme_hook.PARAGRAPH_ARRAY: [
+                    "paragraphArray": [
                         APP_TITLE,
                         "\xa9 {} Vodafone Foundation".format(datetime.now().year),
                     ],
                 },
-                theme_hook.SHOW_K_FOOTER_LOGO: True,
+                "showKolibriFooterLogo": True,
             },
             # app bar config
-            theme_hook.APP_BAR: {
-                theme_hook.TOP_LOGO: {
-                    theme_hook.IMG_SRC: static("instant-school-logo.png")
-                }
+            "appBar": {
+                "topLogo": {
+                    "src": logo_file,
+                },
             },
         }

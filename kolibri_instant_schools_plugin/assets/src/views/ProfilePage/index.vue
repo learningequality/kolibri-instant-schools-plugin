@@ -92,14 +92,8 @@
 
   import { crossComponentTranslator } from 'kolibri.utils.i18n';
   import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
-  import KLabeledIcon from 'kolibri.coreVue.components.KLabeledIcon';
   import pickBy from 'lodash/pickBy';
-  import themeMixin from 'kolibri.coreVue.mixins.themeMixin';
-  import responsiveWindow from 'kolibri.coreVue.mixins.responsiveWindow';
   import { validateUsername } from 'kolibri.utils.validators';
-  import KButton from 'kolibri.coreVue.components.KButton';
-  import KTextbox from 'kolibri.coreVue.components.KTextbox';
-  import KPageContainer from 'kolibri.coreVue.components.KPageContainer';
   import PointsIcon from 'kolibri.coreVue.components.PointsIcon';
   import PermissionsIcon from 'kolibri.coreVue.components.PermissionsIcon';
   import UserTypeDisplay from 'kolibri.coreVue.components.UserTypeDisplay';
@@ -107,6 +101,7 @@
   import { PermissionTypes, ERROR_CONSTANTS } from 'kolibri.coreVue.vuex.constants';
   import SignUpPage from '../SignUpPage';
   import ChangeUserPasswordModal from './ChangeUserPasswordModal';
+  import responsiveWindowMixin from 'kolibri.coreVue.mixins.responsiveWindowMixin';
 
   const SignUpPageStrings = crossComponentTranslator(SignUpPage);
 
@@ -118,17 +113,13 @@
       };
     },
     components: {
-      KButton,
-      KTextbox,
-      KLabeledIcon,
-      KPageContainer,
       UiAlert,
       PointsIcon,
       PermissionsIcon,
       ChangeUserPasswordModal,
       UserTypeDisplay,
     },
-    mixins: [responsiveWindow, themeMixin],
+    mixins: [responsiveWindowMixin],
     data() {
       const { username, full_name } = this.$store.state.core.session;
       return {

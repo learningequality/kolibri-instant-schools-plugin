@@ -23,7 +23,6 @@
 
 <script>
 
-  import KModal from 'kolibri.coreVue.components.KModal';
   import { RequestTokenStates as STATES } from '../../../constants';
   import { createResetToken } from './api';
   import ResetPasswordModalStatus from './ResetPasswordModalStatus';
@@ -32,7 +31,6 @@
   export default {
     name: 'ResetPasswordModal',
     components: {
-      KModal,
       PhoneNumberForm,
       ResetPasswordModalStatus,
     },

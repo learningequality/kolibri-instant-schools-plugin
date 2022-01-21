@@ -28,13 +28,8 @@
 
 <script>
 
-  import KButton from 'kolibri.coreVue.components.KButton';
-
   export default {
     name: 'ProfilesList',
-    components: {
-      KButton,
-    },
     props: {
       profiles: {
         type: Array,

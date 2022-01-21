@@ -40,15 +40,8 @@
 
 <script>
 
-  import KTextbox from 'kolibri.coreVue.components.KTextbox';
-  import KButton from 'kolibri.coreVue.components.KButton';
-
   export default {
     name: 'NewPasswordForm',
-    components: {
-      KButton,
-      KTextbox,
-    },
     props: {
       disable: {
         type: Boolean,

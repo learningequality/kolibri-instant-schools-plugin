@@ -31,10 +31,7 @@
 
 <script>
 
-  import KPageContainer from 'kolibri.coreVue.components.KPageContainer';
-  import KButton from 'kolibri.coreVue.components.KButton';
   import throttle from 'lodash/throttle';
-  import KRouterLink from 'kolibri.coreVue.components.KRouterLink';
   import { PageNames } from '../../../constants';
 
   export default {
@@ -42,11 +39,6 @@
     $trs: {
       viewFaq: 'More information',
       startLearning: 'Start learning',
-    },
-    components: {
-      KButton,
-      KRouterLink,
-      KPageContainer,
     },
     data() {
       return {
@@ -88,7 +80,7 @@
 
 <style lang="scss" scoped>
 
-  @import '~kolibri.styles.definitions';
+  @import '~kolibri-design-system/lib/styles/definitions';
 
   .center {
     text-align: center;

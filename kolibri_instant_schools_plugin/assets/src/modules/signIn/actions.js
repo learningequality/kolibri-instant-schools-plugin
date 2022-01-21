@@ -1,15 +1,13 @@
-import { httpClient } from 'kolibri.client';
-import template from 'rest/interceptor/template';
+import client from 'kolibri.client';
 import urls from 'kolibri.urls';
 import { PageNames } from '../../constants';
 
 export function showSelectProfilePage(store, params) {
   const { phone, password, facility } = params;
-  return httpClient
-    .wrap(template)({
-      path: `${urls['kolibri:user:phoneaccountprofile_list']()}{?password}{&phone}`,
+  return client({
+      url: `${urls['kolibri:kolibri_instant_schools_plugin:phoneaccountprofile_list']()}?password=${password}&phone=${phone}`,
       method: 'GET',
-      params: {
+      data: {
         password,
         phone,
       },
@@ -38,10 +36,10 @@ export function showSelectProfilePage(store, params) {
 
 export function createProfile(store, profileName) {
   const { phone, password } = store.state;
-  return httpClient({
-    path: urls['kolibri:user:phoneaccountprofile_list'](),
+  return client({
+    url: urls['kolibri:kolibri_instant_schools_plugin:phoneaccountprofile_list'](),
     method: 'POST',
-    entity: {
+    data: {
       full_name: profileName,
       password,
       phone,

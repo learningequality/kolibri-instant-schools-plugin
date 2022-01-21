@@ -9,25 +9,25 @@
     <div class="wrapper-table">
       <div class="table-row main-row" :style="backgroundImageStyle">
         <div class="table-cell main-cell">
-          <div class="box" :style="{ backgroundColor: $themeColors.palette.grey.v_100 }">
+          <div class="box" :style="{ backgroundColor: $themePalette.grey.v_100 }">
             <CoreLogo
-              v-if="$theme.signIn.topLogo"
+              v-if="theme.signIn.topLogo"
               class="logo"
-              :src="$theme.signIn.topLogo.src"
-              :alt="$theme.signIn.topLogo.alt"
-              :style="$theme.signIn.topLogo.style"
+              :src="theme.signIn.topLogo.src"
+              :alt="theme.signIn.topLogo.alt"
+              :style="theme.signIn.topLogo.style"
             />
             <h1
-              v-if="$theme.signIn.showTitle"
+              v-if="theme.signIn.showTitle"
               class="kolibri-title"
               :class="$computedClass({color: $themeTokens.logoText})"
-              :style="$theme.signIn.titleStyle"
+              :style="theme.signIn.titleStyle"
             >
               {{ logoText }}
             </h1>
             <p
-              v-if="$theme.signIn.showPoweredBy"
-              :style="$theme.signIn.poweredByStyle"
+              v-if="theme.signIn.showPoweredBy"
+              :style="theme.signIn.poweredByStyle"
               class="small-text"
             >
               <KButton
@@ -160,7 +160,7 @@
             <span class="version-string">
               {{ versionMsg }}
             </span>
-            <CoreLogo v-if="this.$theme.signIn.showKolibriFooterLogo" class="footer-logo" />
+            <CoreLogo v-if="this.theme.signIn.showKolibriFooterLogo" class="footer-logo" />
             <span v-else> • </span>
             <KButton
               :text="$tr('privacyLink')"
@@ -209,19 +209,12 @@
 
   import { mapState, mapGetters, mapActions } from 'vuex';
   import { FacilityUsernameResource } from 'kolibri.resources';
-  import themeMixin from 'kolibri.coreVue.mixins.themeMixin';
   import { LoginErrors } from 'kolibri.coreVue.vuex.constants';
-  import KButton from 'kolibri.coreVue.components.KButton';
-  import KRouterLink from 'kolibri.coreVue.components.KRouterLink';
-  import KExternalLink from 'kolibri.coreVue.components.KExternalLink';
-  import KTextbox from 'kolibri.coreVue.components.KTextbox';
-  import KModal from 'kolibri.coreVue.components.KModal';
   import CoreLogo from 'kolibri.coreVue.components.CoreLogo';
   import { validateUsername } from 'kolibri.utils.validators';
   // import UiAutocompleteSuggestion from 'keen-ui/src/UiAutocompleteSuggestion';
   import PrivacyInfoModal from 'kolibri.coreVue.components.PrivacyInfoModal';
   import UiAlert from 'keen-ui/src/UiAlert';
-  import responsiveWindow from 'kolibri.coreVue.mixins.responsiveWindow';
   import urls from 'kolibri.urls';
   import { crossComponentTranslator } from 'kolibri.utils.i18n';
   import { PageNames } from '../../constants';
@@ -229,6 +222,10 @@
   import getUrlParameter from '../getUrlParameter';
   import FacilityModal from './FacilityModal';
   import ResetPasswordModal from './ResetPasswordModal';
+  import responsiveWindowMixin from 'kolibri.coreVue.mixins.responsiveWindowMixin';
+  import themeConfig from 'kolibri.themeConfig';
+
+console.log(urls);
 
   const closeString = crossComponentTranslator(FacilityModal).$tr('close');
 
@@ -240,11 +237,6 @@
       };
     },
     components: {
-      KButton,
-      KRouterLink,
-      KExternalLink,
-      KTextbox,
-      KModal,
       FacilityModal,
       CoreLogo,
       // UiAutocompleteSuggestion,
@@ -253,7 +245,7 @@
       PrivacyInfoModal,
       ResetPasswordModal,
     },
-    mixins: [responsiveWindow, themeMixin],
+    mixins: [responsiveWindowMixin],
     data() {
       return {
         username: '',
@@ -270,7 +262,8 @@
         privacyModalVisible: false,
         whatsThisModalVisible: false,
         showPwResetModal: false,
-        guestUrl: urls['kolibri:about:about'](),
+        theme: themeConfig,
+        guestUrl: urls['kolibri:kolibriInstantSchoolsPlugin:about'](),
       };
     },
     computed: {
@@ -350,21 +343,21 @@
         return this.facilityConfig.allow_guest_access && !this.oidcProviderFlow;
       },
       logoText() {
-        return this.$theme.signIn.title ? this.$theme.signIn.title : this.$tr('kolibri');
+        return this.theme.signIn.title ? this.theme.signIn.title : this.$tr('kolibri');
       },
       aboutUrl() {
-        return urls['kolibri:about:about']();
+        return urls['kolibri:kolibriInstantSchoolsPlugin:about']();
       },
       backgroundImageStyle() {
-        if (this.$theme.signIn.background) {
+        if (this.theme.signIn.background) {
           const scrimOpacity =
-            this.$theme.signIn.scrimOpacity !== undefined ? this.$theme.signIn.scrimOpacity : 0.7;
+            this.theme.signIn.scrimOpacity !== undefined ? this.theme.signIn.scrimOpacity : 0.7;
           return {
             backgroundColor: this.$themeTokens.primary,
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, ${scrimOpacity}), rgba(0, 0, 0, ${scrimOpacity})), url(${this.$theme.signIn.background})`,
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, ${scrimOpacity}), rgba(0, 0, 0, ${scrimOpacity})), url(${this.theme.signIn.background})`,
           };
         }
-        return { backgroundColor: this.$themeColors.brand.primary.v_900 };
+        return { backgroundColor: this.$themePalette.brand.primary.v_900 };
       },
       oidcProviderFlow() {
         return global.oidcProviderEnabled && this.nextParam;
@@ -530,7 +523,7 @@
       },
       suggestionStyle(i) {
         return {
-          backgroundColor: this.highlightedIndex === i ? this.$themeColors.palette.grey.v_200 : '',
+          backgroundColor: this.highlightedIndex === i ? this.$themePalette.palette.grey.v_200 : '',
         };
       },
     },
@@ -567,7 +560,7 @@
 
 <style lang="scss" scoped>
 
-  @import '~kolibri.styles.definitions';
+  @import '~kolibri-design-system/lib/styles/definitions';
 
   .fh {
     height: 100%;

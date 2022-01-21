@@ -2,14 +2,14 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from . import hooks
 from os import getenv
 from datetime import datetime
 from kolibri.core.auth.constants.user_kinds import ANONYMOUS
 from kolibri.core.hooks import NavigationHook
 from kolibri.core.hooks import RoleBasedRedirectHook
 from kolibri.core.webpack import hooks as webpack_hooks
-from kolibri.plugins.base import KolibriPluginBase
+from kolibri.plugins import KolibriPluginBase
+from kolibri.plugins.hooks import register_hook
 from kolibri.core import theme_hook
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
@@ -19,18 +19,22 @@ APP_TITLE = getenv("INSTANT_SCHOOLS_APP_TITLE") or "Instant Schools"
 class User(KolibriPluginBase):
     translated_view_urls = "urls"
 
+    @property
+    def url_slug(self):
+        return "^auth/"
 
+
+
+@register_hook
 class UserAsset(webpack_hooks.WebpackBundleHook):
-    unique_slug = "instant_schools_user_module"
-    src_file = "assets/src/app.js"
+    bundle_id="instant_schools_auth"
 
 
-class UserInclusionHook(hooks.UserSyncHook):
-    bundle_class = UserAsset
-
-
+@register_hook
 class LogInRedirect(RoleBasedRedirectHook):
-    role = ANONYMOUS
+    @property
+    def roles(self):
+        return (ANONYMOUS,)
 
     @property
     def url(self):
@@ -39,31 +43,23 @@ class LogInRedirect(RoleBasedRedirectHook):
 
 #  Navigation hooks
 class LogInNavAction(NavigationHook, webpack_hooks.WebpackBundleHook):
-    unique_slug = "instant_schools_user_module_login_nav_side_nav"
-    src_file = "assets/src/views/SideNav/LoginSideNavEntry.vue"
+    bundle_id="instant_schools_login_nav_action"
 
 
 class AboutNavAction(NavigationHook, webpack_hooks.WebpackBundleHook):
-    unique_slug = "instant_schools_user_module_about_nav_side_nav"
-    src_file = "assets/src/views/SideNav/AboutSideNavEntry.vue"
+    bundle_id="instant_schools_about_nav_action"
 
 
 class ProfileNavAction(NavigationHook, webpack_hooks.WebpackBundleHook):
-    unique_slug = "instant_schools_user_module_user_profile_nav_side_nav"
-    src_file = "assets/src/views/SideNav/UserProfileSideNavEntry.vue"
-
-
-class About(KolibriPluginBase):
-    translated_view_urls = "about_urls"
+    bundle_id="instant_schools_profile_nav_action"
 
 
 class AboutAsset(webpack_hooks.WebpackBundleHook):
-    unique_slug = "about_module"
-    src_file = "assets/src/AboutApp.js"
+    bundle_id = "instant_schools_about"
 
+#class About(KolibriPluginBase):
+    #translated_view_urls = "about_urls"
 
-class AboutInclusionHook(hooks.AboutSyncHook):
-    bundle_class = AboutAsset
 
 
 class InstantSchoolsThemeHook(theme_hook.ThemeHook):

@@ -2,9 +2,6 @@
 from __future__ import unicode_literals
 from kolibri.deployment.default.settings.base import *
 
-if "kolibri_instant_schools_plugin" not in INSTALLED_APPS:
-    INSTALLED_APPS += ["kolibri_instant_schools_plugin"]
-
 OLD_DB_PATH = os.path.join(conf.KOLIBRI_HOME, 'db.sqlite3')
 OLD_HASH_DB_PATH = os.path.join(conf.KOLIBRI_HOME, 'phonehashreverselookup.db')
 

@@ -26,5 +26,8 @@
     "node": "10.x",
     "npm": ">= 3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "global": "^4.4.0",
+    "neovim": "^4.10.1"
+  }
 }

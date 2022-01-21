@@ -16,14 +16,10 @@
 
 <script>
 
-  import KButton from 'kolibri.coreVue.components.KButton';
   import { RequestTokenStates as STATES } from '../../../constants';
 
   export default {
     name: 'ResetPasswordModalStatus',
-    components: {
-      KButton,
-    },
     props: {
       status: {
         type: String,

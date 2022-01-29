@@ -2,6 +2,8 @@ import CatchErrors from 'kolibri.utils.CatchErrors';
 import { ERROR_CONSTANTS } from 'kolibri.coreVue.vuex.constants';
 import { PhoneNumberSignUpResource } from '../../apiResource';
 
+console.log(PhoneNumberSignUpResource);
+
 export function signUpNewUser(store, signUpCreds) {
   store.commit('RESET_STATE');
   store.dispatch('SET_SIGN_UP_BUSY', true);

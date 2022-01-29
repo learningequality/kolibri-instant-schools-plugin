@@ -18,10 +18,11 @@ APP_TITLE = getenv("INSTANT_SCHOOLS_APP_TITLE") or "Instant Schools"
 
 class User(KolibriPluginBase):
     translated_view_urls = "urls"
+    untranslated_view_urls = "untranslated_urls"
 
     @property
     def url_slug(self):
-        return "^auth/"
+        return r''
 
 
 
@@ -31,6 +32,10 @@ class UserAsset(webpack_hooks.WebpackBundleHook):
 
 
 @register_hook
+class AboutAsset(webpack_hooks.WebpackBundleHook):
+    bundle_id="instant_schools_about"
+
+@register_hook
 class LogInRedirect(RoleBasedRedirectHook):
     @property
     def roles(self):
@@ -38,31 +43,27 @@ class LogInRedirect(RoleBasedRedirectHook):
 
     @property
     def url(self):
-        return self.plugin_url(User, "user")
+        return self.plugin_url(User, "instant_schools_auth")
 
 
 #  Navigation hooks
+@register_hook
 class LogInNavAction(NavigationHook, webpack_hooks.WebpackBundleHook):
     bundle_id="instant_schools_login_nav_action"
 
 
+@register_hook
 class AboutNavAction(NavigationHook, webpack_hooks.WebpackBundleHook):
     bundle_id="instant_schools_about_nav_action"
 
 
+@register_hook
 class ProfileNavAction(NavigationHook, webpack_hooks.WebpackBundleHook):
     bundle_id="instant_schools_profile_nav_action"
 
 
-class AboutAsset(webpack_hooks.WebpackBundleHook):
-    bundle_id = "instant_schools_about"
-
-#class About(KolibriPluginBase):
-    #translated_view_urls = "about_urls"
-
-
-
-class InstantSchoolsThemeHook(theme_hook.ThemeHook):
+@register_hook
+class DefaultThemeHook(theme_hook.ThemeHook):
     @property
     def theme(self):
 

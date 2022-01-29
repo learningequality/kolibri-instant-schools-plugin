@@ -4,7 +4,7 @@ import routes from './routes';
 import pluginModule from './modules/pluginModule';
 import KolibriApp from 'kolibri_app';
 
-class UserModule extends KolibriApp {
+class InstantSchoolsAuthModule extends KolibriApp {
   get stateSetters() {
     return [() => this.store.dispatch('setFacilitiesAndConfig')];
   }
@@ -26,4 +26,4 @@ class UserModule extends KolibriApp {
   }
 }
 
-export default new UserModule();
+export default new InstantSchoolsAuthModule();

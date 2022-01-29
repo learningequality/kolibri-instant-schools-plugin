@@ -89,7 +89,7 @@
               </transition>
               <transition name="textbox">
                 <KTextbox
-                  v-if="(!simpleSignIn || (simpleSignIn && (passwordMissing || invalidCredentials)))"
+                  v-if="(!simpleSignIn || (simpleSignIn && invalidCredentials))"
                   id="password"
                   ref="password"
                   v-model="password"
@@ -135,6 +135,7 @@
                 :text="$tr('createAccount')"
                 :to="signUpPage"
                 :primary="true"
+                style="margin: 8px 0;"
                 appearance="raised-button"
               />
             </p>
@@ -225,9 +226,9 @@
   import responsiveWindowMixin from 'kolibri.coreVue.mixins.responsiveWindowMixin';
   import themeConfig from 'kolibri.themeConfig';
 
-console.log(urls);
-
   const closeString = crossComponentTranslator(FacilityModal).$tr('close');
+
+console.log(urls);
 
   export default {
     name: 'SignInPage',
@@ -263,7 +264,8 @@ console.log(urls);
         whatsThisModalVisible: false,
         showPwResetModal: false,
         theme: themeConfig,
-        guestUrl: urls['kolibri:kolibriInstantSchoolsPlugin:about'](),
+        invalidCredentials: null,
+        guestUrl: urls['kolibri:kolibri_instant_schools_plugin:instant_schools_about'](),
       };
     },
     computed: {
@@ -272,8 +274,6 @@ console.log(urls);
       ...mapState(['facilityId']),
       ...mapState('signIn', ['hasMultipleFacilities']),
       ...mapState({
-        passwordMissing: state => state.core.loginError === LoginErrors.PASSWORD_MISSING,
-        invalidCredentials: state => state.core.loginError === LoginErrors.INVALID_CREDENTIALS,
         busy: state => state.core.signInBusy,
       }),
       simpleSignIn() {
@@ -334,7 +334,7 @@ console.log(urls);
         return this.$tr('poweredBy', { version: __version });
       },
       hasServerError() {
-        return Boolean(this.passwordMissing || this.invalidCredentials);
+        return Boolean(this.invalidCredentials);
       },
       needPasswordField() {
         return !this.simpleSignIn || this.hasServerError;
@@ -346,7 +346,7 @@ console.log(urls);
         return this.theme.signIn.title ? this.theme.signIn.title : this.$tr('kolibri');
       },
       aboutUrl() {
-        return urls['kolibri:kolibriInstantSchoolsPlugin:about']();
+        return urls['kolibri:kolibri_instant_schools_plugin:instant_schools_about']();
       },
       backgroundImageStyle() {
         if (this.theme.signIn.background) {
@@ -506,7 +506,7 @@ console.log(urls);
             facility: this.facility,
           }).catch(err => {
             // Handles 404 (no profiles) and 401 (bad credentials) the same way
-            this.$store.commit('CORE_SET_LOGIN_ERROR', LoginErrors.INVALID_CREDENTIALS);
+            this.invalidCredentials = true;
           });
         }
         return this.focusOnInvalidField();
@@ -611,7 +611,7 @@ console.log(urls);
   }
 
   .create {
-    margin-top: 32px;
+    margin-top: 8px;
     margin-bottom: 8px;
   }
 
@@ -680,7 +680,7 @@ console.log(urls);
 
   .kolibri-title {
     margin-top: 0;
-    margin-bottom: 8px;
+    margin-bottom: 24px;
     font-size: 24px;
     font-weight: 100;
   }
@@ -699,9 +699,7 @@ console.log(urls);
     width: 100%;
     max-width: 412px;
     height: 1px;
-    margin: auto;
-    margin-top: 32px;
-    margin-bottom: 36px;
+    margin: 16px auto;
     // background-color: $core-text-annotation;
   }
 

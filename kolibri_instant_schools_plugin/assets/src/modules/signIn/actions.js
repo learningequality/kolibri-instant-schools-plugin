@@ -13,7 +13,7 @@ export function showSelectProfilePage(store, params) {
       },
     })
     .then(response => {
-      if (response.status.code !== 200) {
+      if (response.status !== 200) {
         // Handle error on login page
         return Promise.reject(response);
       }
@@ -45,7 +45,7 @@ export function createProfile(store, profileName) {
       phone,
     },
   }).then(response => {
-    if (response.status.code !== 201) {
+    if (response.status !== 201) {
       return Promise.reject(response);
     }
     return store.commit('ADD_PROFILE', {

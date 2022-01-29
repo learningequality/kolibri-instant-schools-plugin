@@ -154,7 +154,7 @@
       ...mapGetters(['facilities']),
       ...mapState('signUp', ['errors', 'busy']),
       currentFacility() {
-        return this.facilities.find(facility => facility.id === this.$store.state.facilityId);
+        return this.$store.getters.currentFacilityId;
       },
       nameIsInvalidText() {
         if (this.nameBlurred || this.formSubmitted) {

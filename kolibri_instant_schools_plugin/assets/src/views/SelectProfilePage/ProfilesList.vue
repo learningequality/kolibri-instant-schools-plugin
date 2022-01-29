@@ -61,6 +61,7 @@
     width: 100%;
     white-space: nowrap;
     vertical-align: middle;
+    padding-bottom: 16px;
   }
   .profile-icon {
     display: inline-block;

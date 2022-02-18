@@ -30,7 +30,7 @@
     },
     computed: {
       url() {
-        return urls['kolibri:about:about']();
+        return urls['kolibri:kolibri_instant_schools_plugin:instant_schools_about']();
       },
     },
     priority: 10,

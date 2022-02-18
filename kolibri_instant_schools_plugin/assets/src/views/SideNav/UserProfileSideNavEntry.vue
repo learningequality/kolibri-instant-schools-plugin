@@ -29,7 +29,7 @@
     },
     computed: {
       url() {
-        return urls['kolibri:user:user']();
+        return urls['kolibri:kolibri_instant_schools_plugin:instant_schools_auth']();
       },
     },
     role: UserKinds.LEARNER,

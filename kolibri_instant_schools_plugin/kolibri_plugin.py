@@ -22,7 +22,7 @@ class User(KolibriPluginBase):
 
     @property
     def url_slug(self):
-        return r''
+        return 'user'
 
 
 

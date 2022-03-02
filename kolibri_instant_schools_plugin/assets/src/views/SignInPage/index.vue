@@ -104,7 +104,7 @@
                   @input="handlePasswordChanged"
                 />
               </transition>
-              <div>
+              <div style="display: inline-block; text-align: center; width: 100%;">
                 <KButton
                   class="login-btn"
                   type="submit"
@@ -596,7 +596,7 @@ console.log(urls);
   .box {
     @extend %dropshadow-16dp;
 
-    width: 300px;
+    width: 350px;
     padding: 16px 32px;
     margin: 16px auto;
     border-radius: $radius;
@@ -611,6 +611,9 @@ console.log(urls);
   }
 
   .create {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
     margin-top: 8px;
     margin-bottom: 8px;
   }

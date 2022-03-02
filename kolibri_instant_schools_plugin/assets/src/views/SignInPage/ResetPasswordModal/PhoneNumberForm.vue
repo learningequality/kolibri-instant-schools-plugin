@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <div class="instructions">
       {{ $tr('instructionsWillBeSent') }}
@@ -39,6 +40,7 @@
       </div>
     </form>
   </div>
+
 </template>
 
 

@@ -1,4 +1,5 @@
 <template>
+
   <KPageContainer class="content">
     <section>
       <h2>{{ $tr('points') }}</h2>
@@ -85,6 +86,7 @@
       @cancel="setPasswordModalVisible(false)"
     />
   </KPageContainer>
+
 </template>
 
 

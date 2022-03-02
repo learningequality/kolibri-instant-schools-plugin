@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <h1>{{ $tr('resetPasswordHeader') }}</h1>
 
@@ -35,6 +36,7 @@
       />
     </form>
   </div>
+
 </template>
 
 

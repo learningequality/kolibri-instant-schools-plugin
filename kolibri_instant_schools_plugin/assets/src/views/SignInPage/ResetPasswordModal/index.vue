@@ -1,4 +1,5 @@
 <template>
+
   <KModal
     :title="currentTitle"
     @cancel="closeModal"
@@ -18,6 +19,7 @@
       />
     </div>
   </KModal>
+
 </template>
 
 

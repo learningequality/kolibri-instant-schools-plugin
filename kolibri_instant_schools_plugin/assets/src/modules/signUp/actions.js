@@ -3,16 +3,13 @@ import { ERROR_CONSTANTS } from 'kolibri.coreVue.vuex.constants';
 import { PhoneNumberSignUpResource } from '../../apiResource';
 import urls from 'kolibri.urls';
 
-console.log(PhoneNumberSignUpResource);
-
 export function signUpNewUser(store, signUpCreds) {
   store.commit('RESET_STATE');
   store.dispatch('SET_SIGN_UP_BUSY', true);
   PhoneNumberSignUpResource.saveModel({ data: signUpCreds })
     .then(() => {
       // TODO: Better solution?
-      
-      console.log(urls['kolibri:kolibri_instant_schools_plugin:instant_schools_about']());
+
       window.location = urls['kolibri:kolibri_instant_schools_plugin:instant_schools_about']();
     })
     .catch(error => {

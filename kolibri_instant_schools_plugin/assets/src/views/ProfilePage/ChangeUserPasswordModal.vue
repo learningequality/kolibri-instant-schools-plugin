@@ -1,4 +1,5 @@
 <template>
+
   <KModal
     :title="$tr('passwordChangeFormHeader')"
     size="medium"
@@ -29,6 +30,7 @@
       @blur="confirmedNewPasswordBlurred = true"
     />
   </KModal>
+
 </template>
 
 

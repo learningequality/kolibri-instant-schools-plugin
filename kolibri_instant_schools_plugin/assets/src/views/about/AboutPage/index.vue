@@ -1,4 +1,5 @@
 <template>
+
   <KPageContainer>
     <iframe
       ref="iframe"
@@ -26,6 +27,7 @@
       />
     </KButtonGroup>
   </KPageContainer>
+
 </template>
 
 
@@ -51,7 +53,7 @@
         return { name: PageNames.FAQ };
       },
       learnRoute() {
-        return urls["kolibri:kolibri.plugins.learn:learn"]();
+        return urls['kolibri:kolibri.plugins.learn:learn']();
       },
       aboutSrc() {
         return '/content/databases/about/about.html';

@@ -1,4 +1,5 @@
 <template>
+
   <CoreMenuOption
     :label="$tr('about')"
     :link="url"
@@ -10,6 +11,7 @@
       :class="{ 'rtl-icon': isRtl }"
     />
   </CoreMenuOption>
+
 </template>
 
 

@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <div class="message">
       {{ message }}
@@ -11,6 +12,7 @@
       />
     </div>
   </div>
+
 </template>
 
 

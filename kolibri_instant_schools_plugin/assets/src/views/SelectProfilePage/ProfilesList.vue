@@ -1,4 +1,5 @@
 <template>
+
   <table class="table">
     <tr v-for="profile in profiles" :key="profile.username">
       <td class="name-wrapper">
@@ -23,6 +24,7 @@
       </td>
     </tr>
   </table>
+
 </template>
 
 

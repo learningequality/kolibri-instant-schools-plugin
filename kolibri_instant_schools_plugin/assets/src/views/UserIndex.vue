@@ -1,4 +1,5 @@
 <template>
+
   <CoreBase
     :immersivePage="pageName === PageNames.SIGN_UP"
     immersivePagePrimary
@@ -8,6 +9,7 @@
   >
     <component :is="currentPage" />
   </CoreBase>
+
 </template>
 
 

@@ -1,4 +1,5 @@
 <template>
+
   <div class="signup-page">
     <form
       ref="form"
@@ -114,6 +115,7 @@
       />
     </KModal>
   </div>
+
 </template>
 
 

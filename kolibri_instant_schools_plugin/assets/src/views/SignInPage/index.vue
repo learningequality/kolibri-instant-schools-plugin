@@ -1,4 +1,5 @@
 <template>
+
   <div class="fh">
     <FacilityModal
       v-if="facilityModalVisible"
@@ -203,6 +204,7 @@
       </p>
     </KModal>
   </div>
+
 </template>
 
 
@@ -227,8 +229,6 @@
   import themeConfig from 'kolibri.themeConfig';
 
   const closeString = crossComponentTranslator(FacilityModal).$tr('close');
-
-console.log(urls);
 
   export default {
     name: 'SignInPage',
@@ -402,13 +402,13 @@ console.log(urls);
     methods: {
       ...mapActions('signIn', ['showSelectProfilePage']),
       checkGuestUrl() {
-        if(document.cookie.includes('accessed_as_guest')) {
+        if (document.cookie.includes('accessed_as_guest')) {
           this.guestUrl = urls['kolibri:learn:learn']();
         } else {
           var date = new Date();
-          date.setTime(date.getTime() + (365*24*60*60*1000));
-          var expires = "; expires=" + date.toUTCString();
-          document.cookie = "accessed_as_guest=true; path=/" + expires;
+          date.setTime(date.getTime() + 365 * 24 * 60 * 60 * 1000);
+          var expires = '; expires=' + date.toUTCString();
+          document.cookie = 'accessed_as_guest=true; path=/' + expires;
         }
       },
       closeFacilityModal() {

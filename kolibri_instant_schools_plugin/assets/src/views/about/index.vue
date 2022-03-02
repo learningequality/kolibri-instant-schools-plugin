@@ -1,4 +1,5 @@
 <template>
+
   <CoreBase
     :navBarNeeded="true"
     :appBarTitle="appBarTitle"
@@ -7,6 +8,7 @@
       :is="currentPage"
     />
   </CoreBase>
+
 </template>
 
 

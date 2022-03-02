@@ -1,4 +1,5 @@
 <template>
+
   <KModal
     :title="$tr('newProfileModalTitle')"
     @cancel="closeModal"
@@ -41,7 +42,9 @@
       </form>
     </div>
   </KModal>
+
 </template>
+
 
 <script>
 

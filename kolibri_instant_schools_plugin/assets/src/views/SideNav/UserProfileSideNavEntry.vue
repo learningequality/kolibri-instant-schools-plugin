@@ -1,4 +1,5 @@
 <template>
+
   <CoreMenuOption
     :label="$tr('account')"
     :link="url"
@@ -9,6 +10,7 @@
       category="action"
     />
   </CoreMenuOption>
+
 </template>
 
 

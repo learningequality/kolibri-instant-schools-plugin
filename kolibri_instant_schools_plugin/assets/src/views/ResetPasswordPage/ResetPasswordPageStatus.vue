@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <h1>{{ header }}</h1>
     <p class="explanation">
@@ -12,6 +13,7 @@
       />
     </div>
   </div>
+
 </template>
 
 

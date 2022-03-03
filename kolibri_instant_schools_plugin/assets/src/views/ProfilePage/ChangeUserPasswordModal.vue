@@ -1,4 +1,5 @@
 <template>
+
   <KModal
     :title="$tr('passwordChangeFormHeader')"
     size="medium"
@@ -29,21 +30,16 @@
       @blur="confirmedNewPasswordBlurred = true"
     />
   </KModal>
+
 </template>
 
 
 <script>
 
   import { mapState, mapActions } from 'vuex';
-  import KTextbox from 'kolibri.coreVue.components.KTextbox';
-  import KModal from 'kolibri.coreVue.components.KModal';
 
   export default {
     name: 'ChangeUserPasswordModal',
-    components: {
-      KModal,
-      KTextbox,
-    },
     data() {
       return {
         newPassword: '',

@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <div class="container">
       <h1>{{ $tr('selectProfilePageHeader') }}</h1>
@@ -29,13 +30,13 @@
       />
     </div>
   </div>
+
 </template>
 
 
 <script>
 
   import urls from 'kolibri.urls';
-  import KButton from 'kolibri.coreVue.components.KButton';
   import { mapActions, mapState } from 'vuex';
   import NewProfileModal from './NewProfileModal';
   import ProfilesList from './ProfilesList';
@@ -43,7 +44,6 @@
   export default {
     name: 'SelectProfilePage',
     components: {
-      KButton,
       NewProfileModal,
       ProfilesList,
     },

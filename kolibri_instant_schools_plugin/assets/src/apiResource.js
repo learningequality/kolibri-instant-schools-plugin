@@ -6,10 +6,10 @@ export const SignUpResource = new Resource({
 
 export const PhoneNumberSignUpResource = new Resource({
   name: 'phonesignup',
-  namespace: 'user',
+  namespace: 'kolibri_instant_schools_plugin',
 });
 
 export const FacilityUserProfileResource = new Resource({
   name: 'facilityuserprofile',
-  namespace: 'user',
+  namespace: 'kolibri_instant_schools_plugin',
 });

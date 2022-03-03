@@ -1,4 +1,5 @@
 <template>
+
   <KPageContainer>
     <iframe
       ref="iframe"
@@ -10,43 +11,37 @@
     >
     </iframe>
 
-    <div class="center">
+    <KButtonGroup class="center">
       <KRouterLink
         appearance="raised-button"
         :text="$tr('viewFaq')"
         :to="faqRoute"
       />
 
-      <a :href="learnRoute">
-        <KButton
-          :text="$tr('startLearning')"
-          :primary="true"
-          :raised="true"
-        />
-      </a>
-    </div>
+      <KExternalLink
+        appearance="raised-button"
+        :href="learnRoute"
+        :text="$tr('startLearning')"
+        :primary="true"
+        :raised="true"
+      />
+    </KButtonGroup>
   </KPageContainer>
+
 </template>
 
 
 <script>
 
-  import KPageContainer from 'kolibri.coreVue.components.KPageContainer';
-  import KButton from 'kolibri.coreVue.components.KButton';
   import throttle from 'lodash/throttle';
-  import KRouterLink from 'kolibri.coreVue.components.KRouterLink';
   import { PageNames } from '../../../constants';
+  import urls from 'kolibri.urls';
 
   export default {
     name: 'AboutPage',
     $trs: {
       viewFaq: 'More information',
       startLearning: 'Start learning',
-    },
-    components: {
-      KButton,
-      KRouterLink,
-      KPageContainer,
     },
     data() {
       return {
@@ -58,7 +53,7 @@
         return { name: PageNames.FAQ };
       },
       learnRoute() {
-        return '/learn';
+        return urls['kolibri:kolibri.plugins.learn:learn']();
       },
       aboutSrc() {
         return '/content/databases/about/about.html';
@@ -88,9 +83,11 @@
 
 <style lang="scss" scoped>
 
-  @import '~kolibri.styles.definitions';
+  @import '~kolibri-design-system/lib/styles/definitions';
 
   .center {
+    // Makes children elements which are inline-block centered
+    display: block;
     text-align: center;
   }
 

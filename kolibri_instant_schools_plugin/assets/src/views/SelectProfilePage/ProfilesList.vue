@@ -1,4 +1,5 @@
 <template>
+
   <table class="table">
     <tr v-for="profile in profiles" :key="profile.username">
       <td class="name-wrapper">
@@ -23,18 +24,14 @@
       </td>
     </tr>
   </table>
+
 </template>
 
 
 <script>
 
-  import KButton from 'kolibri.coreVue.components.KButton';
-
   export default {
     name: 'ProfilesList',
-    components: {
-      KButton,
-    },
     props: {
       profiles: {
         type: Array,
@@ -66,6 +63,7 @@
     width: 100%;
     white-space: nowrap;
     vertical-align: middle;
+    padding-bottom: 16px;
   }
   .profile-icon {
     display: inline-block;

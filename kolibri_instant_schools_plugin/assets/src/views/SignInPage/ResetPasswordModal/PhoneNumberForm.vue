@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <div class="instructions">
       {{ $tr('instructionsWillBeSent') }}
@@ -39,20 +40,17 @@
       </div>
     </form>
   </div>
+
 </template>
 
 
 <script>
 
-  import KTextbox from 'kolibri.coreVue.components.KTextbox';
-  import KButton from 'kolibri.coreVue.components.KButton';
   import UiAlert from 'keen-ui/src/UiAlert';
 
   export default {
     name: 'PhoneNumberForm',
     components: {
-      KButton,
-      KTextbox,
       UiAlert,
     },
     props: {

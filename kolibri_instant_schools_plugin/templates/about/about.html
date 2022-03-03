@@ -1,5 +1,5 @@
 {% extends "kolibri/base.html" %}
-{% load user_tags %}
+{% load webpack_tags static %}
 {% block content %}
-  {% about_assets %}
+  {% webpack_asset 'kolibri_instant_schools_plugin.instant_schools_about' %}
 {% endblock %}

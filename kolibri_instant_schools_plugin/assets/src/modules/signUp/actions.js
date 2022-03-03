@@ -1,6 +1,7 @@
 import CatchErrors from 'kolibri.utils.CatchErrors';
 import { ERROR_CONSTANTS } from 'kolibri.coreVue.vuex.constants';
 import { PhoneNumberSignUpResource } from '../../apiResource';
+import urls from 'kolibri.urls';
 
 export function signUpNewUser(store, signUpCreds) {
   store.commit('RESET_STATE');
@@ -8,7 +9,8 @@ export function signUpNewUser(store, signUpCreds) {
   PhoneNumberSignUpResource.saveModel({ data: signUpCreds })
     .then(() => {
       // TODO: Better solution?
-      window.location = '/about';
+
+      window.location = urls['kolibri:kolibri_instant_schools_plugin:instant_schools_about']();
     })
     .catch(error => {
       const errors = CatchErrors(error, [

@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <h1>{{ $tr('resetPasswordHeader') }}</h1>
 
@@ -35,20 +36,14 @@
       />
     </form>
   </div>
+
 </template>
 
 
 <script>
 
-  import KTextbox from 'kolibri.coreVue.components.KTextbox';
-  import KButton from 'kolibri.coreVue.components.KButton';
-
   export default {
     name: 'NewPasswordForm',
-    components: {
-      KButton,
-      KTextbox,
-    },
     props: {
       disable: {
         type: Boolean,

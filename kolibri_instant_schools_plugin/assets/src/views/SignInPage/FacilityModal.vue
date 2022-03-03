@@ -22,15 +22,9 @@
 <script>
 
   import { mapGetters, mapActions, mapMutations } from 'vuex';
-  import KModal from 'kolibri.coreVue.components.KModal';
-  import KRadioButton from 'kolibri.coreVue.components.KRadioButton';
 
   export default {
     name: 'FacilityModal',
-    components: {
-      KModal,
-      KRadioButton,
-    },
     data() {
       const facilityId = this.$store.state.facilityId || this.$store.getters.facilities[0].id;
       return {

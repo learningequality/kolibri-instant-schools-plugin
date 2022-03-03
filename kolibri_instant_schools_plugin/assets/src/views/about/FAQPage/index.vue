@@ -1,4 +1,5 @@
 <template>
+
   <KPageContainer>
     <KRouterLink
       ref="backButton"
@@ -26,14 +27,12 @@
       @click="goToTop"
     />
   </KPageContainer>
+
 </template>
 
 
 <script>
 
-  import KPageContainer from 'kolibri.coreVue.components.KPageContainer';
-  import KButton from 'kolibri.coreVue.components.KButton';
-  import KRouterLink from 'kolibri.coreVue.components.KRouterLink';
   import throttle from 'lodash/throttle';
   import { PageNames } from '../../../constants';
 
@@ -42,11 +41,6 @@
     $trs: {
       back: 'Back to about',
       toTop: 'Back to top',
-    },
-    components: {
-      KButton,
-      KPageContainer,
-      KRouterLink,
     },
     data() {
       return {
@@ -101,7 +95,7 @@
 
 <style lang="scss" scoped>
 
-  @import '~kolibri.styles.definitions';
+  @import '~kolibri-design-system/lib/styles/definitions';
 
   .faq-page {
     padding-bottom: 32px;

@@ -1,4 +1,5 @@
 <template>
+
   <div class="signup-page">
     <form
       ref="form"
@@ -114,16 +115,13 @@
       />
     </KModal>
   </div>
+
 </template>
 
 
 <script>
 
   import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
-  import KButton from 'kolibri.coreVue.components.KButton';
-  import KTextbox from 'kolibri.coreVue.components.KTextbox';
-  import KCheckbox from 'kolibri.coreVue.components.KCheckbox';
-  import KModal from 'kolibri.coreVue.components.KModal';
   import { ERROR_CONSTANTS } from 'kolibri.coreVue.vuex.constants';
   import getUrlParameter from './getUrlParameter';
   import LanguageSwitcherFooter from './LanguageSwitcherFooter';
@@ -136,10 +134,6 @@
       };
     },
     components: {
-      KButton,
-      KTextbox,
-      KCheckbox,
-      KModal,
       LanguageSwitcherFooter,
     },
     data: () => ({
@@ -162,7 +156,7 @@
       ...mapGetters(['facilities']),
       ...mapState('signUp', ['errors', 'busy']),
       currentFacility() {
-        return this.facilities.find(facility => facility.id === this.$store.state.facilityId);
+        return this.$store.getters.currentFacilityId;
       },
       nameIsInvalidText() {
         if (this.nameBlurred || this.formSubmitted) {

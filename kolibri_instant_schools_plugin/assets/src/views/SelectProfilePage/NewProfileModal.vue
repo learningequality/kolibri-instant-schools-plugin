@@ -1,4 +1,5 @@
 <template>
+
   <KModal
     :title="$tr('newProfileModalTitle')"
     @cancel="closeModal"
@@ -41,22 +42,18 @@
       </form>
     </div>
   </KModal>
+
 </template>
+
 
 <script>
 
   import { mapState } from 'vuex';
-  import KModal from 'kolibri.coreVue.components.KModal';
-  import KTextbox from 'kolibri.coreVue.components.KTextbox';
-  import KButton from 'kolibri.coreVue.components.KButton';
   import UiAlert from 'keen-ui/src/UiAlert';
 
   export default {
     name: 'NewProfileModal',
     components: {
-      KModal,
-      KButton,
-      KTextbox,
       UiAlert,
     },
     props: {

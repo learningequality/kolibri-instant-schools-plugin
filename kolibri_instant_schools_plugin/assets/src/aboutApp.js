@@ -5,7 +5,7 @@ import pluginModule from './modules/pluginModule';
 import { PageNames } from './constants';
 import KolibriApp from 'kolibri_app';
 
-class AboutModule extends KolibriApp {
+class InstantSchoolsAboutModule extends KolibriApp {
   get routes() {
     const routes = [
       {
@@ -44,4 +44,4 @@ class AboutModule extends KolibriApp {
   }
 }
 
-export default new AboutModule();
+export default new InstantSchoolsAboutModule();

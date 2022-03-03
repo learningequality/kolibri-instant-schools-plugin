@@ -1,4 +1,5 @@
 <template>
+
   <div class="fh">
     <FacilityModal
       v-if="facilityModalVisible"
@@ -9,25 +10,25 @@
     <div class="wrapper-table">
       <div class="table-row main-row" :style="backgroundImageStyle">
         <div class="table-cell main-cell">
-          <div class="box" :style="{ backgroundColor: $themeColors.palette.grey.v_100 }">
+          <div class="box" :style="{ backgroundColor: $themePalette.grey.v_100 }">
             <CoreLogo
-              v-if="$theme.signIn.topLogo"
+              v-if="theme.signIn.topLogo"
               class="logo"
-              :src="$theme.signIn.topLogo.src"
-              :alt="$theme.signIn.topLogo.alt"
-              :style="$theme.signIn.topLogo.style"
+              :src="theme.signIn.topLogo.src"
+              :alt="theme.signIn.topLogo.alt"
+              :style="theme.signIn.topLogo.style"
             />
             <h1
-              v-if="$theme.signIn.showTitle"
+              v-if="theme.signIn.showTitle"
               class="kolibri-title"
               :class="$computedClass({color: $themeTokens.logoText})"
-              :style="$theme.signIn.titleStyle"
+              :style="theme.signIn.titleStyle"
             >
               {{ logoText }}
             </h1>
             <p
-              v-if="$theme.signIn.showPoweredBy"
-              :style="$theme.signIn.poweredByStyle"
+              v-if="theme.signIn.showPoweredBy"
+              :style="theme.signIn.poweredByStyle"
               class="small-text"
             >
               <KButton
@@ -89,7 +90,7 @@
               </transition>
               <transition name="textbox">
                 <KTextbox
-                  v-if="(!simpleSignIn || (simpleSignIn && (passwordMissing || invalidCredentials)))"
+                  v-if="(!simpleSignIn || (simpleSignIn && invalidCredentials))"
                   id="password"
                   ref="password"
                   v-model="password"
@@ -104,7 +105,7 @@
                   @input="handlePasswordChanged"
                 />
               </transition>
-              <div>
+              <div style="display: inline-block; text-align: center; width: 100%;">
                 <KButton
                   class="login-btn"
                   type="submit"
@@ -135,6 +136,7 @@
                 :text="$tr('createAccount')"
                 :to="signUpPage"
                 :primary="true"
+                style="margin: 8px 0;"
                 appearance="raised-button"
               />
             </p>
@@ -160,7 +162,7 @@
             <span class="version-string">
               {{ versionMsg }}
             </span>
-            <CoreLogo v-if="this.$theme.signIn.showKolibriFooterLogo" class="footer-logo" />
+            <CoreLogo v-if="this.theme.signIn.showKolibriFooterLogo" class="footer-logo" />
             <span v-else> • </span>
             <KButton
               :text="$tr('privacyLink')"
@@ -202,6 +204,7 @@
       </p>
     </KModal>
   </div>
+
 </template>
 
 
@@ -209,19 +212,12 @@
 
   import { mapState, mapGetters, mapActions } from 'vuex';
   import { FacilityUsernameResource } from 'kolibri.resources';
-  import themeMixin from 'kolibri.coreVue.mixins.themeMixin';
   import { LoginErrors } from 'kolibri.coreVue.vuex.constants';
-  import KButton from 'kolibri.coreVue.components.KButton';
-  import KRouterLink from 'kolibri.coreVue.components.KRouterLink';
-  import KExternalLink from 'kolibri.coreVue.components.KExternalLink';
-  import KTextbox from 'kolibri.coreVue.components.KTextbox';
-  import KModal from 'kolibri.coreVue.components.KModal';
   import CoreLogo from 'kolibri.coreVue.components.CoreLogo';
   import { validateUsername } from 'kolibri.utils.validators';
   // import UiAutocompleteSuggestion from 'keen-ui/src/UiAutocompleteSuggestion';
   import PrivacyInfoModal from 'kolibri.coreVue.components.PrivacyInfoModal';
   import UiAlert from 'keen-ui/src/UiAlert';
-  import responsiveWindow from 'kolibri.coreVue.mixins.responsiveWindow';
   import urls from 'kolibri.urls';
   import { crossComponentTranslator } from 'kolibri.utils.i18n';
   import { PageNames } from '../../constants';
@@ -229,6 +225,8 @@
   import getUrlParameter from '../getUrlParameter';
   import FacilityModal from './FacilityModal';
   import ResetPasswordModal from './ResetPasswordModal';
+  import responsiveWindowMixin from 'kolibri.coreVue.mixins.responsiveWindowMixin';
+  import themeConfig from 'kolibri.themeConfig';
 
   const closeString = crossComponentTranslator(FacilityModal).$tr('close');
 
@@ -240,11 +238,6 @@
       };
     },
     components: {
-      KButton,
-      KRouterLink,
-      KExternalLink,
-      KTextbox,
-      KModal,
       FacilityModal,
       CoreLogo,
       // UiAutocompleteSuggestion,
@@ -253,7 +246,7 @@
       PrivacyInfoModal,
       ResetPasswordModal,
     },
-    mixins: [responsiveWindow, themeMixin],
+    mixins: [responsiveWindowMixin],
     data() {
       return {
         username: '',
@@ -270,7 +263,9 @@
         privacyModalVisible: false,
         whatsThisModalVisible: false,
         showPwResetModal: false,
-        guestUrl: urls['kolibri:about:about'](),
+        theme: themeConfig,
+        invalidCredentials: null,
+        guestUrl: urls['kolibri:kolibri_instant_schools_plugin:instant_schools_about'](),
       };
     },
     computed: {
@@ -279,8 +274,6 @@
       ...mapState(['facilityId']),
       ...mapState('signIn', ['hasMultipleFacilities']),
       ...mapState({
-        passwordMissing: state => state.core.loginError === LoginErrors.PASSWORD_MISSING,
-        invalidCredentials: state => state.core.loginError === LoginErrors.INVALID_CREDENTIALS,
         busy: state => state.core.signInBusy,
       }),
       simpleSignIn() {
@@ -341,7 +334,7 @@
         return this.$tr('poweredBy', { version: __version });
       },
       hasServerError() {
-        return Boolean(this.passwordMissing || this.invalidCredentials);
+        return Boolean(this.invalidCredentials);
       },
       needPasswordField() {
         return !this.simpleSignIn || this.hasServerError;
@@ -350,21 +343,21 @@
         return this.facilityConfig.allow_guest_access && !this.oidcProviderFlow;
       },
       logoText() {
-        return this.$theme.signIn.title ? this.$theme.signIn.title : this.$tr('kolibri');
+        return this.theme.signIn.title ? this.theme.signIn.title : this.$tr('kolibri');
       },
       aboutUrl() {
-        return urls['kolibri:about:about']();
+        return urls['kolibri:kolibri_instant_schools_plugin:instant_schools_about']();
       },
       backgroundImageStyle() {
-        if (this.$theme.signIn.background) {
+        if (this.theme.signIn.background) {
           const scrimOpacity =
-            this.$theme.signIn.scrimOpacity !== undefined ? this.$theme.signIn.scrimOpacity : 0.7;
+            this.theme.signIn.scrimOpacity !== undefined ? this.theme.signIn.scrimOpacity : 0.7;
           return {
             backgroundColor: this.$themeTokens.primary,
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, ${scrimOpacity}), rgba(0, 0, 0, ${scrimOpacity})), url(${this.$theme.signIn.background})`,
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, ${scrimOpacity}), rgba(0, 0, 0, ${scrimOpacity})), url(${this.theme.signIn.background})`,
           };
         }
-        return { backgroundColor: this.$themeColors.brand.primary.v_900 };
+        return { backgroundColor: this.$themePalette.brand.primary.v_900 };
       },
       oidcProviderFlow() {
         return global.oidcProviderEnabled && this.nextParam;
@@ -409,13 +402,13 @@
     methods: {
       ...mapActions('signIn', ['showSelectProfilePage']),
       checkGuestUrl() {
-        if(document.cookie.includes('accessed_as_guest')) {
+        if (document.cookie.includes('accessed_as_guest')) {
           this.guestUrl = urls['kolibri:learn:learn']();
         } else {
           var date = new Date();
-          date.setTime(date.getTime() + (365*24*60*60*1000));
-          var expires = "; expires=" + date.toUTCString();
-          document.cookie = "accessed_as_guest=true; path=/" + expires;
+          date.setTime(date.getTime() + 365 * 24 * 60 * 60 * 1000);
+          var expires = '; expires=' + date.toUTCString();
+          document.cookie = 'accessed_as_guest=true; path=/' + expires;
         }
       },
       closeFacilityModal() {
@@ -513,7 +506,7 @@
             facility: this.facility,
           }).catch(err => {
             // Handles 404 (no profiles) and 401 (bad credentials) the same way
-            this.$store.commit('CORE_SET_LOGIN_ERROR', LoginErrors.INVALID_CREDENTIALS);
+            this.invalidCredentials = true;
           });
         }
         return this.focusOnInvalidField();
@@ -530,7 +523,7 @@
       },
       suggestionStyle(i) {
         return {
-          backgroundColor: this.highlightedIndex === i ? this.$themeColors.palette.grey.v_200 : '',
+          backgroundColor: this.highlightedIndex === i ? this.$themePalette.palette.grey.v_200 : '',
         };
       },
     },
@@ -567,7 +560,7 @@
 
 <style lang="scss" scoped>
 
-  @import '~kolibri.styles.definitions';
+  @import '~kolibri-design-system/lib/styles/definitions';
 
   .fh {
     height: 100%;
@@ -603,7 +596,7 @@
   .box {
     @extend %dropshadow-16dp;
 
-    width: 300px;
+    width: 350px;
     padding: 16px 32px;
     margin: 16px auto;
     border-radius: $radius;
@@ -618,7 +611,10 @@
   }
 
   .create {
-    margin-top: 32px;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    margin-top: 8px;
     margin-bottom: 8px;
   }
 
@@ -687,7 +683,7 @@
 
   .kolibri-title {
     margin-top: 0;
-    margin-bottom: 8px;
+    margin-bottom: 24px;
     font-size: 24px;
     font-weight: 100;
   }
@@ -706,9 +702,7 @@
     width: 100%;
     max-width: 412px;
     height: 1px;
-    margin: auto;
-    margin-top: 32px;
-    margin-bottom: 36px;
+    margin: 16px auto;
     // background-color: $core-text-annotation;
   }
 

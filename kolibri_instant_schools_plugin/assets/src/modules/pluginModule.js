@@ -4,9 +4,11 @@ import signIn from './signIn';
 import signUp from './signUp';
 
 export default {
-  state: {
-    facilityId: '',
-    pageName: '',
+  state: () => {
+    return {
+      facilityId: '',
+      pageName: '',
+    };
   },
   actions: {
     resetAndSetPageName(store, { pageName }) {

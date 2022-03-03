@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <ResetPasswordPageStatus
       v-if="showStatus"
@@ -11,6 +12,7 @@
       @submit="submitNewPassword"
     />
   </div>
+
 </template>
 
 

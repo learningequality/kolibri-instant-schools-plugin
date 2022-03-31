@@ -3,9 +3,10 @@ import uuid
 
 from datetime import datetime
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
 
 from kolibri.core.auth.models import FacilityUser
-from ..models import PhoneToUsernameMapping
+from ..models import PhoneHashToUsernameMapping, SALT
 
 
 def normalize_phone_number(phone):
@@ -13,28 +14,23 @@ def normalize_phone_number(phone):
     return re.sub("[^\d\+]", "", str(phone))
 
 
-def get_usernames(phone):
-    """Look up the usernames associated with this phone number."""
-
-    # normalize the phone number to only digits
-    phone = normalize_phone_number(phone)
+def get_usernames(phone_hash):
+    """Look up the usernames associated with this phone hash."""
 
     # look up all of the associated usernames
-    return list(PhoneToUsernameMapping.objects.filter(phone=phone).values_list("username", flat=True))
+    return list(PhoneHashToUsernameMapping.objects.filter(hash=phone_hash).values_list("username", flat=True))
 
-
-def create_new_username(phone):
-    uuidval = uuid.uuid4().hex
-    old_usernames = get_usernames(phone)
+def create_new_username(phone_number):
+    hashed_phone = make_password(normalize_phone_number(phone_number), salt=SALT)
+    old_usernames = get_usernames(hashed_phone)
     if old_usernames:
         # keep the first 10 characters the same so we can see which users are from the same phone number
-        username = old_usernames[0][:10] + uuidval[:20]
+        username = old_usernames[0][:10] + uuid.uuid4().hex[:20]
     else:
         # no existing users, so just use a random id as username
-        username = uuidval[:30]
-    PhoneToUsernameMapping.objects.create(username=username, phone=phone)
+        username = uuid.uuid4().hex[:30]
+    PhoneHashToUsernameMapping.objects.create(username=username, hash=hashed_phone)
     return username
-
 
 def get_facility_users(phone):
 
@@ -43,10 +39,10 @@ def get_facility_users(phone):
 
     return FacilityUser.objects.filter(username__in=usernames)
 
-
-def get_phone_number(username):
-    """Look up the phone number for a specific username, from the reverse lookup database."""
+def get_hash(username):
+    """Look up the hash for a specific username, from the reverse lookup database."""
     try:
-        return PhoneToUsernameMapping.objects.get(username=username).phone
-    except PhoneToUsernameMapping.DoesNotExist:
+        return PhoneHashToUsernameMapping.objects.get(username=username).hash
+    except PhoneHashToUsernameMapping.DoesNotExist:
         return None
+

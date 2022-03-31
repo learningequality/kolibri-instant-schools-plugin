@@ -4,6 +4,7 @@
   "description": "Custom plugin for Vodafone.",
   "scripts": {
     "build": "kolibri-tools build prod --plugins kolibri_instant_schools_plugin",
+    "stats": "kolibri-tools bulid stats --plugins kolibri_instant_schools_plugin",
     "django-devserver": "DJANGO_SETTINGS_MODULE=kolibri_instant_schools_plugin.dev_settings kolibri --debug manage runserver \"0.0.0.0:8000\" ",
     "watch": "kolibri-tools build dev --plugins kolibri_instant_schools_plugin --port 4000",
     "watch-hot": "kolibri-tools build dev --plugins kolibri_instant_schools_plugin --port 4000 --hot",

@@ -105,17 +105,17 @@ class FacilityUserProfileViewset(FacilityUserViewSet):
         with transaction.atomic():
             if serializer.validated_data.get('password', ''):
                 # update the password for all accounts associated with this password
-                phone = PhoneHashToUsernameMapping.objects.get(username=instance.username).phone
-                set_password_for_phone(phone, serializer.validated_data['password'])
+                hashed_phone = PhoneHashToUsernameMapping.objects.get(username=instance.username).hash
+                set_password_for_phone_hash(phone_hash, serializer.validated_data['password'])
                 # explicitly update password for this user to avoid sign out
                 instance.set_password(serializer.validated_data['password'])
                 instance.save()
 
 
-def set_password_for_phone(phone, password):
+def set_password_for_phone_hash(phone_hash, password):
 
     # get the full list of usernames associated with this account
-    usernames = get_usernames(phone)
+    usernames = get_usernames(phone_hash)
 
     # update the password for each of the accounts
     for user in FacilityUser.objects.filter(username__in=usernames):

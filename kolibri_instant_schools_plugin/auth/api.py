@@ -9,7 +9,7 @@ from kolibri.core.auth.api import SignUpViewSet, FacilityUserViewSet
 from kolibri.core.auth.serializers import FacilityUserSerializer
 
 from .mapping import get_usernames, create_new_username, normalize_phone_number
-from ..models import PasswordResetToken, PhoneToUsernameMapping
+from ..models import PasswordResetToken, PhoneHashToUsernameMapping
 from ..smpp.utils import send_password_reset_link, SMSConnectionError
 
 
@@ -105,7 +105,7 @@ class FacilityUserProfileViewset(FacilityUserViewSet):
         with transaction.atomic():
             if serializer.validated_data.get('password', ''):
                 # update the password for all accounts associated with this password
-                phone = PhoneToUsernameMapping.objects.get(username=instance.username).phone
+                phone = PhoneHashToUsernameMapping.objects.get(username=instance.username).phone
                 set_password_for_phone(phone, serializer.validated_data['password'])
                 # explicitly update password for this user to avoid sign out
                 instance.set_password(serializer.validated_data['password'])

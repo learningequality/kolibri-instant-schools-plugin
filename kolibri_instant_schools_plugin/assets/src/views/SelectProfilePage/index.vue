@@ -69,7 +69,7 @@
         })
           .then(() => {
             if (isNew) {
-              window.location = urls['kolibri:about:about']();
+              window.location = urls['kolibri_instant_schools_plugin:instant_schools_about']();
             }
           })
           .catch(() => {

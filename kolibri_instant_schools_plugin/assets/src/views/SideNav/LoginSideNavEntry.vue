@@ -1,6 +1,7 @@
 <template>
 
   <CoreMenuOption
+    icon="login"
     :label="$tr('signIn')"
     :link="url"
   >

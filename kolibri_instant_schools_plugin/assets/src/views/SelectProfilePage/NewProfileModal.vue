@@ -25,7 +25,7 @@
           @blur="profileNameIsBlurred=true"
         />
 
-        <div class="buttons">
+        <KButtonGroup style="float: right;">
           <KButton
             :text="$tr('cancel')"
             :primary="false"
@@ -38,7 +38,7 @@
             :primary="true"
             :disabled="disabled"
           />
-        </div>
+        </KButtonGroup>
       </form>
     </div>
   </KModal>
@@ -120,16 +120,3 @@
   };
 
 </script>
-
-
-<style lang="scss" scoped>
-
-  .buttons {
-    text-align: right;
-  }
-
-  button[type='submit'] {
-    margin-right: 0;
-  }
-
-</style>

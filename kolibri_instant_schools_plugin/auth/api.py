@@ -31,9 +31,9 @@ class PhoneNumberSignUpViewSet(SignUpViewSet):
         data = super(PhoneNumberSignUpViewSet, self).extract_request_data(request)
 
         # if there are already users for this number, use one, to trigger a validation error, else create a new one
-        usernames = get_usernames(data["username"])
+        usernames = get_usernames(hash_phone(data["username"]))
         if usernames:
-            data["username"] = usernames[0]
+            data["username"] = hash_phone(usernames[0])
         else:
             data["username"] = create_new_username(data["username"])
 

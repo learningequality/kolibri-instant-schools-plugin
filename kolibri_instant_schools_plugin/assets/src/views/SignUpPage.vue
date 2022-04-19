@@ -31,6 +31,7 @@
         :label="$tr('phoneNumberLabel')"
         :invalid="usernameIsInvalid"
         :invalidText="usernameIsInvalidText"
+        :showInvalidText="usernameIsInvalid"
         @blur="usernameBlurred = true"
         @input="resetSignUpState"
       />
@@ -44,6 +45,7 @@
         :label="$tr('password')"
         :invalid="passwordIsInvalid"
         :invalidText="passwordIsInvalidText"
+        :showInvalidText="passwordIsInvalidText"
         @blur="passwordBlurred = true"
       />
 

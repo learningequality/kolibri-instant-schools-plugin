@@ -13,15 +13,18 @@ def normalize_phone_number(phone):
     """Remove everything except digits and "+" symbol from the phone number string."""
     return re.sub("[^\d\+]", "", str(phone))
 
+def hash_phone(phone):
+    """Hash a phone number, and return the hashed value."""
+    return make_password(normalize_phone_number(phone), salt=SALT)
 
-def get_usernames(phone_hash):
+def get_usernames(hashed_phone):
     """Look up the usernames associated with this phone hash."""
 
     # look up all of the associated usernames
-    return list(PhoneHashToUsernameMapping.objects.filter(hash=phone_hash).values_list("username", flat=True))
+    return list(PhoneHashToUsernameMapping.objects.filter(hash=hashed_phone).values_list("username", flat=True))
 
 def create_new_username(phone_number):
-    hashed_phone = make_password(normalize_phone_number(phone_number), salt=SALT)
+    hashed_phone = hash_phone(phone_number)
     old_usernames = get_usernames(hashed_phone)
     if old_usernames:
         # keep the first 10 characters the same so we can see which users are from the same phone number

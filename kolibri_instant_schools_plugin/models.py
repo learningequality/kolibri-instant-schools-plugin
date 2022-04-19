@@ -5,6 +5,7 @@ from django.utils import timezone
 from kolibri.core.auth.models import FacilityUser
 
 TOKEN_VALIDITY_MINUTES = 60 * 48  # tokens last for 48 hours
+SALT = "1a8e928ae600405b9c1acef123502fb1"
 
 class PhoneHashToUsernameMapping(models.Model):
     username = models.CharField(max_length=32, primary_key=True)

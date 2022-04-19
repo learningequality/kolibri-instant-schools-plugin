@@ -8,7 +8,7 @@ from kolibri.core.auth.models import Facility, FacilityUser
 from kolibri.core.auth.api import SignUpViewSet, FacilityUserViewSet
 from kolibri.core.auth.serializers import FacilityUserSerializer
 
-from .mapping import get_usernames, create_new_username, normalize_phone_number
+from .mapping import get_usernames, create_new_username, normalize_phone_number, hash_phone
 from ..models import PasswordResetToken, PhoneHashToUsernameMapping
 from ..smpp.utils import send_password_reset_link, SMSConnectionError
 
@@ -106,16 +106,16 @@ class FacilityUserProfileViewset(FacilityUserViewSet):
             if serializer.validated_data.get('password', ''):
                 # update the password for all accounts associated with this password
                 hashed_phone = PhoneHashToUsernameMapping.objects.get(username=instance.username).hash
-                set_password_for_phone_hash(phone_hash, serializer.validated_data['password'])
+                set_password_for_hashed_phone(hashed_phone, serializer.validated_data['password'])
                 # explicitly update password for this user to avoid sign out
                 instance.set_password(serializer.validated_data['password'])
                 instance.save()
 
 
-def set_password_for_phone_hash(phone_hash, password):
+def set_password_for_hashed_phone(hashed_phone, password):
 
     # get the full list of usernames associated with this account
-    usernames = get_usernames(phone_hash)
+    usernames = get_usernames(hashed_phone)
 
     # update the password for each of the accounts
     for user in FacilityUser.objects.filter(username__in=usernames):
@@ -212,7 +212,7 @@ class PhoneAccountProfileViewset(viewsets.ViewSet):
         password = request.query_params.get('password', '')
 
         # get all user profiles associated with the phone number
-        users = FacilityUser.objects.filter(username__in=get_usernames(phone))
+        users = FacilityUser.objects.filter(username__in=get_usernames(hash_phone(phone)))
 
         # return a 404 if there are no users for this phone number
         if not users:

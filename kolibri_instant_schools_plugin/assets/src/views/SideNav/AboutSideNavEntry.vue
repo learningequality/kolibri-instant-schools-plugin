@@ -1,6 +1,7 @@
 <template>
 
   <CoreMenuOption
+    icon="help"
     :label="$tr('about')"
     :link="url"
   >

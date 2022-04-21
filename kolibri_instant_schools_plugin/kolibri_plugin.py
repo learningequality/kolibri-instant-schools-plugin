@@ -58,11 +58,6 @@ class AboutNavAction(NavigationHook, webpack_hooks.WebpackBundleHook):
 
 
 @register_hook
-class ProfileNavAction(NavigationHook, webpack_hooks.WebpackBundleHook):
-    bundle_id="instant_schools_profile_nav_action"
-
-
-@register_hook
 class DefaultThemeHook(theme_hook.ThemeHook):
     @property
     def theme(self):

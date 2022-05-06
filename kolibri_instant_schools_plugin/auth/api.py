@@ -178,7 +178,8 @@ class PhoneAccountProfileViewset(viewsets.ViewSet):
         full_name = request.data['full_name']
 
         # get the list of existing profiles (users) for the phone number
-        users = FacilityUser.objects.filter(username__in=get_usernames(phone))
+        users = FacilityUser.objects.filter(username__in=get_usernames(hash_phone(phone)))
+
         if not users:
             return Response("", status=status.HTTP_401_UNAUTHORIZED)
 

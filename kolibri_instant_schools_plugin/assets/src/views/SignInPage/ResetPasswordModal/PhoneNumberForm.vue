@@ -24,7 +24,7 @@
         :invalidText="$tr('required')"
         :disabled="disabled"
       />
-      <div class="buttons">
+      <KButtonGroup style="float: right">
         <KButton
           :text="$tr('cancel')"
           :primary="false"
@@ -37,7 +37,7 @@
           :primary="true"
           :disabled="disabled"
         />
-      </div>
+      </KButtonGroup>
     </form>
   </div>
 
@@ -121,15 +121,6 @@
   .instructions {
     margin: 1em 0;
     text-align: left;
-  }
-
-  .buttons {
-    margin-top: 1em;
-    text-align: right;
-  }
-
-  button[type='submit'] {
-    margin-right: 0;
   }
 
 </style>

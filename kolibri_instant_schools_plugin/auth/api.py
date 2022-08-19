@@ -58,7 +58,7 @@ class PasswordResetTokenViewset(viewsets.ViewSet):
         phone = normalize_phone_number(request.data.get('phone', ''))
 
         # ensure we have an account for this phone number
-        if not get_usernames(phone):
+        if not get_usernames(hash_phone(phone)):
             return Response(_("No account found for this phone number."), status=status.HTTP_400_BAD_REQUEST)
 
         # generate a new token for the phone number

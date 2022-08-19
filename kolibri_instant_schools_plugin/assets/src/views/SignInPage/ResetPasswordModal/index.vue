@@ -68,7 +68,7 @@
             this.status = STATES.MESSAGE_SENT;
           })
           .catch(err => {
-            const { code } = err.status;
+            const code = typeof(err.status) == 'object' ? err.status.code : err.status;
             if (code === 400) {
               this.status = STATES.ACCOUNT_NOT_FOUND;
             } else {

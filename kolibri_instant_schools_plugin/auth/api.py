@@ -211,8 +211,8 @@ class PhoneAccountProfileViewset(viewsets.ViewSet):
                 If password fails, returns status 401.
         """
         # extract the phone and password from the query params
-        phone = normalize_phone_number(request.data['phone'])
-        password = request.data['password']
+        phone = normalize_phone_number(request.data.get('phone', ''))
+        password = request.data.get('password', '')
 
         # get all user profiles associated with the phone number
         users = FacilityUser.objects.filter(username__in=get_usernames(hash_phone(phone)))

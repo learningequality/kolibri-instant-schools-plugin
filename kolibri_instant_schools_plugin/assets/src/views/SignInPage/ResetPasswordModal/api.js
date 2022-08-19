@@ -2,10 +2,10 @@ import { httpClient } from 'kolibri.client';
 import urls from 'kolibri.urls';
 
 export function createResetToken({ phoneNumber }) {
+  const url = urls['kolibri:kolibri_instant_schools_plugin:passwordresettoken_list']();
   return httpClient({
-    path: urls['kolibri:user:passwordresettoken_list'](),
-    method: 'POST',
-    entity: {
+    url,
+    data: {
       phone: phoneNumber,
     },
   }).then(response => {

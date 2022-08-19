@@ -3,7 +3,7 @@ import urls from 'kolibri.urls';
 
 export function getTokenStatus({ token, phoneNumber }) {
   return httpClient({
-    path: `${urls['kolibri:user:passwordresettoken_list']()}${token}/?phone=${phoneNumber}`,
+    path: `${urls['kolibri:kolibri_instant_schools_plugin:passwordresettoken_list']()}${token}/?phone=${phoneNumber}`,
     method: 'GET',
   }).then(response => {
     if (response.status.code !== 200) {
@@ -15,7 +15,7 @@ export function getTokenStatus({ token, phoneNumber }) {
 
 export function updatePassword({ password, token, phone }) {
   return httpClient({
-    path: urls['kolibri:user:passwordchange_list'](),
+    path: urls['kolibri:kolibri_instant_schools_plugin:passwordchange_list'](),
     method: 'POST',
     entity: {
       password: encodeURIComponent(password),

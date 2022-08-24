@@ -6,9 +6,9 @@ export function showSelectProfilePage(store, params) {
   const { phone, password, facility } = params;
   return client({
     url: `${urls[
-      'kolibri:kolibri_instant_schools_plugin:phoneaccountprofile_list'
-    ]()}?password=${password}&phone=${phone}`,
-    method: 'GET',
+      'kolibri:kolibri_instant_schools_plugin:phoneaccountprofile-profiles'
+    ]()}`,
+    method: 'POST',
     data: {
       password,
       phone,

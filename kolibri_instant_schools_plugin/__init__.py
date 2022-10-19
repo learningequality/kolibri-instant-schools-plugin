@@ -1,0 +1,1 @@
+default_app_config = "kolibri_instant_schools_plugin.apps.KolibriInstantSchoolsConfig"

@@ -61,14 +61,16 @@
       },
     },
     methods: {
-      submitTokenRequest(phoneNumber) {
+      submitTokenRequest({phoneNumber, phonePrefix}) {
         this.disableForms = true;
-        createResetToken({ phoneNumber })
+        createResetToken({ phoneNumber, phonePrefix })
           .then(() => {
             this.status = STATES.MESSAGE_SENT;
+            console.log("MADE ME A TOKEN")
           })
           .catch(err => {
-            const { code } = err.status;
+            console.log(" OH SHIT ")
+            const code = typeof(err.status) == 'object' ? err.status.code : err.status;
             if (code === 400) {
               this.status = STATES.ACCOUNT_NOT_FOUND;
             } else {

@@ -11,7 +11,7 @@ from kolibri.core.auth.serializers import FacilityUserSerializer
 
 from .mapping import get_usernames, create_new_username, normalize_phone_number, hash_phone
 from ..models import PasswordResetToken, PhoneHashToUsernameMapping
-from ..smpp.utils import send_password_reset_link, SMSConnectionError
+from ..sms.utils import send_password_reset_link
 
 
 class PhoneNumberSignupSerializer(FacilityUserSerializer):
@@ -57,9 +57,10 @@ class PasswordResetTokenViewset(viewsets.ViewSet):
 
         # extract the phone number from the request
         phone = normalize_phone_number(request.data.get('phone', ''))
+        prefix = request.data.get('prefix')
 
         # ensure we have an account for this phone number
-        if not get_usernames(phone):
+        if not get_usernames(hash_phone(phone)):
             return Response(_("No account found for this phone number."), status=status.HTTP_400_BAD_REQUEST)
 
         # generate a new token for the phone number
@@ -70,8 +71,8 @@ class PasswordResetTokenViewset(viewsets.ViewSet):
 
         # send the password reset URL to the phone number via SMS
         try:
-            send_password_reset_link(phone, token.token, baseurl)
-        except SMSConnectionError:
+            send_password_reset_link(prefix, phone, token.token, baseurl)
+        except: # noqa
             return Response(_("Error sending SMS message; please try again later."),
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

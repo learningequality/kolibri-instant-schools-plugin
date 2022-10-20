@@ -25,10 +25,15 @@ class User(KolibriPluginBase):
         return 'user'
 
 
-
 @register_hook
 class UserAsset(webpack_hooks.WebpackBundleHook):
-    bundle_id="instant_schools_auth"
+    bundle_id = "instant_schools_auth"
+
+    @property
+    def plugin_data(self):
+        return {
+            "COUNTRY_CODE": getenv("COUNTRY_CODE") or None,
+        }
 
 
 @register_hook

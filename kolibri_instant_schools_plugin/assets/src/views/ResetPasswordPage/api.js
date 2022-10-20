@@ -1,9 +1,9 @@
-import { httpClient } from 'kolibri.client';
+import client from 'kolibri.client';
 import urls from 'kolibri.urls';
 
 export function getTokenStatus({ token, phoneNumber }) {
-  return httpClient({
-    path: `${urls['kolibri:user:passwordresettoken_list']()}${token}/?phone=${phoneNumber}`,
+  return client({
+    url: `${urls['kolibri:user:passwordresettoken_list']()}${token}/?phone=${phoneNumber}`,
     method: 'GET',
   }).then(response => {
     if (response.status.code !== 200) {

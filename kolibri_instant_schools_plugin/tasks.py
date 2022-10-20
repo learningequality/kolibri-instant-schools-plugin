@@ -7,9 +7,10 @@ from kolibri.core.tasks.job import State
 from kolibri.core.tasks.main import job_storage
 
 USER_DATA_POST_FUNC = "kolibri_instant_schools_plugin.auth.api.send_user_data_to_opco"
+SCH_REQUEUE_FAILED_USER_JOB_ID = "100"
+SCH_ANONYMIZE_JOB_ID = "101"
 
-
-@register_task()
+@register_task(job_id=SCH_REQUEUE_FAILED_USER_JOB_ID)
 def requeue_failed_user_data_requests():
     """
     Requeues failed jobs that tried to post user data and bumps their failure_
@@ -40,7 +41,7 @@ def requeue_failed_user_data_requests():
             failed_job.storage.enqueue_job(failed_job, None)
 
 
-@register_task()
+@register_task(job_id=SCH_ANONYMIZE_JOB_ID)
 def anonymize_compeleted_user_posts():
     """
     For any jobs that are completed, anonymize the data.

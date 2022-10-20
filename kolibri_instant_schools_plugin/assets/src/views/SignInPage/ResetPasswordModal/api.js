@@ -10,7 +10,7 @@ export function createResetToken({ phoneNumber, phonePrefix }) {
       prefix: phonePrefix,
     },
   }).then(response => {
-    if (response.status.code !== 201) {
+    if (response.status !== 201) {
       return Promise.reject(response);
     }
     return response;

@@ -71,8 +71,8 @@ class PasswordResetTokenViewset(viewsets.ViewSet):
 
         # send the password reset URL to the phone number via SMS
         try:
-            send_password_reset_link("{}{}".format(prefix, phone), token.token, baseurl)
-        except SMSConnectionError:
+            send_password_reset_link(prefix, phone, token.token, baseurl)
+        except: # noqa
             return Response(_("Error sending SMS message; please try again later."),
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

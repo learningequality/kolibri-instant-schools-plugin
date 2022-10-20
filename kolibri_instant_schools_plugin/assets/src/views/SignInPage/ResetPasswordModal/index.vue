@@ -61,9 +61,9 @@
       },
     },
     methods: {
-      submitTokenRequest(phoneNumber) {
+      submitTokenRequest({phoneNumber, phonePrefix}) {
         this.disableForms = true;
-        createResetToken({ phoneNumber })
+        createResetToken({ phoneNumber, phonePrefix })
           .then(() => {
             this.status = STATES.MESSAGE_SENT;
           })

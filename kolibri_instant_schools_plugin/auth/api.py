@@ -4,6 +4,7 @@ from django.db import transaction
 from django.utils.translation import ugettext as _
 from rest_framework import filters, permissions, status, viewsets, serializers
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from kolibri.core.auth.models import Facility, FacilityUser
 from kolibri.core.auth.api import SignUpViewSet, FacilityUserViewSet
 from kolibri.core.auth.serializers import FacilityUserSerializer
@@ -56,6 +57,7 @@ class PasswordResetTokenViewset(viewsets.ViewSet):
 
         # extract the phone number from the request
         phone = normalize_phone_number(request.data.get('phone', ''))
+        prefix = request.data.get('prefix')
 
         # ensure we have an account for this phone number
         if not get_usernames(hash_phone(phone)):
@@ -69,8 +71,8 @@ class PasswordResetTokenViewset(viewsets.ViewSet):
 
         # send the password reset URL to the phone number via SMS
         try:
-            send_password_reset_link(phone, token.token, baseurl)
-        except:
+            send_password_reset_link("{}{}".format(prefix, phone), token.token, baseurl)
+        except SMSConnectionError:
             return Response(_("Error sending SMS message; please try again later."),
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -153,7 +155,7 @@ class PasswordChangeViewset(viewsets.ViewSet):
             resettoken.use_token()
 
             # change the password for all accounts associated with this phone number
-            set_password_for_phone(phone, password)
+            set_password_for_hashed_phone(hash_phone(phone), password)
 
         # return a 200 to indicate having successfully changed the passwords
         return Response("", status=status.HTTP_200_OK)
@@ -197,20 +199,21 @@ class PhoneAccountProfileViewset(viewsets.ViewSet):
 
         return Response(username, status=status.HTTP_201_CREATED)
 
-    def list(self, request):
+    @action(methods=["POST"], detail=False)
+    def profiles(self, request):
         """
         Get a list of profiles associated with a phone number (authenticated by password).
 
         Usage:
 
-            GET /user/api/phoneaccountprofile/?phone=<phone>&password=<password>
+            POST {"phone": "<phone>", "password": "<password>"} to /user/api/phoneaccountprofile/
                 If successful, returns status 200 with a list of dicts with `full_name` and `username`.
                 If no accounts are found, returns status 404.
                 If password fails, returns status 401.
         """
         # extract the phone and password from the query params
-        phone = normalize_phone_number(request.query_params.get('phone', ''))
-        password = request.query_params.get('password', '')
+        phone = normalize_phone_number(request.data.get('phone', ''))
+        password = request.data.get('password', '')
 
         # get all user profiles associated with the phone number
         users = FacilityUser.objects.filter(username__in=get_usernames(hash_phone(phone)))

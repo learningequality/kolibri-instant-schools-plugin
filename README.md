@@ -49,6 +49,7 @@ The following environment variables are *required*:
 
 - `SMS_MESSAGE_TEMPLATE` - A string prepared for Python's `string.format()` with one variable `{url}` within the string somewhere. That will be where the URL the user clicks to reset their password will be inserted into the message template.
 - `TWILIO_SID` & `TWILIO_AUTH_TOKEN` - These will allow us to send password reset tokens. You can find these in your Twilio account.
+- `POST_USER_URL` - This is the base URL to where user information will be securely POSTed to partners.
 
 The following environment variables are *optional*:
 

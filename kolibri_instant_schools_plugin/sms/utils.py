@@ -4,10 +4,15 @@ from django.core.urlresolvers import reverse
 
 from ..auth.mapping import normalize_phone_number
 
-SMS_MESSAGE_TEMPLATE = os.environ["SMS_MESSAGE_TEMPLATE"]
-TWILIO_SID = os.environ["TWILIO_SID"]
-TWILIO_AUTH_TOKEN = os.environ["TWILIO_AUTH_TOKEN"]
+SMS_MESSAGE_TEMPLATE = os.environ.get("SMS_MESSAGE_TEMPLATE")
+TWILIO_SID = os.environ.get("TWILIO_SID")
+TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
+TWILIO_MESSAGING_SID = os.environ.get("TWILIO_MESSAGING_SID")
 
+if not (TWILIO_SID and TWILIO_AUTH_TOKEN and TWILIO_MESSAGING_SID and SMS_MESSAGE_TEMPLATE):
+    class ConfigurationError(Exception):
+        pass
+    raise ConfigurationError("Twilio not configured properly. SMS password reset will not work until Twilio is configured. Ensure the following environment variables are set: SMS_MESSAGE_TEMPLATE, TWILIO_SID, TWILIO_MESSAGING_SID, TWILIO_AUTH_TOKEN.")
 
 def send_password_reset_link(prefix, phone, token, baseurl):
 
@@ -29,7 +34,7 @@ def send_message(prefix, phone, message):
     client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
 
     message = client.messages.create(
-      messaging_service_sid='MG5789fbd6bb5607f3c1a10a020bb11ca3',
+      messaging_service_sid=TWILIO_MESSAGING_SID,
       to="{}{}".format(prefix, phone),
       body=message,
     )

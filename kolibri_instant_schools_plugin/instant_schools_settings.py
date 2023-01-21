@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from kolibri.deployment.default.settings.base import *
+import os
+if(os.environ("KUBERNETES_PORT")):
+    from kolibri.deployment.default.settings.cloud_kolibri_settings import *
+else:
+    from kolibri.deployment.default.settings.base import *
 
 OLD_DB_PATH = os.path.join(conf.KOLIBRI_HOME, 'db.sqlite3')
 OLD_HASH_DB_PATH = os.path.join(conf.KOLIBRI_HOME, 'phonehashreverselookup.db')

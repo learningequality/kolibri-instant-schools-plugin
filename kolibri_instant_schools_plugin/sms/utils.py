@@ -19,10 +19,10 @@ def send_password_reset_link(prefix, phone, token, baseurl):
     phone = normalize_phone_number(phone)
     baseurl = baseurl.rstrip("/")
     endpointurl = reverse("kolibri:kolibri_instant_schools_plugin:instant_schools_auth")
-    path = "{endpointurl}{phone}/{token}".format(endpointurl=endpointurl, token=token, phone=phone)
+    path = "{endpointurl}#/passwordreset/{phone}/{token}".format(endpointurl=endpointurl, token=token, phone=phone)
 
 
-    url = "{baseurl}/{path}".format(
+    url = "{baseurl}{path}".format(
         baseurl=baseurl, path=path
     )
 

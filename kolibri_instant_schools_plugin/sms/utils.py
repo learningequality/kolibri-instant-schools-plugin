@@ -1,18 +1,36 @@
 import os
 from twilio.rest import Client
 from django.core.urlresolvers import reverse
+import logging as logger
 
 from ..auth.mapping import normalize_phone_number
+
+logging = logger.getLogger("kolibri")
 
 SMS_MESSAGE_TEMPLATE = os.environ.get("SMS_MESSAGE_TEMPLATE")
 TWILIO_SID = os.environ.get("TWILIO_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 TWILIO_MESSAGING_SID = os.environ.get("TWILIO_MESSAGING_SID")
 
-if not (TWILIO_SID and TWILIO_AUTH_TOKEN and TWILIO_MESSAGING_SID and SMS_MESSAGE_TEMPLATE):
+required_env_vars = [
+    ("SMS_MESSAGE_TEMPLATE", SMS_MESSAGE_TEMPLATE),
+    ("TWILIO_SID", TWILIO_SID),
+    ("TWILIO_AUTH_TOKEN", TWILIO_AUTH_TOKEN),
+    ("TWILIO_MESSAGING_SID", TWILIO_MESSAGING_SID),
+]
+
+env_var_errors = False
+
+for name, value in required_env_vars:
+    if not value:
+        env_var_errors = True
+        logging.error("{} is not set".format(name))
+
+if env_var_errors:
     class ConfigurationError(Exception):
         pass
-    raise ConfigurationError("Twilio not configured properly. SMS password reset will not work until Twilio is configured. Ensure the following environment variables are set: SMS_MESSAGE_TEMPLATE, TWILIO_SID, TWILIO_MESSAGING_SID, TWILIO_AUTH_TOKEN.")
+    raise ConfigurationError("Twilio is not configured properly. The service will not start until this is resolved.")
+
 
 def send_password_reset_link(prefix, phone, token, baseurl):
 

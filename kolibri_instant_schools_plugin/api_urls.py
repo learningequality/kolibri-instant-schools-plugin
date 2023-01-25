@@ -1,6 +1,13 @@
 from rest_framework import routers
 
-from .auth.api import PhoneNumberSignUpViewSet, PasswordResetTokenViewset, PhoneAccountProfileViewset, PasswordChangeViewset, FacilityUserProfileViewset
+from .auth.api import (
+    PhoneNumberSignUpViewSet,
+    PasswordResetTokenViewset,
+    PhoneAccountProfileViewset,
+    PasswordChangeViewset,
+    FacilityUserProfileViewset,
+    AboutFAQView
+)
 
 router = routers.SimpleRouter()
 
@@ -9,5 +16,6 @@ router.register(r'passwordresettoken', PasswordResetTokenViewset, base_name='pas
 router.register(r'phoneaccountprofile', PhoneAccountProfileViewset, base_name='phoneaccountprofile')
 router.register(r'passwordchange', PasswordChangeViewset, base_name='passwordchange')
 router.register(r'facilityuserprofile', FacilityUserProfileViewset, base_name='facilityuserprofile')
+router.register(r'aboutfaq', AboutFAQView, base_name='aboutfaq')
 
 urlpatterns = router.urls

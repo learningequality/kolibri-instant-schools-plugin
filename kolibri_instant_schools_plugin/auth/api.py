@@ -1,26 +1,41 @@
-from django.conf import settings
-from django.contrib.auth import update_session_auth_hash
 from django.db import transaction
 from django.utils.translation import ugettext as _
-from rest_framework import filters, permissions, status, viewsets, serializers
+from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from kolibri.core.auth.models import Facility, FacilityUser
+from kolibri.core.auth.models import FacilityUser
+from rest_framework import status, viewsets, serializers
 from kolibri.core.auth.api import SignUpViewSet, FacilityUserViewSet
 from kolibri.core.auth.serializers import FacilityUserSerializer
 
-from .mapping import get_usernames, create_new_username, normalize_phone_number, hash_phone
-from ..models import PasswordResetToken, PhoneHashToUsernameMapping
+from .mapping import (
+    get_usernames, create_new_username, normalize_phone_number, hash_phone
+)
+from ..models import PasswordResetToken, PhoneHashToUsernameMapping, AboutFAQ
 from ..sms.utils import send_password_reset_link
+
+
+class AboutFAQView(viewsets.ViewSet):
+    def retrieve(self, request):
+        kind = request.data.get("kind")
+        try:
+            aboutfaq = AboutFAQ.objects.get(kind=kind)
+        except AboutFAQ.DoesNotExist:
+            return HttpResponse(
+                "<h1>{} not available.</h1>".format(kind),
+                status=404
+            )
+        return HttpResponse(aboutfaq.html)
 
 
 class PhoneNumberSignupSerializer(FacilityUserSerializer):
 
     def validate_username(self, value):
         if FacilityUser.objects.filter(username__iexact=value).exists():
-            raise serializers.ValidationError(_('An account already exists for this phone number. To add a new profile ' +
-                                                'under this account, you must first login. If you have forgotten your ' +
-                                                'password, you can reset it using the link on the login page.'))
+            raise serializers.ValidationError(
+            _('An account already exists for this phone number. To add a new profile ' +
+                'under this account, you must first login. If you have forgotten your ' +
+                'password, you can reset it using the link on the login page.'))
         return value
 
 

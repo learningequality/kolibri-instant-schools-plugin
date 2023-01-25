@@ -20,4 +20,3 @@ class UserView(TemplateView):
 
 class AboutView(TemplateView):
     template_name = "about/about.html"
-

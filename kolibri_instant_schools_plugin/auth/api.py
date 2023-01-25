@@ -1,6 +1,6 @@
 from django.db import transaction
-from django.utils.translation import ugettext as _
 from django.http import HttpResponse
+from django.utils.translation import ugettext as _
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from kolibri.core.auth.models import FacilityUser
@@ -15,17 +15,18 @@ from ..models import PasswordResetToken, PhoneHashToUsernameMapping, AboutFAQ
 from ..sms.utils import send_password_reset_link
 
 
-class AboutFAQView(viewsets.ViewSet):
-    def retrieve(self, request):
-        kind = request.data.get("kind")
+class AboutFAQViewSet(viewsets.ViewSet):
+
+    def retrieve(self, request, pk=None):
+        kind = pk
         try:
             aboutfaq = AboutFAQ.objects.get(kind=kind)
         except AboutFAQ.DoesNotExist:
             return HttpResponse(
-                "<h1>{} not available.</h1>".format(kind),
-                status=404
+                "<h1>~{}~ not available.</h1><h2>Be sure you're using the proper case for FAQ and About, respectively.</h2>".format(kind),
+                content_type="text/html"
             )
-        return HttpResponse(aboutfaq.html)
+        return HttpResponse(aboutfaq.html, status=status.HTTP_200_OK)
 
 
 class PhoneNumberSignupSerializer(FacilityUserSerializer):

@@ -1,5 +1,4 @@
 <template>
-
   <KPageContainer>
     <iframe
       ref="iframe"
@@ -27,15 +26,14 @@
       />
     </KButtonGroup>
   </KPageContainer>
-
 </template>
 
 
 <script>
 
   import throttle from 'lodash/throttle';
-  import { PageNames } from '../../../constants';
   import urls from 'kolibri.urls';
+  import { PageNames } from '../../../constants';
 
   export default {
     name: 'AboutPage',
@@ -56,7 +54,8 @@
         return urls['kolibri:kolibri.plugins.learn:learn']();
       },
       aboutSrc() {
-        return '/content/databases/about/about.html';
+        //return urls["kolibri:kolibri_instant_schools_plugin:aboutfaq-detail"]()
+        return "/en/user/api/aboutfaq/About";
       },
     },
     mounted() {

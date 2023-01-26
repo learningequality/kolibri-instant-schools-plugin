@@ -3,9 +3,19 @@ import uuid
 from django.db import models
 from django.utils import timezone
 from kolibri.core.auth.models import FacilityUser
+from django.contrib.auth.hashers import make_password
 
 TOKEN_VALIDITY_MINUTES = 60 * 48  # tokens last for 48 hours
 SALT = "1a8e928ae600405b9c1acef123502fb1"
+
+
+class AboutFAQ(models.Model):
+    html = models.TextField()
+    kind = models.TextField(choices=(("FAQ", "FAQ"), ("About", "About")))
+
+    class Meta:
+        app_label = "kolibri_instant_schools_plugin"
+
 
 class PhoneHashToUsernameMapping(models.Model):
     username = models.CharField(max_length=32, primary_key=True)
@@ -26,6 +36,7 @@ class PhoneHashToUsernameMapping(models.Model):
 
     class Meta:
         app_label = "kolibri_instant_schools_plugin"
+
 
 class PasswordResetToken(models.Model):
     token = models.CharField(max_length=12, primary_key=True)

@@ -1,5 +1,4 @@
 <template>
-
   <KPageContainer>
     <KRouterLink
       ref="backButton"
@@ -27,7 +26,6 @@
       @click="goToTop"
     />
   </KPageContainer>
-
 </template>
 
 
@@ -53,7 +51,7 @@
         return { name: PageNames.ABOUT };
       },
       faqSrc() {
-        return '/content/databases/about/faq.html';
+        return '/en/user/api/aboutfaq/FAQ';
       },
     },
     mounted() {

@@ -1,42 +1,57 @@
 <template>
 
-  <AppBarPage
-    :appBarTitle="title"
-  >
+  <AppBarPage :appBarTitle="title">
     <KPageContainer class="content">
       <section>
         <h2>{{ $tr('points') }}</h2>
-        <KIcon icon="pointsActive" :color="$themeTokens.primary" />
+        <KIcon
+          icon="pointsActive"
+          :color="$themeTokens.primary"
+        />
         <PointsIcon class="points-icon" />
-        <span class="points-num" :style="{ color: $themeTokens.correct }">
+        <span
+          class="points-num"
+          :style="{ color: $themeTokens.correct }"
+        >
           {{ $formatNumber(totalPoints) }}
         </span>
       </section>
 
       <section>
         <h2>{{ $tr('userType') }}</h2>
-        <UserTypeDisplay :distinguishCoachTypes="false" :userType="getUserKind" />
+        <UserTypeDisplay
+          :distinguishCoachTypes="false"
+          :userType="getUserKind"
+        />
       </section>
 
       <section v-if="userHasPermissions">
         <h2>{{ $tr('devicePermissions') }}</h2>
         <p>
           <KLabeledIcon>
-            <PermissionsIcon slot="icon" :permissionType="permissionType" class="permissions-icon" />
+            <template #icon>
+              <PermissionsIcon
+                :permissionType="permissionType"
+                class="permissions-icon"
+              />
+            </template>
             {{ permissionTypeText }}
           </KLabeledIcon>
         </p>
         <p>
           {{ $tr('youCan') }}
-          <ul class="permissions-list">
-            <li v-if="isSuperuser">
-              {{ $tr('manageDevicePermissions') }}
-            </li>
-            <li v-for="(value, key) in userPermissions" :key="key">
-              {{ getPermissionString(key) }}
-            </li>
-          </ul>
         </p>
+        <ul class="permissions-list">
+          <li v-if="isSuperuser">
+            {{ $tr('manageDevicePermissions') }}
+          </li>
+          <li
+            v-for="(value, key) in userPermissions"
+            :key="key"
+          >
+            {{ getPermissionString(key) }}
+          </li>
+        </ul>
       </section>
 
       <form @submit.prevent="submitEdits">
@@ -97,7 +112,6 @@
 
 <script>
 
-  import { crossComponentTranslator } from 'kolibri.utils.i18n';
   import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
   import pickBy from 'lodash/pickBy';
   import { validateUsername } from 'kolibri.utils.validators';
@@ -106,10 +120,7 @@
   import AppBarPage from 'kolibri.coreVue.components.AppBarPage';
   import UiAlert from 'kolibri-design-system/lib/keen/UiAlert';
   import { PermissionTypes, ERROR_CONSTANTS } from 'kolibri.coreVue.vuex.constants';
-  import SignUpPage from '../SignUpPage';
   import ChangeUserPasswordModal from './ChangeUserPasswordModal';
-
-  const SignUpPageStrings = crossComponentTranslator(SignUpPage);
 
   export default {
     name: 'ProfilePage',
@@ -162,9 +173,6 @@
       userPermissions() {
         return pickBy(this.getUserPermissions);
       },
-      facilityString() {
-        return SignUpPageStrings.$tr('facility');
-      },
       passwordModalVisible() {
         return this.passwordState.modal;
       },
@@ -183,12 +191,6 @@
           return this.$tr('limitedPermissions');
         }
         return '';
-      },
-      canEditUsername() {
-        if (this.isCoach || this.isLearner) {
-          return this.facilityConfig.learner_can_edit_username;
-        }
-        return true;
       },
       canEditName() {
         if (this.isCoach || this.isLearner) {
@@ -272,7 +274,6 @@
     },
     $trs: {
       success: 'Profile name updated!',
-      username: 'Username',
       name: 'Full name',
       updateProfile: 'Save changes',
       isSuperuser: 'Super admin permissions ',

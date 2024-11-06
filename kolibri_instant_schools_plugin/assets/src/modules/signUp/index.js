@@ -19,7 +19,7 @@ export default {
     errors: {
       default: [],
       type: Array,
-      validator: function(value) {
+      validator: function (value) {
         return value.reduce((acc, val) => {
           if (!(val instanceof String)) {
             return false;

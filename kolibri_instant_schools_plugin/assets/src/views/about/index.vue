@@ -4,9 +4,7 @@
     :navBarNeeded="true"
     :appBarTitle="appBarTitle"
   >
-    <component
-      :is="currentPage"
-    />
+    <component :is="currentPage" />
   </AppBarPage>
 
 </template>
@@ -26,7 +24,7 @@
   };
 
   export default {
-    $trs: { aboutTitle: 'About' },
+    // eslint-disable-next-line kolibri/vue-filename-and-component-name-match
     name: 'About',
     components: {
       AppBarPage,
@@ -42,6 +40,7 @@
         return pageNameComponentMap[this.pageName] || null;
       },
     },
+    $trs: { aboutTitle: 'About' },
   };
 
 </script>

@@ -1,6 +1,9 @@
 <template>
 
-  <component :is="currentPage" :title="appBarTitle" />
+  <component
+    :is="currentPage"
+    :title="appBarTitle"
+  />
 
 </template>
 
@@ -38,6 +41,7 @@
         if (this.pageName === PageNames.PROFILE) {
           return this.$tr('userProfileTitle');
         } else if (this.pageName === PageNames.SIGN_UP) {
+          // eslint-disable-next-line kolibri/vue-no-undefined-string-uses
           return translator.$tr('createAccount');
         } else if (this.pageName == PageNames.SELECT_PROFILE) {
           return 'Instant Schools';
@@ -47,14 +51,10 @@
       currentPage() {
         return pageNameComponentMap[this.pageName] || null;
       },
-      PageNames() {
-        return PageNames;
-      },
     },
     $trs: {
       userProfileTitle: 'Account',
       userSignInTitle: 'Sign in',
-      about: 'About',
     },
   };
 

@@ -1,7 +1,0 @@
-{
-  "name": "kolibri_instant_schools_plugin",
-  "description": "user, a plugin for Kolibri.",
-  "private": true,
-  "dependencies": {
-  }
-}

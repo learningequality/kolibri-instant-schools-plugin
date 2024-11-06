@@ -1,8 +1,6 @@
 <template>
 
-  <AppBarPage
-    :appBarTitle="title"
-  >
+  <AppBarPage :appBarTitle="title">
     <div>
       <div class="container">
         <h1>{{ $tr('selectProfilePageHeader') }}</h1>
@@ -42,14 +40,12 @@
 
   import urls from 'kolibri.urls';
   import { mapActions, mapState } from 'vuex';
-  import AppBarPage from 'kolibri.coreVue.components.AppBarPage';
   import NewProfileModal from './NewProfileModal';
   import ProfilesList from './ProfilesList';
 
   export default {
     name: 'SelectProfilePage',
     components: {
-      NewProfileModal,
       NewProfileModal,
       ProfilesList,
     },
@@ -119,8 +115,6 @@
       },
     },
     $trs: {
-      instantSchoolsBrand: 'Instant Schools',
-      logIn: 'Sign in',
       newProfileButton: 'New profile',
       selectProfilePageHeader: 'Select profile',
     },

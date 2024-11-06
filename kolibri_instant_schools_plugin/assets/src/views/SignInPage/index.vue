@@ -8,9 +8,15 @@
     />
 
     <div class="wrapper-table">
-      <div class="table-row main-row" :style="backgroundImageStyle">
-        <div class="table-cell main-cell">
-          <div class="box" :style="{ backgroundColor: $themePalette.grey.v_100 }">
+      <div
+        class="main-row table-row"
+        :style="backgroundImageStyle"
+      >
+        <div class="main-cell table-cell">
+          <div
+            class="box"
+            :style="{ backgroundColor: $themePalette.grey.v_100 }"
+          >
             <CoreLogo
               v-if="theme.signIn.topLogo"
               class="logo"
@@ -21,7 +27,7 @@
             <h1
               v-if="theme.signIn.showTitle"
               class="kolibri-title"
-              :class="$computedClass({color: $themeTokens.logoText})"
+              :class="$computedClass({ color: $themeTokens.logoText })"
               :style="theme.signIn.titleStyle"
             >
               {{ logoText }}
@@ -46,7 +52,11 @@
                 appearance="basic-link"
               />
             </p>
-            <form ref="form" class="login-form" @submit.prevent="signIn">
+            <form
+              ref="form"
+              class="login-form"
+              @submit.prevent="signIn"
+            >
               <UiAlert
                 v-if="invalidCredentials"
                 type="error"
@@ -76,7 +86,7 @@
                     v-if="simpleSignIn && suggestions.length"
                     v-show="showDropdown"
                     class="suggestions"
-                    :style="{backgroundColor: $themeTokens.surface}"
+                    :style="{ backgroundColor: $themeTokens.surface }"
                   >
                     <UiAutocompleteSuggestion
                       v-for="(suggestion, i) in suggestions"
@@ -90,7 +100,7 @@
               </transition>
               <transition name="textbox">
                 <KTextbox
-                  v-if="(!simpleSignIn || (simpleSignIn && invalidCredentials))"
+                  v-if="!simpleSignIn || (simpleSignIn && invalidCredentials)"
                   id="password"
                   ref="password"
                   v-model="password"
@@ -105,7 +115,7 @@
                   @input="handlePasswordChanged"
                 />
               </transition>
-              <div style="display: inline-block; text-align: center; width: 100%;">
+              <div style="display: inline-block; width: 100%; text-align: center">
                 <KButton
                   class="login-btn"
                   type="submit"
@@ -126,8 +136,7 @@
 
             <div class="divider"></div>
 
-            <p class="login-text no-account">
-            </p>
+            <p class="login-text no-account"></p>
 
             <p class="create">
               {{ $tr('noAccount') }}
@@ -136,7 +145,7 @@
                 :text="$tr('createAccount')"
                 :to="signUpPage"
                 :primary="true"
-                style="margin: 8px 0;"
+                style="margin: 8px 0"
                 appearance="raised-button"
               />
             </p>
@@ -147,22 +156,28 @@
               <KExternalLink
                 :text="$tr('accessAsGuest')"
                 :href="guestUrl"
-                @click.native="checkGuestUrl"
                 :primary="false"
                 appearance="flat-button"
+                @click.native="checkGuestUrl"
               />
             </p>
           </div>
         </div>
       </div>
       <div class="table-row">
-        <div class="table-cell footer-cell" :style="{ backgroundColor: $themeTokens.surface }">
+        <div
+          class="footer-cell table-cell"
+          :style="{ backgroundColor: $themeTokens.surface }"
+        >
           <LanguageSwitcherFooter />
           <div class="small-text">
             <span class="version-string">
               {{ versionMsg }}
             </span>
-            <CoreLogo v-if="this.theme.signIn.showKolibriFooterLogo" class="footer-logo" />
+            <CoreLogo
+              v-if="theme.signIn.showKolibriFooterLogo"
+              class="footer-logo"
+            />
             <span v-else> • </span>
             <KButton
               :text="$tr('privacyLink')"
@@ -211,6 +226,7 @@
 <script>
 
   import { mapState, mapGetters, mapActions } from 'vuex';
+  import Kolibri from 'kolibri';
   import { FacilityUsernameResource } from 'kolibri.resources';
   import CoreLogo from 'kolibri.coreVue.components.CoreLogo';
   import { validateUsername } from 'kolibri.utils.validators';
@@ -219,13 +235,14 @@
   import UiAlert from 'kolibri-design-system/lib/keen/UiAlert';
   import urls from 'kolibri.urls';
   import { crossComponentTranslator } from 'kolibri.utils.i18n';
+  import themeConfig from 'kolibri.themeConfig';
   import { PageNames } from '../../constants';
   import LanguageSwitcherFooter from '../LanguageSwitcherFooter';
   import getUrlParameter from '../getUrlParameter';
   import FacilityModal from './FacilityModal';
   import ResetPasswordModal from './ResetPasswordModal';
-  import themeConfig from 'kolibri.themeConfig';
 
+  // eslint-disable-next-line kolibri/vue-no-undefined-string-uses
   const closeString = crossComponentTranslator(FacilityModal).$tr('close');
 
   export default {
@@ -268,7 +285,6 @@
     computed: {
       ...mapGetters(['facilityConfig']),
       // backend's default facility on load
-      ...mapState(['facilityId']),
       ...mapState('signIn', ['hasMultipleFacilities']),
       ...mapState({
         busy: state => state.core.signInBusy,
@@ -279,7 +295,7 @@
       suggestions() {
         // Filter suggestions on the client side so we don't hammer the server
         return this.usernameSuggestions.filter(sug =>
-          sug.toLowerCase().startsWith(this.username.toLowerCase())
+          sug.toLowerCase().startsWith(this.username.toLowerCase()),
         );
       },
       usernameIsInvalidText() {
@@ -328,22 +344,13 @@
         return { name: PageNames.SIGN_UP };
       },
       versionMsg() {
-        return this.$tr('poweredBy', { version: __version });
-      },
-      hasServerError() {
-        return Boolean(this.invalidCredentials);
-      },
-      needPasswordField() {
-        return !this.simpleSignIn || this.hasServerError;
+        return this.$tr('poweredBy', { version: Kolibri.version });
       },
       showGuestAccess() {
         return this.facilityConfig.allow_guest_access && !this.oidcProviderFlow;
       },
       logoText() {
         return this.theme.signIn.title ? this.theme.signIn.title : this.$tr('kolibri');
-      },
-      aboutUrl() {
-        return urls['kolibri:kolibri_instant_schools_plugin:instant_schools_about']();
       },
       backgroundImageStyle() {
         if (this.theme.signIn.background) {
@@ -388,8 +395,9 @@
           https://stackoverflow.com/a/35783761
       */
       setTimeout(() => {
-        const bgColor = window.getComputedStyle(this.$refs.username.$el.querySelector('input'))
-          .backgroundColor;
+        const bgColor = window.getComputedStyle(
+          this.$refs.username.$el.querySelector('input'),
+        ).backgroundColor;
 
         if (bgColor === 'rgb(250, 255, 189)') {
           this.autoFilledByChromeAndNotEdited = true;
@@ -455,7 +463,7 @@
             if (this.showDropdown && this.suggestions.length) {
               this.highlightedIndex = Math.min(
                 this.highlightedIndex + 1,
-                this.suggestions.length - 1
+                this.suggestions.length - 1,
               );
             }
             break;
@@ -501,7 +509,7 @@
             phone: strippedPhoneNumber,
             password: this.password,
             facility: this.facility,
-          }).catch(err => {
+          }).catch(() => {
             // Handles 404 (no profiles) and 401 (bad credentials) the same way
             this.invalidCredentials = true;
           });
@@ -530,12 +538,8 @@
       whatsThis: "What's this?",
       oidcGenericExplanation:
         'Kolibri is an e-learning platform. You can also use your Kolibri account to log in to some third-party applications.',
-      oidcSpecificExplanation:
-        "You were sent here from the application '{app_name}'. Kolibri is an e-learning platform, and you can also use your Kolibri account to access '{app_name}'.",
       signIn: 'Sign in',
-      username: 'Username',
       password: 'Password',
-      enterPassword: 'Enter password',
       createAccount: 'Create an account',
       poweredBy: 'Kolibri {version}',
       required: 'This field is required',
@@ -543,9 +547,8 @@
       usernameNotAlphaNumUnderscore: 'Username can only contain letters, numbers, and underscores',
       documentTitle: 'User Sign In',
       privacyLink: 'Usage and privacy',
-      signInHeader: 'Instant Schools',
       signInPhoneNumberPrompt: 'Phone Number',
-      noAccount: `Don't have an account?`,
+      noAccount: "Don't have an account?",
       accessAsGuest: 'Access as guest',
       signInError: 'Incorrect phone number or password',
       resetYourPassword: 'Reset your password',
@@ -610,9 +613,9 @@
   .create {
     display: inline-block;
     width: 100%;
-    text-align: center;
     margin-top: 8px;
     margin-bottom: 8px;
+    text-align: center;
   }
 
   .guest {

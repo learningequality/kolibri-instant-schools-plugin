@@ -94,13 +94,6 @@
         this.$router.replace({ name: PageNames.SIGN_IN });
       },
     },
-    $trs: {
-      newPw: 'New password',
-      newPwConfirm: 'New password again',
-      passwordsDoNotMatch: 'Passwords do not match',
-      resetPasswordHeader: 'Reset password',
-      saveButton: 'Save',
-    },
   };
 
 </script>

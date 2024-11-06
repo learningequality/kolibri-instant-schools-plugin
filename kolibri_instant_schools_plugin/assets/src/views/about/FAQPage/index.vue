@@ -1,4 +1,5 @@
 <template>
+
   <KPageContainer>
     <KRouterLink
       ref="backButton"
@@ -26,6 +27,7 @@
       @click="goToTop"
     />
   </KPageContainer>
+
 </template>
 
 
@@ -36,10 +38,6 @@
 
   export default {
     name: 'FAQPage',
-    $trs: {
-      back: 'Back to about',
-      toTop: 'Back to top',
-    },
     data() {
       return {
         height: 5000,
@@ -73,7 +71,7 @@
       updateBtnVisibility() {
         this.btnIsVisible = document.querySelector('.main-wrapper').scrollTop > 500;
       },
-      throttleUpdateBtnVisibility: throttle(function() {
+      throttleUpdateBtnVisibility: throttle(function () {
         this.updateBtnVisibility();
       }, 100),
       goToTop() {
@@ -82,9 +80,13 @@
       resizeIframe() {
         this.height = this.$refs.iframe.contentWindow.document.body.scrollHeight;
       },
-      throttleResizeIframe: throttle(function() {
+      throttleResizeIframe: throttle(function () {
         this.resizeIframe();
       }, 100),
+    },
+    $trs: {
+      back: 'Back to about',
+      toTop: 'Back to top',
     },
   };
 

@@ -26,7 +26,7 @@
 
 <style lang="scss" scoped>
 
-.language-switcher-wrapper {
+  .language-switcher-wrapper {
     display: flex;
     justify-content: center;
     width: 100%;

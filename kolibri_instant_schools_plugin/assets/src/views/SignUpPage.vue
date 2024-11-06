@@ -112,7 +112,10 @@
         :size="'large'"
         @cancel="showTerms = false"
       >
-        <iframe class="terms" src="/content/databases/about/tos.txt"></iframe>
+        <iframe
+          class="terms"
+          src="/content/databases/about/tos.txt"
+        ></iframe>
         <KButton
           :text="$tr('close')"
           :primary="false"
@@ -128,7 +131,7 @@
 
 <script>
 
-  import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
+  import { mapState, mapActions, mapMutations } from 'vuex';
   import ImmersivePage from 'kolibri.coreVue.components.ImmersivePage';
   import { ERROR_CONSTANTS } from 'kolibri.coreVue.vuex.constants';
   import { PageNames } from '../constants';
@@ -157,19 +160,16 @@
       username: '',
       password: '',
       confirmedPassword: '',
-      selectedFacility: {},
       nameBlurred: false,
       usernameBlurred: false,
       passwordBlurred: false,
       confirmedPasswordBlurred: false,
-      facilityBlurred: false,
       formSubmitted: false,
       showTerms: false,
       termsAgreed: false,
       termsAgreementCheckboxBlurred: false,
     }),
     computed: {
-      ...mapGetters(['facilities']),
       ...mapState('signUp', ['errors', 'busy']),
       currentFacilityId() {
         return this.$store.getters.userFacilityId;
@@ -310,18 +310,13 @@
       reEnterPassword: 'Re-enter password',
       passwordMatchError: 'Passwords do not match',
       finish: 'Finish',
-      facility: 'Facility',
       required: 'This field is required',
       documentTitle: 'User Sign Up',
-      privacyLink: 'Usage and privacy in Kolibri',
-      genericError: 'Something went wrong during sign up!',
       phoneNumberInvalid: 'A valid phone number has at least 9 digits',
       usernameAlreadyExistsError: 'An account with that phone number already exists',
-      logIn: 'Sign in',
       termsAgreementLabel: 'I agree to the terms of service & privacy policy',
       termsOfServiceModalHeader: 'Terms of service & privacy policy',
       viewTermsOfServicePrompt: 'View terms of service & privacy policy',
-      appBarHeader: 'Instant Schools',
       close: 'Close',
     },
   };
@@ -357,7 +352,8 @@
   .terms {
     width: 80vw;
     height: 80vh;
-    border: none;
+    border: 0;
+
     &-agreement {
       $height-of-prompt: 18px + 16px;
       $height-of-checkbox: 48px + 16px;
@@ -392,6 +388,7 @@
           // outline: $core-outline;
         }
       }
+
       &-checkbox {
         margin-top: 0;
         // margin-bottom: $form-item-spacing;
@@ -399,6 +396,7 @@
           // color: $keen-invalid-md-red;
         }
       }
+
       &-error-box {
         display: block;
         font-size: 14px; // same as error messages from inputs

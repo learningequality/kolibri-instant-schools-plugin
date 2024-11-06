@@ -17,9 +17,9 @@
     <form @submit.prevent="submitPhoneNumber">
       <KSelect
         v-model="selectedPrefix"
-        :label="phonePrefixOptions.find(o => o.value == selectedPrefix)"
+        :label="phonePrefixOptions.find(o => o.value === selectedPrefix)"
         :options="phonePrefixOptions"
-        @change="s => selectedPrefix = s"
+        @change="s => (selectedPrefix = s)"
       />
       <KTextbox
         ref="phoneNumber"
@@ -62,35 +62,42 @@
    * follow and the rest of the country codes are available after that.
    */
 
-  const OPCO_COUNTRY_CODES = ['DRC','TZ','GH','MZ'];
+  const OPCO_COUNTRY_CODES = ['DRC', 'TZ', 'GH', 'MZ'];
 
   const OPCO_PHONE_PREFIXES = countryCodesAndPrefixes.reduce((acc, val) => {
-    var countryCode = val["code"];
+    var countryCode = val['code'];
     if (OPCO_COUNTRY_CODES.includes(countryCode)) {
-      acc[countryCode] = val["dial_code"]
+      acc[countryCode] = val['dial_code'];
     }
     return acc;
-  }, {})
+  }, {});
 
-  const CURRENT_COUNTRY_PREFIX = (countryCodesAndPrefixes.find(o => o.code == plugin_data["COUNTRY_CODE"]) || {}).dial_code;
+  const CURRENT_COUNTRY_PREFIX = (
+    countryCodesAndPrefixes.find(o => o.code === plugin_data['COUNTRY_CODE']) || {}
+  ).dial_code;
 
   // Sorted so that all of the OPCO codes sort to the top
-  const PHONE_PREFIX_OPTIONS = countryCodesAndPrefixes.map(codeObj => {
-    // create object that maps code (country code) to a pretty version for the select label
-    var { dial_code, name, code } = codeObj;
-    var label = `${dial_code} ${name} (${code})`;
-    return { label, value: dial_code };
-  }).sort((a,b) => { // Then custom on top of that
-    if(a.value === CURRENT_COUNTRY_PREFIX) {
+  const PHONE_PREFIX_OPTIONS = countryCodesAndPrefixes
+    .map(codeObj => {
+      // create object that maps code (country code) to a pretty version for the select label
+      var { dial_code, name, code } = codeObj;
+      var label = `${dial_code} ${name} (${code})`;
+      return { label, value: dial_code };
+    })
+    .sort((a, b) => {
+      // Then custom on top of that
+      if (a.value === CURRENT_COUNTRY_PREFIX) {
         // The current country's code is always #1
         return -1;
-      } else if(Object.values(OPCO_PHONE_PREFIXES).includes(a.value) && b.value !== CURRENT_COUNTRY_PREFIX) {
+      } else if (
+        Object.values(OPCO_PHONE_PREFIXES).includes(a.value) &&
+        b.value !== CURRENT_COUNTRY_PREFIX
+      ) {
         // Other proper OPCO codes are next
         return -1;
       }
       return 0;
-    }
-  )
+    });
 
   export default {
     name: 'PhoneNumberForm',
@@ -111,7 +118,7 @@
       return {
         phoneNumber: '',
         phoneNumberShouldValidate: false,
-        selectedPrefix: PHONE_PREFIX_OPTIONS[0]
+        selectedPrefix: PHONE_PREFIX_OPTIONS[0],
       };
     },
     computed: {
@@ -123,7 +130,7 @@
       },
       phonePrefixOptions() {
         return PHONE_PREFIX_OPTIONS;
-      }
+      },
     },
     watch: {
       phoneLookupFailed(val) {
@@ -138,7 +145,10 @@
       submitPhoneNumber() {
         this.phoneNumberShouldValidate = true;
         if (this.phoneNumberIsValid) {
-          this.$emit('submit', { phoneNumber: this.phoneNumber, phonePrefix: this.selectedPrefix.value });
+          this.$emit('submit', {
+            phoneNumber: this.phoneNumber,
+            phonePrefix: this.selectedPrefix.value,
+          });
         } else {
           this.focusTextbox();
         }

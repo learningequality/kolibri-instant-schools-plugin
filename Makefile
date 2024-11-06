@@ -23,8 +23,7 @@ clean-pyc:
 	find . -name '*~' -exec rm -f {} +
 
 dist: clean
-	python setup.py sdist
-	python setup.py bdist_wheel --universal
+	python setup.py sdist --format=zip
 
 release: dist
 	echo "Ensure that you have built the frontend files using Kolibri"

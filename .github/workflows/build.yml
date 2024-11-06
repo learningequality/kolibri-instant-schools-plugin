@@ -1,0 +1,51 @@
+name: Build and deploy
+
+on:
+  push:
+    branches:
+    - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Build frontend assets
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '18.x'
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Cache Node.js modules
+      uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.OS }}-node-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+    - name: Build assets
+      run: |
+        pip install -e .
+        npm run build
+    - name: Make dist zip file
+      run: |
+        make dist
+        mv dist/kolibri_instant_schools_plugin-*.zip kolibri_instant_schools_plugin.zip
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GH_UPLOADER_GCP_SA_CREDENTIALS }}'
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v0'
+    - name: Upload files to Google Cloud Storage
+      uses: 'google-github-actions/upload-cloud-storage@v0'
+      with:
+        path: 'kolibri_instant_schools_plugin.zip'
+        destination: '${{ secrets.BCK_BUILD_ARTIFACT_GCS_BUCKET }}/'
+        process_gcloudignore: false

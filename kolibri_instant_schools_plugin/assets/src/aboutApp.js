@@ -1,9 +1,9 @@
 import router from 'kolibri.coreVue.router';
 import store from 'kolibri.coreVue.vuex.store';
+import KolibriApp from 'kolibri_app';
 import RootVue from './views/about';
 import pluginModule from './modules/pluginModule';
 import { PageNames } from './constants';
-import KolibriApp from 'kolibri_app';
 
 class InstantSchoolsAboutModule extends KolibriApp {
   get routes() {

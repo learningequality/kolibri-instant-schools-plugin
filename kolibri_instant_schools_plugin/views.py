@@ -13,7 +13,7 @@ class UserView(TemplateView):
     template_name = "user/user.html"
 
     def get(self, request):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             return RootURLRedirectView.as_view()(request)
         return super(UserView, self).get(request)
 

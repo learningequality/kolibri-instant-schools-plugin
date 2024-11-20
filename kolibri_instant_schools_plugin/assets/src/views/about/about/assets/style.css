@@ -1,9 +1,9 @@
 body {
-  background-color: white;
+  padding-bottom: 16px;
+  overflow: hidden;
   font-family: sans-serif;
   color: #3a3a3a;
-  overflow: hidden;
-  padding-bottom: 16px;
+  background-color: white;
 }
 
 h1 {
@@ -24,14 +24,11 @@ h6 {
 .vodafone-logo {
   display: block;
   width: 100%;
-  margin-top: 16px;
-  margin-bottom: 16px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.vodafone-logo {
   max-width: 300px;
+  margin-top: 16px;
+  margin-right: auto;
+  margin-bottom: 16px;
+  margin-left: auto;
 }
 
 .icon {
@@ -46,7 +43,7 @@ table {
 table,
 th,
 td {
+  padding: 8px;
   text-align: left;
   border: 1px solid #686868;
-  padding: 8px;
 }

@@ -14,13 +14,13 @@ module.exports = [
   {
     bundle_id: 'instant_schools_about_nav_action',
     webpack_config: {
-      entry: './assets/src/views/SideNav/AboutSideNavEntry.vue',
+      entry: './assets/src/views/SideNav/AboutSideNavEntry.js',
     },
   },
   {
     bundle_id: 'instant_schools_login_nav_action',
     webpack_config: {
-      entry: './assets/src/views/SideNav/LoginSideNavEntry.vue',
+      entry: './assets/src/views/SideNav/LoginSideNavEntry.js',
     },
   },
 ];

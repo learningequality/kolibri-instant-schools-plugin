@@ -1,4 +1,5 @@
 <template>
+
   <KPageContainer>
     <iframe
       ref="iframe"
@@ -26,6 +27,7 @@
       />
     </KButtonGroup>
   </KPageContainer>
+
 </template>
 
 
@@ -37,10 +39,6 @@
 
   export default {
     name: 'AboutPage',
-    $trs: {
-      viewFaq: 'More information',
-      startLearning: 'Start learning',
-    },
     data() {
       return {
         height: 300,
@@ -55,7 +53,7 @@
       },
       aboutSrc() {
         //return urls["kolibri:kolibri_instant_schools_plugin:aboutfaq-detail"]()
-        return "/en/user/api/aboutfaq/About";
+        return '/en/user/api/aboutfaq/About';
       },
     },
     mounted() {
@@ -71,9 +69,13 @@
       resizeIframe() {
         this.height = this.$refs.iframe.contentWindow.document.body.scrollHeight;
       },
-      throttleResizeIframe: throttle(function() {
+      throttleResizeIframe: throttle(function () {
         this.resizeIframe();
       }, 100),
+    },
+    $trs: {
+      viewFaq: 'More information',
+      startLearning: 'Start learning',
     },
   };
 

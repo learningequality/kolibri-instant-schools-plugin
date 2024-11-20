@@ -61,16 +61,14 @@
       },
     },
     methods: {
-      submitTokenRequest({phoneNumber, phonePrefix}) {
+      submitTokenRequest({ phoneNumber, phonePrefix }) {
         this.disableForms = true;
         createResetToken({ phoneNumber, phonePrefix })
           .then(() => {
             this.status = STATES.MESSAGE_SENT;
-            console.log("MADE ME A TOKEN")
           })
           .catch(err => {
-            console.log(" OH SHIT ")
-            const code = typeof(err.status) == 'object' ? err.status.code : err.status;
+            const code = typeof err.status == 'object' ? err.status.code : err.status;
             if (code === 400) {
               this.status = STATES.ACCOUNT_NOT_FOUND;
             } else {
@@ -80,9 +78,6 @@
           .then(() => {
             this.disableForms = false;
           });
-      },
-      resetState() {
-        this.status = STATES.ENTER_PHONE_NUMBER;
       },
       closeModal() {
         // guard against closing until 'X' button can be removed
@@ -99,7 +94,6 @@
       },
     },
     $trs: {
-      accountNotFound: 'Account not found',
       messageSent: 'Message sent',
       resetPassword: 'Reset password',
       smsServiceError: 'SMS service error',

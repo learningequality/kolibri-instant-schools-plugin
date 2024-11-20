@@ -11,7 +11,7 @@ from kolibri.core.webpack import hooks as webpack_hooks
 from kolibri.plugins import KolibriPluginBase
 from kolibri.plugins.hooks import register_hook
 from kolibri.core import theme_hook
-from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.templatetags.static import static
 
 APP_TITLE = getenv("INSTANT_SCHOOLS_APP_TITLE") or "Instant Schools"
 
@@ -99,7 +99,7 @@ class DefaultThemeHook(theme_hook.ThemeHook):
             },
             "tokenMapping": {
                 "primary": "#e11300",
-                "appBar": "#333333",
+                "appBar": "#cccccc",
             },
             # sign-in page config
             "signIn": {

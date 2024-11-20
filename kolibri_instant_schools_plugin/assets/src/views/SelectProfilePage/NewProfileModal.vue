@@ -22,10 +22,10 @@
           :invalidText="profileNameInvalidText"
           :maxlength="120"
           :disabled="disabled"
-          @blur="profileNameIsBlurred=true"
+          @blur="profileNameIsBlurred = true"
         />
 
-        <KButtonGroup style="float: right;">
+        <KButtonGroup style="float: right">
           <KButton
             :text="$tr('cancel')"
             :primary="false"
@@ -49,7 +49,7 @@
 <script>
 
   import { mapState } from 'vuex';
-  import UiAlert from 'keen-ui/src/UiAlert';
+  import UiAlert from 'kolibri-design-system/lib/keen/UiAlert';
 
   export default {
     name: 'NewProfileModal',

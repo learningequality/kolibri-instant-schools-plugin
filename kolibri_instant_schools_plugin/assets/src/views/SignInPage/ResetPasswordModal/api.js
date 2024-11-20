@@ -1,4 +1,4 @@
-import client from 'kolibri.client'
+import client from 'kolibri.client';
 import urls from 'kolibri.urls';
 
 export function createResetToken({ phoneNumber, phonePrefix }) {

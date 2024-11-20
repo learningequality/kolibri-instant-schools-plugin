@@ -5,7 +5,10 @@
     <p class="explanation">
       {{ explanation }}
     </p>
-    <div v-if="showButton" class="buttons">
+    <div
+      v-if="showButton"
+      class="buttons"
+    >
       <KButton
         :text="$tr('homeButton')"
         :primary="true"

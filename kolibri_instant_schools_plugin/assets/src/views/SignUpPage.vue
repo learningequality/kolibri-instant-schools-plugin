@@ -1,130 +1,140 @@
 <template>
 
-  <div class="signup-page">
-    <form
-      ref="form"
-      class="signup-form"
-      @submit.prevent="signUp"
-    >
-      <h1>{{ $tr('createAccount') }}</h1>
-
-      <KTextbox
-        id="name"
-        ref="name"
-        v-model="name"
-        type="text"
-        autocomplete="name"
-        :label="$tr('name')"
-        :maxlength="120"
-        :autofocus="true"
-        :invalid="nameIsInvalid"
-        :invalidText="nameIsInvalidText"
-        @blur="nameBlurred = true"
-      />
-
-      <KTextbox
-        id="username"
-        ref="username"
-        v-model="username"
-        type="tel"
-        autocomplete="tel"
-        :label="$tr('phoneNumberLabel')"
-        :invalid="usernameIsInvalid"
-        :invalidText="usernameIsInvalidText"
-        :showInvalidText="usernameIsInvalid"
-        @blur="usernameBlurred = true"
-        @input="resetSignUpState"
-      />
-
-      <KTextbox
-        id="password"
-        ref="password"
-        v-model="password"
-        type="password"
-        autocomplete="new-password"
-        :label="$tr('password')"
-        :invalid="passwordIsInvalid"
-        :invalidText="passwordIsInvalidText"
-        :showInvalidText="passwordIsInvalidText"
-        @blur="passwordBlurred = true"
-      />
-
-      <KTextbox
-        id="confirmed-password"
-        ref="confirmedPassword"
-        v-model="confirmedPassword"
-        type="password"
-        autocomplete="new-password"
-        :label="$tr('reEnterPassword')"
-        :invalid="confirmedPasswordIsInvalid"
-        :invalidText="confirmedPasswordIsInvalidText"
-        @blur="confirmedPasswordBlurred = true"
-      />
-
-      <p class="privacy-link">
-        <KButton
-          :text="$tr('viewTermsOfServicePrompt')"
-          appearance="basic-link"
-          @click="showTerms = true"
-        />
-      </p>
-
-      <KCheckbox
-        id="terms-agreement-checkbox"
-        :class="['terms-agreement-checkbox', termsNotAgreed ? 'invalid' : '']"
-        :checked="termsAgreed"
-        :label="$tr('termsAgreementLabel')"
-        @change="termsAgreed = $event"
-        @blur="termsAgreementCheckboxBlurred = true"
-      />
-
-      <label
-        v-if="termsNotAgreed"
-        aria-live="polite"
-        for="terms-agreement-checkbox"
-        class="terms-agreement-error-box"
+  <ImmersivePage
+    :appBarTitle="title"
+    :route="backRoute"
+  >
+    <div class="signup-page">
+      <form
+        ref="form"
+        class="signup-form"
+        @submit.prevent="signUp"
       >
-        {{ termsNotAgreedText }}
-      </label>
+        <h1>{{ $tr('createAccount') }}</h1>
 
-      <p>
-        <KButton
-          :disabled="busy"
-          :primary="true"
-          :text="$tr('finish')"
-          type="submit"
-          class="submit"
+        <KTextbox
+          id="name"
+          ref="name"
+          v-model="name"
+          type="text"
+          autocomplete="name"
+          :label="$tr('name')"
+          :maxlength="120"
+          :autofocus="true"
+          :invalid="nameIsInvalid"
+          :invalidText="nameIsInvalidText"
+          @blur="nameBlurred = true"
         />
-      </p>
-    </form>
 
-    <div class="footer">
-      <LanguageSwitcherFooter />
+        <KTextbox
+          id="username"
+          ref="username"
+          v-model="username"
+          type="tel"
+          autocomplete="tel"
+          :label="$tr('phoneNumberLabel')"
+          :invalid="usernameIsInvalid"
+          :invalidText="usernameIsInvalidText"
+          :showInvalidText="usernameIsInvalid"
+          @blur="usernameBlurred = true"
+          @input="resetSignUpState"
+        />
+
+        <KTextbox
+          id="password"
+          ref="password"
+          v-model="password"
+          type="password"
+          autocomplete="new-password"
+          :label="$tr('password')"
+          :invalid="passwordIsInvalid"
+          :invalidText="passwordIsInvalidText"
+          :showInvalidText="passwordIsInvalidText"
+          @blur="passwordBlurred = true"
+        />
+
+        <KTextbox
+          id="confirmed-password"
+          ref="confirmedPassword"
+          v-model="confirmedPassword"
+          type="password"
+          autocomplete="new-password"
+          :label="$tr('reEnterPassword')"
+          :invalid="confirmedPasswordIsInvalid"
+          :invalidText="confirmedPasswordIsInvalidText"
+          @blur="confirmedPasswordBlurred = true"
+        />
+
+        <p class="privacy-link">
+          <KButton
+            :text="$tr('viewTermsOfServicePrompt')"
+            appearance="basic-link"
+            @click="showTerms = true"
+          />
+        </p>
+
+        <KCheckbox
+          id="terms-agreement-checkbox"
+          :class="['terms-agreement-checkbox', termsNotAgreed ? 'invalid' : '']"
+          :checked="termsAgreed"
+          :label="$tr('termsAgreementLabel')"
+          @change="termsAgreed = $event"
+          @blur="termsAgreementCheckboxBlurred = true"
+        />
+
+        <label
+          v-if="termsNotAgreed"
+          aria-live="polite"
+          for="terms-agreement-checkbox"
+          class="terms-agreement-error-box"
+        >
+          {{ termsNotAgreedText }}
+        </label>
+
+        <p>
+          <KButton
+            :disabled="busy"
+            :primary="true"
+            :text="$tr('finish')"
+            type="submit"
+            class="submit"
+          />
+        </p>
+      </form>
+
+      <div class="footer">
+        <LanguageSwitcherFooter />
+      </div>
+
+      <KModal
+        v-if="showTerms"
+        :title="$tr('termsOfServiceModalHeader')"
+        :size="'large'"
+        @cancel="showTerms = false"
+      >
+        <iframe
+          class="terms"
+          src="/content/databases/about/tos.txt"
+        ></iframe>
+        <KButton
+          :text="$tr('close')"
+          :primary="false"
+          :disabled="false"
+          @click="showTerms = false"
+        />
+      </KModal>
     </div>
-
-    <KModal
-      v-if="showTerms"
-      :title="$tr('termsOfServiceModalHeader')"
-      :size="'large'"
-      @cancel="showTerms = false"
-    >
-      <iframe class="terms" src="/content/databases/about/tos.txt"></iframe>
-      <KButton
-        :text="$tr('close')"
-        :primary="false"
-        :disabled="false"
-        @click="showTerms = false"
-      />
-    </KModal>
-  </div>
+  </ImmersivePage>
 
 </template>
 
 
 <script>
 
-  import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
+  import { mapState, mapActions, mapMutations } from 'vuex';
+  import ImmersivePage from 'kolibri.coreVue.components.ImmersivePage';
   import { ERROR_CONSTANTS } from 'kolibri.coreVue.vuex.constants';
+  import { PageNames } from '../constants';
   import getUrlParameter from './getUrlParameter';
   import LanguageSwitcherFooter from './LanguageSwitcherFooter';
 
@@ -136,29 +146,33 @@
       };
     },
     components: {
+      ImmersivePage,
       LanguageSwitcherFooter,
+    },
+    props: {
+      title: {
+        type: String,
+        required: true,
+      },
     },
     data: () => ({
       name: '',
       username: '',
       password: '',
       confirmedPassword: '',
-      selectedFacility: {},
       nameBlurred: false,
       usernameBlurred: false,
       passwordBlurred: false,
       confirmedPasswordBlurred: false,
-      facilityBlurred: false,
       formSubmitted: false,
       showTerms: false,
       termsAgreed: false,
       termsAgreementCheckboxBlurred: false,
     }),
     computed: {
-      ...mapGetters(['facilities']),
       ...mapState('signUp', ['errors', 'busy']),
-      currentFacility() {
-        return this.$store.getters.currentFacilityId;
+      currentFacilityId() {
+        return this.$store.getters.userFacilityId;
       },
       nameIsInvalidText() {
         if (this.nameBlurred || this.formSubmitted) {
@@ -245,6 +259,9 @@
         // query is before hash
         return getUrlParameter('next');
       },
+      backRoute() {
+        return { name: PageNames.SIGN_IN };
+      },
     },
     methods: {
       ...mapActions('signUp', ['signUpNewUser']),
@@ -256,7 +273,7 @@
         const canSubmit = this.formIsValid && !this.busy;
         if (canSubmit) {
           const payload = {
-            facility: this.currentFacility.id,
+            facility: this.currentFacilityId,
             full_name: this.name,
             username: this.username,
             password: this.password,
@@ -293,18 +310,13 @@
       reEnterPassword: 'Re-enter password',
       passwordMatchError: 'Passwords do not match',
       finish: 'Finish',
-      facility: 'Facility',
       required: 'This field is required',
       documentTitle: 'User Sign Up',
-      privacyLink: 'Usage and privacy in Kolibri',
-      genericError: 'Something went wrong during sign up!',
       phoneNumberInvalid: 'A valid phone number has at least 9 digits',
       usernameAlreadyExistsError: 'An account with that phone number already exists',
-      logIn: 'Sign in',
       termsAgreementLabel: 'I agree to the terms of service & privacy policy',
       termsOfServiceModalHeader: 'Terms of service & privacy policy',
       viewTermsOfServicePrompt: 'View terms of service & privacy policy',
-      appBarHeader: 'Instant Schools',
       close: 'Close',
     },
   };
@@ -340,7 +352,8 @@
   .terms {
     width: 80vw;
     height: 80vh;
-    border: none;
+    border: 0;
+
     &-agreement {
       $height-of-prompt: 18px + 16px;
       $height-of-checkbox: 48px + 16px;
@@ -375,6 +388,7 @@
           // outline: $core-outline;
         }
       }
+
       &-checkbox {
         margin-top: 0;
         // margin-bottom: $form-item-spacing;
@@ -382,6 +396,7 @@
           // color: $keen-invalid-md-red;
         }
       }
+
       &-error-box {
         display: block;
         font-size: 14px; // same as error messages from inputs

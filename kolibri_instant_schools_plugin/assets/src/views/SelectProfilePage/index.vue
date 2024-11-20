@@ -1,35 +1,37 @@
 <template>
 
-  <div>
-    <div class="container">
-      <h1>{{ $tr('selectProfilePageHeader') }}</h1>
+  <AppBarPage :appBarTitle="title">
+    <div>
+      <div class="container">
+        <h1>{{ $tr('selectProfilePageHeader') }}</h1>
 
-      <div class="profiles">
-        <ProfilesList
-          :profiles="profiles"
+        <div class="profiles">
+          <ProfilesList
+            :profiles="profiles"
+            :disabled="disableForms"
+            @selectprofile="signInWithProfile"
+          />
+        </div>
+
+        <div class="buttons">
+          <KButton
+            :text="$tr('newProfileButton')"
+            :primary="false"
+            :disabled="disableForms"
+            @click="openModal"
+          />
+        </div>
+
+        <NewProfileModal
+          v-if="showNewProfileModal"
           :disabled="disableForms"
-          @selectprofile="signInWithProfile"
+          :showError="newProfileFailed"
+          @submit="addProfileToAccount"
+          @close="closeModal"
         />
       </div>
-
-      <div class="buttons">
-        <KButton
-          :text="$tr('newProfileButton')"
-          :primary="false"
-          :disabled="disableForms"
-          @click="openModal"
-        />
-      </div>
-
-      <NewProfileModal
-        v-if="showNewProfileModal"
-        :disabled="disableForms"
-        :showError="newProfileFailed"
-        @submit="addProfileToAccount"
-        @close="closeModal"
-      />
     </div>
-  </div>
+  </AppBarPage>
 
 </template>
 
@@ -46,6 +48,12 @@
     components: {
       NewProfileModal,
       ProfilesList,
+    },
+    props: {
+      title: {
+        type: String,
+        required: true,
+      },
     },
     data() {
       return {
@@ -107,8 +115,6 @@
       },
     },
     $trs: {
-      instantSchoolsBrand: 'Instant Schools',
-      logIn: 'Sign in',
       newProfileButton: 'New profile',
       selectProfilePageHeader: 'Select profile',
     },

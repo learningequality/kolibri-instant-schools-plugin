@@ -4,15 +4,41 @@ from __future__ import unicode_literals
 from kolibri_instant_schools_plugin.instant_schools_settings import *  # noqa
 
 # copied from kolibri.deployment.settings.dev
-INSTALLED_APPS += ["rest_framework_swagger"]  # noqa
+DEBUG = True
+
+# Settings might be tuples, so switch to lists
+INSTALLED_APPS = list(INSTALLED_APPS) + ["drf_yasg"]  # noqa F405
+webpack_middleware = "kolibri.core.webpack.middleware.WebpackErrorHandler"
+no_login_popup_middleware = (
+    "kolibri.core.auth.middleware.XhrPreventLoginPromptMiddleware"
+)
+MIDDLEWARE = list(MIDDLEWARE) + [  # noqa F405
+    webpack_middleware,
+    no_login_popup_middleware,
+]
+
 INTERNAL_IPS = ["127.0.0.1"]
+
 ROOT_URLCONF = "kolibri.deployment.default.dev_urls"
+
 DEVELOPER_MODE = True
-# Create a dummy cache for each cache
-CACHES = {
-    key: {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}
-    for key in CACHES.keys()  # noqa F405
+os.environ.update({"KOLIBRI_DEVELOPER_MODE": "True"})
+
+
+REST_FRAMEWORK = {
+    "UNAUTHENTICATED_USER": "kolibri.core.auth.models.KolibriAnonymousUser",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        # Always keep this first, so that we consistently return 403 responses
+        # when a request is unauthenticated.
+        "rest_framework.authentication.SessionAuthentication",
+        # Activate basic auth for external API testing tools
+        "rest_framework.authentication.BasicAuthentication",
+    ],
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ),
+    "EXCEPTION_HANDLER": "kolibri.core.utils.exception_handler.custom_exception_handler",
 }
 
-# so user won't be logged out during development
-SESSION_COOKIE_AGE = 10000000
+SWAGGER_SETTINGS = {"DEFAULT_INFO": "kolibri.deployment.default.dev_urls.api_info"}

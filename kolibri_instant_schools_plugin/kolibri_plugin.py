@@ -17,6 +17,7 @@ APP_TITLE = getenv("INSTANT_SCHOOLS_APP_TITLE") or "Instant Schools"
 
 
 class User(KolibriPluginBase):
+    root_view_urls = "root_urls"
     translated_view_urls = "urls"
     untranslated_view_urls = "untranslated_urls"
 

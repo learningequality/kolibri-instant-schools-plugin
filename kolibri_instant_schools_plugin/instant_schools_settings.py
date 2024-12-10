@@ -2,6 +2,8 @@
 from __future__ import unicode_literals
 from kolibri.deployment.default.settings.base import *
 
+INSTALLED_APPS = list(INSTALLED_APPS) + ["django.contrib.admin"]
+
 OLD_DB_PATH = os.path.join(conf.KOLIBRI_HOME, 'db.sqlite3')
 OLD_HASH_DB_PATH = os.path.join(conf.KOLIBRI_HOME, 'phonehashreverselookup.db')
 

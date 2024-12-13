@@ -134,6 +134,8 @@ class DefaultThemeHook(theme_hook.ThemeHook):
             },
             # app bar config
             "appBar": {
+                "background": "#333333",
+                "textColor": "#ffffff",
                 "topLogo": {
                     "src": logo_file,
                 },

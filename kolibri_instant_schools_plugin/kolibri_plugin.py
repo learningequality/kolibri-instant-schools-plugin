@@ -100,8 +100,6 @@ class DefaultThemeHook(theme_hook.ThemeHook):
             },
             "tokenMapping": {
                 "primary": "#e11300",
-                "appBar": "#333333",
-                "appBarText": "#ffffff",
             },
             # sign-in page config
             "signIn": {

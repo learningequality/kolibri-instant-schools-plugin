@@ -17,6 +17,7 @@ APP_TITLE = getenv("INSTANT_SCHOOLS_APP_TITLE") or "Instant Schools"
 
 
 class User(KolibriPluginBase):
+    root_view_urls = "root_urls"
     translated_view_urls = "urls"
     untranslated_view_urls = "untranslated_urls"
 
@@ -99,7 +100,6 @@ class DefaultThemeHook(theme_hook.ThemeHook):
             },
             "tokenMapping": {
                 "primary": "#e11300",
-                "appBar": "#cccccc",
             },
             # sign-in page config
             "signIn": {
@@ -132,6 +132,8 @@ class DefaultThemeHook(theme_hook.ThemeHook):
             },
             # app bar config
             "appBar": {
+                "background": "#333333",
+                "textColor": "#ffffff",
                 "topLogo": {
                     "src": logo_file,
                 },

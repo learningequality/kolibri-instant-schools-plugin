@@ -1,25 +1,10 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from kolibri.deployment.default.settings.base import *
+INSTALLED_APPS = ["django.contrib.admin"]
 
-INSTALLED_APPS = list(INSTALLED_APPS) + ["django.contrib.admin"]
-
-OLD_DB_PATH = os.path.join(conf.KOLIBRI_HOME, 'db.sqlite3')
-OLD_HASH_DB_PATH = os.path.join(conf.KOLIBRI_HOME, 'phonehashreverselookup.db')
-
-DATABASES["default"]["NAME"] = os.path.join(conf.KOLIBRI_HOME, 'instant_schools_primary.sqlite3')
-
-LANGUAGES = [
-    ('en', 'English'),
-    ('sw-tz', 'Kiswahili'),
-    ('fr-fr', 'Français'),
-    ('pt-br', 'Português'),
-]
-
-USE_X_FORWARDED_HOST = (not DEBUG)
-USE_X_FORWARDED_PORT = (not DEBUG)
-CSRF_COOKIE_SECURE = (not DEBUG)
-SESSION_COOKIE_SECURE = (not DEBUG)
-ALLOW_CERTIFICATE_PUSHING = (not DEBUG) 
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+ALLOW_CERTIFICATE_PUSHING = True 
 SECURE_FRAME_DENY = False
 X_FRAME_OPTIONS = "SAMEORIGIN"

@@ -2,15 +2,15 @@
 Kolibri Instant Schools Plugin
 =================================
 
-How can I install this plugin for development?
+How can I install this plugin for development or local testing?
 ------------------------------
 
-1. Ensure you have (Kolibri)[https://github.com/learningequality/kolibri] setup for local development. Note that all commands below are to be done in the Kolibri repo unless specified otherwise. Also, be sure you're checking out the correct version branch. As of August 2020, this would be `release-v0.12.x`.
+1. Ensure you have (Kolibri)[https://github.com/learningequality/kolibri] setup for local development. **Note that all commands below are to be done in the Kolibri repo unless specified otherwise.** Also, be sure you're checking out the correct version branch. The latest version of Kolibri supported by the plugin is the `release-v0.15.x` branch.
 2. `git clone` this `kolibri_instant_schools_plugin` repository and then `cd` back into where you setup your Kolibri for development.
-3. Set and export the following local variables for use in your development environment: `KOLIBRI_HOME` - this ought to be a new path that was not previously used as a `KOLIBRI_HOME`. Also set `DJANGO_SETTINGS_MODULE` to `kolibri_instant_schools_plugin.instant_schools_settings`.
+3. See the **Env Vars** section below and set the required variables.
 4. Run `pip install -e ../relative/path/to/kolibri_instant_schools_plugin`
-5. Run `kolibri manage migrate --database=instant_schools`
-6. Run `kolibri plugin kolibri_instant_schools_plugin enable` and `kolibri plugin kolibri.plugins.user disable`. If you find that you're having issues, see the next item.
+5. Run `kolibri manage migrate`
+6. Run `kolibri plugin enable kolibri_instant_schools_plugin` and `kolibri plugin disable kolibri.plugins.user_auth kolibri.plugins.default_theme`.
 7. As an alternative to item 6 above, we may instead use plugins files and update our package.json scripts __TEMPORARILY__ in our local Kolibri. Do not commit these changes to Kolibri.
 
 Make your `build_tools/build_plugins.txt` read as follows and remember that this is __TEMPORARY__ and should not be committed to Kolibri:
@@ -42,27 +42,19 @@ If things aren't working, double and triple check that the user plugin is disabl
 
 9. (Optional) - Copy the `kolibri_instant_schools_plugin/assets/src/views/about/views/about` to `$(KOLIBRI_HOME)/content/databases`. Note that the about folders are indeed nested and that is not a typo. 
 
-How do I test SMPP locally?
-----------------------------
+Env Vars
+--------
 
-1. From the root of the `kolibri_instant_schools_plugin` project, `cd kolibri_instant_schools_plugin/smpp/SMPPSim` 
-2. Now, unzip the file: `unzip SMPPSim.zip` which should create a new folder `SMPPSim` 
-3. Now, `cd SMPPSim` and you can run `sudo sh startsmppsim.sh` from that folder anytime to test SMPP.
+The following environment variables are *required*:
 
-This will start a server that will be used for the SMPP testing. You can see output of SMPP activity logged in the console where this is run.
+- `SMS_MESSAGE_TEMPLATE` - A string prepared for Python's `string.format()` with one variable `{url}` within the string somewhere. That will be where the URL the user clicks to reset their password will be inserted into the message template.
+- `TWILIO_SID` & `TWILIO_AUTH_TOKEN` - These will allow us to send password reset tokens. You can find these in your Twilio account.
+- `POST_USER_URL` - This is the base URL to where user information will be securely POSTed to partners.
 
-Notes about nginx configuration and SMPP and SMS Password Reset
-------------------------------------------
+The following environment variables are *optional*:
 
-If you are running nginx as a reverse proxy, you will need to ensure that the following headers are set so that the password reset generates the link with the proper host in the URL:
+- `INSTANT_SCHOOLS_APP_NAME` - This allows partners to have their instances of the platform branded with a name of their choice.
 
-
-```
-proxy_set_header X-Forwarded-Host $host;  # allows django to determine the name/addr of the server that the client originally connected to (see request.get_host()) 
-proxy_set_header X-Forwarded-Port $server_port;  # same idea as above, but for port number (see request.get_port()) 
-proxy_set_header X-Forwarded-Server $host; 
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-```
 
 How can I install this plugin, but not for development?
 ------------------------------
@@ -79,19 +71,3 @@ Note that this may be incomplete. Typically, a plugin like this will be used wit
 
 3. Restart Kolibri.
 
-
-How to publish to PyPi?
-------------------------------
-
-1. Follow the instructions above to installing the plugin for development.
-
-2. Update `setup.py` to a newer version.
-
-3. In the terminal move to the root level of repo dir and run the following command to publish to PyPi:
-
-    `make release`
-
-How to use a custom title for the app?
---------------------------------------
-
-The Instant Schools plugin will look for an environment variable `INSTANT_SCHOOLS_APP_TITLE`. If there is nothing set for that variable, the default title "Instant Schools" will be used.

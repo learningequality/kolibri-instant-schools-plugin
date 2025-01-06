@@ -34,15 +34,11 @@
 <script>
 
   import throttle from 'lodash/throttle';
-  import { PageNames } from '../../../constants';
   import urls from 'kolibri.urls';
+  import { PageNames } from '../../../constants';
 
   export default {
     name: 'AboutPage',
-    $trs: {
-      viewFaq: 'More information',
-      startLearning: 'Start learning',
-    },
     data() {
       return {
         height: 300,
@@ -56,7 +52,8 @@
         return urls['kolibri:kolibri.plugins.learn:learn']();
       },
       aboutSrc() {
-        return '/content/databases/about/about.html';
+        //return urls["kolibri:kolibri_instant_schools_plugin:aboutfaq-detail"]()
+        return '/en/user/api/aboutfaq/About';
       },
     },
     mounted() {
@@ -72,9 +69,13 @@
       resizeIframe() {
         this.height = this.$refs.iframe.contentWindow.document.body.scrollHeight;
       },
-      throttleResizeIframe: throttle(function() {
+      throttleResizeIframe: throttle(function () {
         this.resizeIframe();
       }, 100),
+    },
+    $trs: {
+      viewFaq: 'More information',
+      startLearning: 'Start learning',
     },
   };
 

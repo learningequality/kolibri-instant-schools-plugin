@@ -5,29 +5,33 @@
   "scripts": {
     "build": "kolibri-tools build prod --plugins kolibri_instant_schools_plugin",
     "stats": "kolibri-tools build stats --plugins kolibri_instant_schools_plugin",
-    "django-devserver": "DJANGO_SETTINGS_MODULE=kolibri_instant_schools_plugin.dev_settings kolibri --debug manage runserver \"0.0.0.0:8000\" ",
+    "django-devserver": "DJANGO_SETTINGS_MODULE=kolibri_instant_schools_plugin.dev_settings kolibri start --foreground --debug --port=8000",
     "watch": "kolibri-tools build dev --plugins kolibri_instant_schools_plugin --port 4000",
     "watch-hot": "kolibri-tools build dev --plugins kolibri_instant_schools_plugin --port 4000 --hot",
-    "devserver": "npm-run-all --parallel django-devserver watch lint:watch",
-    "devserver-hot": "npm-run-all --parallel django-devserver watch-hot lint:watch",
+    "devserver": "npm-run-all --parallel django-devserver watch",
+    "devserver-hot": "npm-run-all --parallel django-devserver watch-hot",
     "clean": "kolibri-tools build clean --file ./build_plugins.txt",
     "lint": "kolibri-tools lint",
-    "lint-all": "kolibri-tools lint 'kolibri_instant_schools_plugin/assets/**/*.{js,vue,scss,less,css}'",
+    "lint-all": "kolibri-tools lint --pattern 'kolibri_instant_schools_plugin/assets/**/*.{js,vue,scss,less,css}' --ignore '**/normalize.min.css'",
     "lint-all:fix": "yarn run lint-all -w",
     "lint:fix": "yarn run lint -w",
-    "lint:watch": "yarn lint-all -w -m",
     "test": "yarn run test-jest --watch",
     "test-jest": "kolibri-tools test --config ./jest.conf.js"
   },
   "devDependencies": {
-    "kolibri-tools": "^0.12.0-beta.6",
+    "kolibri-tools": "^0.17.0-dev.4",
     "yarn-run-all": "^3.1.1"
   },
   "engines": {
-    "node": "10.x",
+    "node": "18.x",
     "npm": ">= 3"
   },
-  "volta": {
-    "node": "10.24.1"
+  "browserslist": [
+    "extends browserslist-config-kolibri"
+  ],
+  "dependencies": {
+    "kolibri-design-system": "4.6",
+    "lockr": "0.8.5",
+    "vuex-router-sync": "^5.0.0"
   }
 }

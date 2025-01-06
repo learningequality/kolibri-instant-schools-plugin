@@ -51,7 +51,6 @@
       facilitySelectionPrompt: 'Which facility do you want to sign in to?',
       submitFacilitySelectionButtonPrompt: 'Select',
       facilitySelectionModalHeader: 'Select a facility',
-      close: 'Close',
     },
   };
 

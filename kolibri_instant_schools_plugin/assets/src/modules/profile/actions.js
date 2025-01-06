@@ -50,7 +50,7 @@ export function updateUserProfile(store, { edits, session }) {
       } else {
         store.dispatch('handleApiError', error, { root: true });
       }
-    }
+    },
   );
 }
 
@@ -74,6 +74,6 @@ export function updateUserProfilePassword(store, password) {
     () => {
       store.commit('SET_PROFILE_BUSY', false);
       store.commit('SET_PROFILE_PASSWORD_ERROR', true);
-    }
+    },
   );
 }

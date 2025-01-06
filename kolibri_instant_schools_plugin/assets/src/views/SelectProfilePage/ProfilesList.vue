@@ -1,7 +1,10 @@
 <template>
 
   <table class="table">
-    <tr v-for="profile in profiles" :key="profile.username">
+    <tr
+      v-for="profile in profiles"
+      :key="profile.username"
+    >
       <td class="name-wrapper">
         <div class="profile-icon">
           <mat-svg
@@ -61,10 +64,11 @@
 
   .name-wrapper {
     width: 100%;
+    padding-bottom: 16px;
     white-space: nowrap;
     vertical-align: middle;
-    padding-bottom: 16px;
   }
+
   .profile-icon {
     display: inline-block;
     padding: 0 0.5em;

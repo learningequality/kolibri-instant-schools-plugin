@@ -11,14 +11,17 @@ from kolibri.core.webpack import hooks as webpack_hooks
 from kolibri.plugins import KolibriPluginBase
 from kolibri.plugins.hooks import register_hook
 from kolibri.core import theme_hook
-from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.templatetags.static import static
 
 APP_TITLE = getenv("INSTANT_SCHOOLS_APP_TITLE") or "Instant Schools"
 
 
 class User(KolibriPluginBase):
+    root_view_urls = "root_urls"
     translated_view_urls = "urls"
     untranslated_view_urls = "untranslated_urls"
+    django_settings = "instant_schools_settings"
+    kolibri_option_defaults = "default_options"
 
     @property
     def url_slug(self):
@@ -99,7 +102,6 @@ class DefaultThemeHook(theme_hook.ThemeHook):
             },
             "tokenMapping": {
                 "primary": "#e11300",
-                "appBar": "#333333",
             },
             # sign-in page config
             "signIn": {
@@ -132,6 +134,8 @@ class DefaultThemeHook(theme_hook.ThemeHook):
             },
             # app bar config
             "appBar": {
+                "background": "#333333",
+                "textColor": "#ffffff",
                 "topLogo": {
                     "src": logo_file,
                 },

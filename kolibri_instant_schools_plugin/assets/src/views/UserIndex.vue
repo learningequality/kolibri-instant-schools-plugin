@@ -1,14 +1,9 @@
 <template>
 
-  <CoreBase
-    :immersivePage="pageName === PageNames.SIGN_UP"
-    immersivePagePrimary
-    :immersivePageRoute="{ name: PageNames.SIGN_IN }"
-    :appBarTitle="appBarTitle"
-    :fullScreen="pageName === PageNames.SIGN_IN"
-  >
-    <component :is="currentPage" />
-  </CoreBase>
+  <component
+    :is="currentPage"
+    :title="appBarTitle"
+  />
 
 </template>
 
@@ -16,7 +11,7 @@
 <script>
 
   import { mapState } from 'vuex';
-  import CoreBase from 'kolibri.coreVue.components.CoreBase';
+  import AppBarPage from 'kolibri.coreVue.components.AppBarPage';
   import { crossComponentTranslator } from 'kolibri.utils.i18n';
   import { PageNames } from '../constants';
   import SignInPage from './SignInPage';
@@ -38,7 +33,7 @@
   export default {
     name: 'UserIndex',
     components: {
-      CoreBase,
+      AppBarPage,
     },
     computed: {
       ...mapState(['pageName']),
@@ -46,6 +41,7 @@
         if (this.pageName === PageNames.PROFILE) {
           return this.$tr('userProfileTitle');
         } else if (this.pageName === PageNames.SIGN_UP) {
+          // eslint-disable-next-line kolibri/vue-no-undefined-string-uses
           return translator.$tr('createAccount');
         } else if (this.pageName == PageNames.SELECT_PROFILE) {
           return 'Instant Schools';
@@ -55,14 +51,10 @@
       currentPage() {
         return pageNameComponentMap[this.pageName] || null;
       },
-      PageNames() {
-        return PageNames;
-      },
     },
     $trs: {
       userProfileTitle: 'Account',
       userSignInTitle: 'Sign in',
-      about: 'About',
     },
   };
 

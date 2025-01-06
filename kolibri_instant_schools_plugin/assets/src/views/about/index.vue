@@ -1,13 +1,11 @@
 <template>
 
-  <CoreBase
+  <AppBarPage
     :navBarNeeded="true"
     :appBarTitle="appBarTitle"
   >
-    <component
-      :is="currentPage"
-    />
-  </CoreBase>
+    <component :is="currentPage" />
+  </AppBarPage>
 
 </template>
 
@@ -15,7 +13,7 @@
 <script>
 
   import { mapState } from 'vuex';
-  import CoreBase from 'kolibri.coreVue.components.CoreBase';
+  import AppBarPage from 'kolibri.coreVue.components.AppBarPage';
   import { PageNames } from '../../constants';
   import AboutPage from './AboutPage';
   import FAQPage from './FAQPage';
@@ -26,10 +24,10 @@
   };
 
   export default {
-    $trs: { aboutTitle: 'About' },
+    // eslint-disable-next-line kolibri/vue-filename-and-component-name-match
     name: 'About',
     components: {
-      CoreBase,
+      AppBarPage,
       AboutPage,
       FAQPage,
     },
@@ -42,6 +40,7 @@
         return pageNameComponentMap[this.pageName] || null;
       },
     },
+    $trs: { aboutTitle: 'About' },
   };
 
 </script>

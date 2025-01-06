@@ -42,7 +42,6 @@
     },
     $trs: {
       close: 'Close',
-      goBack: 'Go back',
       messageSent:
         'A text message (SMS) has been sent to your phone with instructions to reset your password.',
       smsServiceUnavailable: 'The text message (SMS) service is not currently available',
@@ -62,6 +61,7 @@
     margin-top: 1em;
     text-align: right;
   }
+
   button {
     margin-right: 0;
   }

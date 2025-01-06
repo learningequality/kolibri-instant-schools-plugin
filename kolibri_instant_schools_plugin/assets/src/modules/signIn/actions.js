@@ -5,9 +5,7 @@ import { PageNames } from '../../constants';
 export function showSelectProfilePage(store, params) {
   const { phone, password, facility } = params;
   return client({
-    url: `${urls[
-      'kolibri:kolibri_instant_schools_plugin:phoneaccountprofile-profiles'
-    ]()}`,
+    url: `${urls['kolibri:kolibri_instant_schools_plugin:phoneaccountprofile-profiles']()}`,
     method: 'POST',
     data: {
       password,
@@ -24,7 +22,7 @@ export function showSelectProfilePage(store, params) {
       {
         pageName: PageNames.SELECT_PROFILE,
       },
-      { root: true }
+      { root: true },
     );
     return store.commit('SET_STATE', {
       facility,

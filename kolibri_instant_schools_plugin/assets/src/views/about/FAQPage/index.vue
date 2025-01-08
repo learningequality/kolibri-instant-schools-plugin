@@ -6,6 +6,7 @@
       appearance="raised-button"
       :text="$tr('back')"
       :to="aboutRoute"
+      style="margin: 0.5em 0"
     />
 
     <iframe

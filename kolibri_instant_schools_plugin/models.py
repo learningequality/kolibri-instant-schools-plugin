@@ -11,7 +11,7 @@ SALT = "1a8e928ae600405b9c1acef123502fb1"
 
 class AboutFAQ(models.Model):
     html = models.TextField()
-    kind = models.TextField(choices=(("FAQ", "FAQ"), ("About", "About")))
+    kind = models.TextField(choices=(("FAQ", "FAQ"), ("About", "About"), ("Terms", "Terms")))
 
     class Meta:
         app_label = "kolibri_instant_schools_plugin"

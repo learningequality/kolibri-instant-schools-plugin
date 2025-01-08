@@ -1,3 +1,4 @@
+import './fix.css';
 import { UserKinds, NavComponentSections } from 'kolibri.coreVue.vuex.constants';
 import registerNavItem from 'kolibri.utils.registerNavItem';
 import urls from 'kolibri.urls';

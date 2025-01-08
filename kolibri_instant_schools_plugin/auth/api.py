@@ -32,30 +32,20 @@ class AboutFAQViewSet(viewsets.ViewSet):
 class PhoneNumberSignupSerializer(FacilityUserSerializer):
 
     def validate_username(self, value):
-        if FacilityUser.objects.filter(username__iexact=value).exists():
+        # Check if the phone number is already associated with an account
+        usernames = get_usernames(hash_phone(value))
+        if usernames:
             raise serializers.ValidationError(
             _('An account already exists for this phone number. To add a new profile ' +
                 'under this account, you must first login. If you have forgotten your ' +
                 'password, you can reset it using the link on the login page.'))
-        return value
+
+        return create_new_username(value)
 
 
 class PhoneNumberSignUpViewSet(SignUpViewSet):
 
     serializer_class = PhoneNumberSignupSerializer
-
-    def extract_request_data(self, request):
-        data = super(PhoneNumberSignUpViewSet, self).extract_request_data(request)
-
-        # if there are already users for this number, use one, to trigger a validation error, else create a new one
-        usernames = get_usernames(hash_phone(data["username"]))
-        if usernames:
-            data["username"] = hash_phone(usernames[0])
-        else:
-            data["username"] = create_new_username(data["username"])
-
-        return data
-
 
 class PasswordResetTokenViewset(viewsets.ViewSet):
 

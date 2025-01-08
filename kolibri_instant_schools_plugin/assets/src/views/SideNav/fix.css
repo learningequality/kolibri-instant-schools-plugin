@@ -1,0 +1,10 @@
+/*  This is a hack introduced to hide the hashed username displayed within the side nav. */
+
+.user-information p:nth-child(3) {
+    /* Hide hashed username */
+    display: none !important;
+}
+.user-information p:nth-child(4) {
+    /* Better spacing between account type & full name */
+    margin-top: 0.5em !important;
+}

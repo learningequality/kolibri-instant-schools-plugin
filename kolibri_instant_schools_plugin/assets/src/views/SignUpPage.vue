@@ -110,18 +110,13 @@
         v-if="showTerms"
         :title="$tr('termsOfServiceModalHeader')"
         :size="'large'"
+        :cancelText="$tr('close')"
         @cancel="showTerms = false"
       >
         <iframe
           class="terms"
-          src="/content/databases/about/tos.txt"
+          src="/en/user/api/aboutfaq/Terms"
         ></iframe>
-        <KButton
-          :text="$tr('close')"
-          :primary="false"
-          :disabled="false"
-          @click="showTerms = false"
-        />
       </KModal>
     </div>
   </ImmersivePage>

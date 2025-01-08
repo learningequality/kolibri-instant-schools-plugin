@@ -113,6 +113,10 @@
         :cancelText="$tr('close')"
         @cancel="showTerms = false"
       >
+        <!-- 
+          aboutfaq/Terms returns the "Terms" kind of "AboutFAQ" model record 
+          configured in the Django admin panel
+         -->
         <iframe
           class="terms"
           src="/en/user/api/aboutfaq/Terms"

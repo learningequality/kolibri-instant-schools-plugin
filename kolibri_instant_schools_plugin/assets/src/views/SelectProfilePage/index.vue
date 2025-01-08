@@ -39,6 +39,7 @@
 <script>
 
   import urls from 'kolibri.urls';
+  import AppBarPage from 'kolibri.coreVue.components.AppBarPage';
   import { mapActions, mapState } from 'vuex';
   import NewProfileModal from './NewProfileModal';
   import ProfilesList from './ProfilesList';
@@ -46,6 +47,7 @@
   export default {
     name: 'SelectProfilePage',
     components: {
+      AppBarPage,
       NewProfileModal,
       ProfilesList,
     },
